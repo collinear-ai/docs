@@ -35,25 +35,26 @@
     {
       "name": "Documentation",
       "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
-    },
-    {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
+      "url": "https://docs.collinear.ai"
     },
     {
       "name": "Blog",
       "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
+      "url": "https://collinear.ai"
     }
   ],
   "navigation": [
     {
+      "group": "Introduction",
+      "pages": [
+        "introduction"
+      ]
+
+    },
+    {
       "group": "Get Started",
       "pages": [
-        "introduction",
-        "quickstart",
+        "essentials/create_org",
         "development"
       ]
     },

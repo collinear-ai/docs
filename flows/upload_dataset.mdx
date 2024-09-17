@@ -1,0 +1,88 @@
+---
+title: Upload Dataset
+description: Use the Collinear AI API to upload a dataset to your space.
+icon: 'recycle'
+---
+
+### Parameters
+
+The input dataset in the form of a pandas DataFrame. Each row in the DataFrame should contain:
+* conv_prefix: A list of strings representing the conversation prefix.
+* response: A dictionary containing the conversation response with a key 'content'.
+* ground_truth: Ground truth values for the corresponding conversation.
+
+### API Request Details
+The function makes a POST request to the API endpoint to upload the dataset. Here are the key parts of the request:
+
+#### URL:
+The URL is formed by concatenating the host and the /api/v1/dataset path.
+
+#### Headers:
+The request includes an Authorization header with a Bearer token for authentication(This token can be obtained from the API Key section of the Collinear AI dashboard):
+```
+{
+  'Authorization': 'Bearer <token>'
+}
+```
+#### Request Body:
+The body of the request is a JSON object with the following fields:
+
+* name: Name of the dataset being uploaded (e.g., 'benchmark-db').
+* space_id: Identifier for the space to which the dataset belongs.
+* conversations: An array of conversation objects, each containing:
+    * conv_prefix: A list of conversation prefixes.
+        * role: The role of the message['user','assistant']
+        * content: The content of the message.
+    * response: The content of the response.
+    * judgements: An empty dictionary to store future judgements.
+    * ground_truth: The ground truth value for the conversation.
+
+#### Sample Request:
+```json
+{
+  "name": "benchmark-db",
+  "space_id": "<space_id>",
+  "conversations": [
+    {
+      "conv_prefix": [{"role": "user", "content": "I need help"}],
+      "response": "I need assistance with my account.",
+      "judgements": {},
+      "ground_truth": "account-related"
+    }
+  ]
+}
+```
+
+
+## Example Python Code
+
+```python
+import pandas as pd
+import requests
+space_id = '8b560bf4-3a76-4f00-b378-b528d02445c0'
+host = 'https://api.collinear.ai'
+token = '64529d27-08c7-46fc-ba2e-3aa216ac79b4'
+
+
+def upload_new_dataset(df: pd.DataFrame):
+    req_obj = {
+        "name": 'benchmark-db',
+        "space_id": space_id,
+    }
+    conversations = []
+    df = pd.DataFrame(df)
+    for index, row in df.iterrows():
+        conversations.append({
+            'conv_prefix': list(row['conv_prefix']),
+            'response': row['response']['content'],
+            'judgements': {},
+            'ground_truth': row['ground_truth'],
+        })
+    req_obj['conversations'] = conversations
+    url = f'{host}/api/v1/dataset'
+    output = requests.post(url, json=req_obj,
+                           headers={
+                               'Authorization': f'Bearer {token}'})
+    response = output.json()
+    return response
+```

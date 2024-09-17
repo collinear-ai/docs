@@ -49,14 +49,19 @@
       "pages": [
         "introduction"
       ]
-
     },
     {
       "group": "Get Started",
       "pages": [
         "essentials/create_org",
-        "essentials/create_space",
-        "development"
+        "essentials/create_space"
+      ]
+    },
+    {
+      "group": "Flows",
+      "pages": [
+        "flows/upload_dataset",
+        "flows/run_judge_on_dataset"
       ]
     },
     {

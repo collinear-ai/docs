@@ -61,7 +61,8 @@
       "group": "Flows",
       "pages": [
         "flows/upload_dataset",
-        "flows/run_judge_on_dataset"
+        "flows/run_judge_on_dataset",
+        "flows/run_conversation_model_on_dataset"
       ]
     }
   ],

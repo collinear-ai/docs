@@ -121,7 +121,7 @@ def add_new_judgements(df):
     req_obj = {
         'judgements': judgements,
     }
-    output = requests.post(url, json=req_obj,
+    requests.post(url, json=req_obj,
                            headers={
                                'Authorization': f'Bearer {token}'})
 

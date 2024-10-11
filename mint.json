@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "Collinear AI",
   "logo": {
     "dark": "https://webresources-s3.s3.amazonaws.com/new_logo.png",
     "light": "https://webresources-s3.s3.amazonaws.com/logo.png"
@@ -62,7 +62,9 @@
       "pages": [
         "flows/upload_dataset",
         "flows/run_judge_on_dataset",
-        "flows/run_conversation_model_on_dataset"
+        "flows/run_conversation_model_on_dataset",
+        "flows/create_new_judge",
+        "flows/create_safety_judge"
       ]
     }
   ],

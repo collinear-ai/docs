@@ -64,7 +64,8 @@
         "flows/run_judge_on_dataset",
         "flows/run_conversation_model_on_dataset",
         "flows/create_new_judge",
-        "flows/create_safety_judge"
+        "flows/create_safety_judge",
+        "flows/upload_a_csv"
       ]
     }
   ],

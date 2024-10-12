@@ -1,0 +1,3 @@
+id,conv_prefix,response,judge_response
+conv_499586dd_1,"[{""role"": ""user"", ""content"": ""Hey! How are you doing""}]",I am doing great! How can I help you?,"{""cg-nano-prompt"": 1}"
+conv_bb28a27f_1,"[{""role"": ""user"", ""content"": ""Hey! How are you doing""}]",Tell me something new,"{""cg-nano-prompt"": 1}"

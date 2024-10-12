@@ -9,81 +9,135 @@ Safety Judges help keep language models safe by filtering out harmful content. T
 - respectful 
 - safe for users
 
-Steps to create a safety judge 
+# Steps to Create a Safety Judge
 
-Step 1
-Select “safety judge”
-
+## Select “safety judge”
 <img
     style={{borderRadius: '0.5rem'}}
-    src="/images/safetyjudge.png"
+    src="/images/ssafetyjudge.png"
 />
 
-Step 2 
-Select Select Safety Model type 
-
+ ## Select Select Safety Model type 
 You can choose between:
 - Llama Guard
 - Wild Guard
 - Collinear Guard
 - Collinear Guard Nano
 - Prompted Model
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/selectsafetyjudge.png"
+/>
 
-1. Creating LLama Guard judge 
-
+## 1. Creating LLama Guard judge 
 Llamaguard: {0,1} 0 means unsafe and 1 means safe
 
 Once you select Llama Guard judge, select "Continue" 
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/selectsllamaguard.png"
+/>
 
-Set Judge Name to your preference and select "Create Judge"
+##Set Judge Name 
+Name it according to your preference and select "Create Judge"
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/createajudgebutton.png"
+/>
 
-2. Creating Wild Guard judge 
-
+##2. Creating Wild Guard judge 
 Prompt evaluation: {0,1} 0 is unsafe and 1 is safe
 Response evaluation: {0,1} 0 is unsafe and 1 is safe
 Refusal evaluation: {0,1} 0 is refusal and 1 is not a refusal
 
 Once you select Llama Guard judge, select "Continue" 
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/wildguard.png"
+/>
 
-Set Judge Name to your preference and select "Create Judge"
+## Set Judge Name
+Name it according to your preference and select "Create Judge"
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/createajudgebutton.png"
+/>
 
-2. Creating Collinear Guard judge
-
+##3. Creating Collinear Guard judge
 Likert rating of 1 to 5. 1 is very unsafe, 2 is unsafe, 3 is neutral, 4 is safe, 5 is very safe
 
 Once you select Collinear Guard judge, select "Continue" 
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/collinearguard.png"
+/>
 
-Set Judge Name to your preference and select "Create Judge"
+##Set Judge Name
+Name it according to your preference and select "Create Judge"
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/createajudgebutton.png"
+/>
 
-3. Creating Collinear Guard Nano judge 
-
+##4. Creating Collinear Guard Nano judge 
 Prompt evaluation: {0,1} 0 is unsafe and 1 is safe
 Response evaluation: {0,1} 0 is unsafe and 1 is safe
 Refusal evaluation: {0,1} 0 is refusal and 1 is not a refusal
 
 Once you select Collinear Guard Nano judge, select "Continue" 
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/collinearguardnanoo.png"
+/>
 
-Select your Model Type and select "Continue"
-- Response
-- Prompt
-- Refusal
+##Select your Model Type 
+Choose Response, Prompt and Refusal and select "Continue"
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/selectyourmodelnano.png"
+/>
 
-Set Judge Name to your preference and select "Create Judge"
+##Set Judge Name 
+Name it according to your preference and select "Create Judge"
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/createajudgebutton.png"
+/>
 
-4. Creating Prompted Model judge
-
-Add a Model —> link to the doc to add model
-Default safety template that can be updated
+##5. Creating Prompted Model judge
 {0,1} where 0 is unsafe and 1 is safe
 
 Once you select Prompted Model judge, select "Continue"
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/promptedmodel.png"
+/>
 
-Choose your Prompted Model from the drop down, if you haven't added a model select "Add New Model" to create a new model 
+##Select your Prompted Model
+You can select your model from the drop down, if you haven't added a model select "Add New Model" to create a new model
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/selectyourmodelprompted.png"
+/>
 
-Edit your prompt template or if proceed with the template and select "Continue"
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/addanewmodelprompted.png"
+/>
 
-Set Judge Name to your preference and select "Create Judge"
+##Edit your prompt template 
+You can proceed with the template or edit it and then select "Continue"
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/prompttemplate.png"
+/>
 
+##Set Judge Name 
+Name it according to your preference and select "Create Judge"
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/createajudgebutton.png"
+/>
 
 
 

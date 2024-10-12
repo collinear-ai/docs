@@ -58,14 +58,19 @@
       ]
     },
     {
-      "group": "Flows",
+      "group": "Judge",
       "pages": [
-        "flows/upload_dataset",
-        "flows/run_judge_on_dataset",
-        "flows/run_conversation_model_on_dataset",
         "flows/create_new_judge",
         "flows/create_safety_judge",
         "flows/upload_a_csv"
+      ]
+    },
+    {
+      "group": "Datasets",
+      "pages": [
+        "flows/upload_dataset",
+        "flows/run_judge_on_dataset",
+        "flows/run_conversation_model_on_dataset"
       ]
     }
   ],

@@ -5,7 +5,7 @@
     "dark": "https://webresources-s3.s3.amazonaws.com/new_logo.png",
     "light": "https://webresources-s3.s3.amazonaws.com/logo.png"
   },
-  "favicon": "/collinearfavicon.svg",
+  "favicon": "/collinearfavicon1.svg",
   "colors": {
     "primary": "#F26124",
     "light": "#70747B",

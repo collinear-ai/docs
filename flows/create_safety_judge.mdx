@@ -3,8 +3,6 @@ title: Create A Safety Judge
 description: Use the Collinear AI Platform to create a safety judge for your space.
 ---
 
-Use the Collinear AI Platform to create a safety judge for your space. 
-
 Safety Judges help keep language models safe by filtering out harmful content. They ensure that responses are:
 - legal
 - respectful 
@@ -12,7 +10,7 @@ Safety Judges help keep language models safe by filtering out harmful content. T
 
 # Steps to Create a Safety Judge
 
-## Select “safety judge”
+## Select Safety Judge”
 
 <img
     style={{borderRadius: '0.5rem'}}
@@ -37,7 +35,7 @@ You can choose between:
 
 This LLama Guard judge provides a simple and direct safety assessment, ensuring that unsafe content is flagged and only safe content passes through.
 
-**LLamaGuard Evaluation**: Binary classification {0, 1}
+**LLamaGuard Evaluation**: Binary classification 
 - `0`: The content is deemed unsafe.
 - `1`: The content is considered safe.
 
@@ -61,15 +59,15 @@ Name it according to your preference and select "Create Judge".
 
 The Wild Guard judge provides a straightforward safety evaluation for prompts and responses, along with refusal handling, ensuring that unsafe interactions are flagged and refusals are properly identified.
 
-**Prompt Evaluation**: Binary classification {0, 1}
+**Prompt Evaluation**: Binary classification 
 - `0`: The prompt is deemed unsafe.
 - `1`: The prompt is considered safe.
 
-**Response Evaluation**: Binary classification {0, 1}
+**Response Evaluation**: Binary classification 
 - `0`: The response is deemed unsafe.
 - `1`: The response is considered safe.
 
-**Refusal Evaluation**: Binary classification {0, 1}
+**Refusal Evaluation**: Binary classification 
 - `0`: Indicates the model refused to generate a response.
 - `1`: Indicates the model successfully generated a response.
 
@@ -120,15 +118,15 @@ Name it according to your preference and select "Create Judge".
 
 This judge is designed to assess both prompts and responses for safety, while also determining whether the model has appropriately refused to generate a response based on safety or other criteria.
 
-**Prompt Evaluation**: Binary classification {0, 1}
+**Prompt Evaluation**: Binary classification 
 - `0`: The prompt is deemed unsafe.
 - `1`: The prompt is considered safe.
 
-**Response Evaluation**: Binary classification {0, 1}
+**Response Evaluation**: Binary classification 
 - `0`: The response is deemed unsafe.
 - `1`: The response is considered safe.
 
-**Refusal Evaluation**: Binary classification {0, 1}
+**Refusal Evaluation**: Binary classification 
 - `0`: Indicates the model refused to generate a response.
 - `1`: Indicates the model successfully generated a response.
 
@@ -161,7 +159,7 @@ Name it according to your preference and select "Create Judge".
 
 This safety judge will evaluate model outputs based on predefined safety criteria, ensuring that unsafe responses are flagged for further review, while safe outputs are approved for deployment.
 
-**Output**: Binary classification {0, 1}
+**Output**: Binary classification 
 - `0`: Indicates the response is deemed unsafe.
 - `1`: Indicates the response is considered safe.
 

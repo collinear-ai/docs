@@ -12,18 +12,9 @@ The input dataset in the form of a pandas DataFrame. Each row in the DataFrame s
 * ground_truth: Ground truth values for the corresponding conversation.
 
 ### API Request Details
-The function makes a POST request to the API endpoint to upload the dataset. Here are the key parts of the request:
+The function makes a POST request to the API endpoint to upload the dataset.
+Check the API documentation [here](/api-reference/endpoint/upload_dataset).
 
-#### URL:
-The URL is formed by concatenating the host and the /api/v1/dataset path.
-
-#### Headers:
-The request includes an Authorization header with a Bearer token for authentication(This token can be obtained from the API Key section of the Collinear AI dashboard):
-```
-{
-  'Authorization': 'Bearer <token>'
-}
-```
 #### Request Body:
 The body of the request is a JSON object with the following fields:
 
@@ -47,7 +38,7 @@ The body of the request is a JSON object with the following fields:
       "conv_prefix": [{"role": "user", "content": "I need help"}],
       "response": "I need assistance with my account.",
       "judgements": {},
-      "ground_truth": "account-related"
+      "ground_truth": 3
     }
   ]
 }

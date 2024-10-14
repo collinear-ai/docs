@@ -31,6 +31,12 @@
       "url": "api-reference"
     }
   ],
+  "api": {
+    "baseUrl": "https://api.collinear.ai",
+    "auth": {
+      "method": "bearer"
+    }
+  },
   "anchors": [
     {
       "name": "Documentation",
@@ -71,6 +77,18 @@
         "flows/upload_dataset",
         "flows/run_judge_on_dataset",
         "flows/run_conversation_model_on_dataset"
+      ]
+    },
+    {
+      "group": "Curated Data",
+      "pages": [
+        "curated_data/introduction"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/endpoint/upload_dataset"
       ]
     }
   ],

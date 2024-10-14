@@ -1,72 +1,19 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
+    "title": "FastAPI",
+    "version": "0.1.0"
   },
-  "servers": [
-    {
-      "url": "http://sandbox.mintlify.com"
-    }
-  ],
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
   "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
+    "/api/v1/user/": {
       "post": {
-        "description": "Creates a new plant in the store",
+        "summary": "Invite New User",
+        "operationId": "invite_new_user_api_v1_user__post",
         "requestBody": {
-          "description": "Plant to add to the store",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/InviteNewUser"
               }
             }
           },
@@ -74,21 +21,75 @@
         },
         "responses": {
           "200": {
-            "description": "plant response",
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Plant"
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
           },
-          "400": {
-            "description": "unexpected error",
+          "422": {
+            "description": "Validation Error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/space/{space_id}/judges": {
+      "get": {
+        "summary": "Get Judges For Space",
+        "operationId": "get_judges_for_space_api_v1_space__space_id__judges_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "space_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Space Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JudgeDashboardDTO"
+                  },
+                  "title": "Response Get Judges For Space Api V1 Space  Space Id  Judges Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -96,33 +97,599 @@
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/api/v1/conversations/{conversation_id}/download": {
+      "get": {
+        "summary": "Download Conversation By Id",
+        "operationId": "download_conversation_by_id_api_v1_conversations__conversation_id__download_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
-            "name": "id",
+            "name": "conversation_id",
             "in": "path",
-            "description": "ID of plant to delete",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string",
+              "format": "uuid",
+              "title": "Conversation Id"
             }
           }
         ],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
           },
-          "400": {
-            "description": "unexpected error",
+          "422": {
+            "description": "Validation Error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/conversations/upload": {
+      "post": {
+        "summary": "Upload Conversation",
+        "operationId": "upload_conversation_api_v1_conversations_upload_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConversationUpload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/judge/dataset-annotation/{dataset_annotation_id}": {
+      "post": {
+        "summary": "Run Judgement On Dataset Annotation",
+        "operationId": "run_judgement_on_dataset_annotation_api_v1_judge_dataset_annotation__dataset_annotation_id__post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "dataset_annotation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Dataset Annotation Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JudgeDatasetAnnotationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetAnnotationsDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/judge/add-judgement": {
+      "post": {
+        "summary": "Add Judgement To Dataset Annotation",
+        "operationId": "add_judgement_to_dataset_annotation_api_v1_judge_add_judgement_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddJudgementsDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/judge/upload/curated-data": {
+      "post": {
+        "summary": "Upload Curated Data",
+        "operationId": "upload_curated_data_api_v1_judge_upload_curated_data_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_curated_data_api_v1_judge_upload_curated_data_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/judge/upload/{judge_id}": {
+      "post": {
+        "summary": "Upload Conversation Csv",
+        "operationId": "upload_conversation_csv_api_v1_judge_upload__judge_id__post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "judge_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Judge Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_conversation_csv_api_v1_judge_upload__judge_id__post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/judge/": {
+      "post": {
+        "summary": "Add New Judge",
+        "operationId": "add_new_judge_api_v1_judge__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JudgeCreateRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Add New Judge Api V1 Judge  Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/curated_data/space/{space_id}": {
+      "get": {
+        "summary": "Get Dataset Annotations By Space Id",
+        "operationId": "get_dataset_annotations_by_space_id_api_v1_curated_data_space__space_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "space_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Space Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DatasetAnnotationsDTO"
+                  },
+                  "title": "Response Get Dataset Annotations By Space Id Api V1 Curated Data Space  Space Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dataset/name": {
+      "post": {
+        "summary": "Get Dataset Annotations By Space Id",
+        "operationId": "get_dataset_annotations_by_space_id_api_v1_dataset_name_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetByNameRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetByNameResponseDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/dataset/": {
+      "post": {
+        "summary": "Create New Dataset",
+        "operationId": "create_new_dataset_api_v1_dataset__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNewDatasetRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/model/": {
+      "post": {
+        "summary": "Add New Model",
+        "operationId": "add_new_model_api_v1_model__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddModelRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Add New Model Api V1 Model  Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/v1/models": {
+      "get": {
+        "summary": "List Models",
+        "description": "Lists models for an organization identified by the API Key.",
+        "operationId": "list_models_v1_models_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelList"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "Create Chat Completion",
+        "description": "Shim for OpenAI's /v1/chat/completions.",
+        "operationId": "create_chat_completion_v1_chat_completions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompletionCreateParams"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletion"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/graphql": {
+      "get": {
+        "summary": "Handle Http Get",
+        "operationId": "handle_http_get_graphql_get",
+        "responses": {
+          "200": {
+            "description": "The GraphiQL integrated development environment.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found if GraphiQL or query via GET are not enabled."
+          }
+        }
+      },
+      "post": {
+        "summary": "Handle Http Post",
+        "operationId": "handle_http_post_graphql_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           }
@@ -132,61 +699,1926 @@
   },
   "components": {
     "schemas": {
-      "Plant": {
+      "AddJudgementsDTO": {
+        "properties": {
+          "judgements": {
+            "items": {
+              "$ref": "#/components/schemas/DatasetAnnotationJudgementDTO"
+            },
+            "type": "array",
+            "title": "Judgements",
+            "default": []
+          }
+        },
+        "type": "object",
+        "title": "AddJudgementsDTO"
+      },
+      "AddModelRequestDTO": {
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "title": "Model Name"
+          },
+          "base_url": {
+            "type": "string",
+            "title": "Base Url"
+          },
+          "space_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Space Id"
+          },
+          "api_key": {
+            "type": "string",
+            "title": "Api Key"
+          },
+          "system_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "System Prompt",
+            "default": ""
+          },
+          "nickname": {
+            "type": "string",
+            "title": "Nickname"
+          },
+          "client": {
+            "$ref": "#/components/schemas/ModelTypeEnum"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_name",
+          "base_url",
+          "space_id",
+          "api_key",
+          "nickname",
+          "client"
+        ],
+        "title": "AddModelRequestDTO"
+      },
+      "ApiResponse": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "title": "ApiResponse"
+      },
+      "Body_upload_conversation_csv_api_v1_judge_upload__judge_id__post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_conversation_csv_api_v1_judge_upload__judge_id__post"
+      },
+      "Body_upload_curated_data_api_v1_judge_upload_curated_data_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_curated_data_api_v1_judge_upload_curated_data_post"
+      },
+      "ChatCompletion": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "choices": {
+            "items": {
+              "$ref": "#/components/schemas/Choice"
+            },
+            "type": "array",
+            "title": "Choices"
+          },
+          "created": {
+            "type": "integer",
+            "title": "Created"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "object": {
+            "type": "string",
+            "enum": [
+              "chat.completion"
+            ],
+            "const": "chat.completion",
+            "title": "Object"
+          },
+          "service_tier": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "scale",
+                  "default"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Service Tier"
+          },
+          "system_fingerprint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "System Fingerprint"
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CompletionUsage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "choices",
+          "created",
+          "model",
+          "object"
+        ],
+        "title": "ChatCompletion"
+      },
+      "ChatCompletionAssistantMessageParam": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ],
+            "const": "assistant",
+            "title": "Role"
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ChatCompletionContentPartTextParam"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ChatCompletionContentPartRefusalParam"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content"
+          },
+          "function_call": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FunctionCall-Input"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "refusal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refusal"
+          },
+          "tool_calls": {
+            "items": {
+              "$ref": "#/components/schemas/ChatCompletionMessageToolCallParam"
+            },
+            "type": "array",
+            "title": "Tool Calls"
+          }
+        },
+        "type": "object",
+        "required": [
+          "role"
+        ],
+        "title": "ChatCompletionAssistantMessageParam"
+      },
+      "ChatCompletionContentPartImageParam": {
+        "properties": {
+          "image_url": {
+            "$ref": "#/components/schemas/ImageURL"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "image_url"
+            ],
+            "const": "image_url",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "image_url",
+          "type"
+        ],
+        "title": "ChatCompletionContentPartImageParam"
+      },
+      "ChatCompletionContentPartRefusalParam": {
+        "properties": {
+          "refusal": {
+            "type": "string",
+            "title": "Refusal"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "refusal"
+            ],
+            "const": "refusal",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "refusal",
+          "type"
+        ],
+        "title": "ChatCompletionContentPartRefusalParam"
+      },
+      "ChatCompletionContentPartTextParam": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ],
+            "const": "text",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text",
+          "type"
+        ],
+        "title": "ChatCompletionContentPartTextParam"
+      },
+      "ChatCompletionFunctionMessageParam": {
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "const": "function",
+            "title": "Role"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content",
+          "name",
+          "role"
+        ],
+        "title": "ChatCompletionFunctionMessageParam"
+      },
+      "ChatCompletionMessage": {
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content"
+          },
+          "refusal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refusal"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ],
+            "const": "assistant",
+            "title": "Role"
+          },
+          "function_call": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FunctionCall-Output"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tool_calls": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ChatCompletionMessageToolCall"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tool Calls"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "role"
+        ],
+        "title": "ChatCompletionMessage"
+      },
+      "ChatCompletionMessageToolCall": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "function": {
+            "$ref": "#/components/schemas/Function-Output"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "const": "function",
+            "title": "Type"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "function",
+          "type"
+        ],
+        "title": "ChatCompletionMessageToolCall"
+      },
+      "ChatCompletionMessageToolCallParam": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "function": {
+            "$ref": "#/components/schemas/Function-Input"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "const": "function",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "function",
+          "type"
+        ],
+        "title": "ChatCompletionMessageToolCallParam"
+      },
+      "ChatCompletionSystemMessageParam": {
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ChatCompletionContentPartTextParam"
+                },
+                "type": "array"
+              }
+            ],
+            "title": "Content"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "system"
+            ],
+            "const": "system",
+            "title": "Role"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content",
+          "role"
+        ],
+        "title": "ChatCompletionSystemMessageParam"
+      },
+      "ChatCompletionTokenLogprob": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "title": "Token"
+          },
+          "bytes": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bytes"
+          },
+          "logprob": {
+            "type": "number",
+            "title": "Logprob"
+          },
+          "top_logprobs": {
+            "items": {
+              "$ref": "#/components/schemas/TopLogprob"
+            },
+            "type": "array",
+            "title": "Top Logprobs"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "token",
+          "logprob",
+          "top_logprobs"
+        ],
+        "title": "ChatCompletionTokenLogprob"
+      },
+      "ChatCompletionToolMessageParam": {
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ChatCompletionContentPartTextParam"
+                },
+                "type": "array"
+              }
+            ],
+            "title": "Content"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "tool"
+            ],
+            "const": "tool",
+            "title": "Role"
+          },
+          "tool_call_id": {
+            "type": "string",
+            "title": "Tool Call Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content",
+          "role",
+          "tool_call_id"
+        ],
+        "title": "ChatCompletionToolMessageParam"
+      },
+      "ChatCompletionUserMessageParam": {
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ChatCompletionContentPartTextParam"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ChatCompletionContentPartImageParam"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ],
+            "title": "Content"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "const": "user",
+            "title": "Role"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content",
+          "role"
+        ],
+        "title": "ChatCompletionUserMessageParam"
+      },
+      "Choice": {
+        "properties": {
+          "finish_reason": {
+            "type": "string",
+            "enum": [
+              "stop",
+              "length",
+              "tool_calls",
+              "content_filter",
+              "function_call"
+            ],
+            "title": "Finish Reason"
+          },
+          "index": {
+            "type": "integer",
+            "title": "Index"
+          },
+          "logprobs": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ChoiceLogprobs"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "message": {
+            "$ref": "#/components/schemas/ChatCompletionMessage"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "finish_reason",
+          "index",
+          "message"
+        ],
+        "title": "Choice"
+      },
+      "ChoiceLogprobs": {
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ChatCompletionTokenLogprob"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content"
+          },
+          "refusal": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ChatCompletionTokenLogprob"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refusal"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "ChoiceLogprobs"
+      },
+      "CompletionCreateParams": {
+        "properties": {
+          "messages": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ChatCompletionSystemMessageParam"
+                },
+                {
+                  "$ref": "#/components/schemas/ChatCompletionUserMessageParam"
+                },
+                {
+                  "$ref": "#/components/schemas/ChatCompletionAssistantMessageParam"
+                },
+                {
+                  "$ref": "#/components/schemas/ChatCompletionToolMessageParam"
+                },
+                {
+                  "$ref": "#/components/schemas/ChatCompletionFunctionMessageParam"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Messages"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "frequency_penalty": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frequency Penalty"
+          },
+          "logit_bias": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "integer"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Logit Bias"
+          },
+          "logprobs": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Logprobs"
+          },
+          "max_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens"
+          },
+          "n": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "N"
+          },
+          "parallel_tool_calls": {
+            "type": "boolean",
+            "title": "Parallel Tool Calls",
+            "default": false
+          },
+          "presence_penalty": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Presence Penalty"
+          },
+          "response_format": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseFormatText"
+              },
+              {
+                "$ref": "#/components/schemas/ResponseFormatJSONObject"
+              },
+              {
+                "$ref": "#/components/schemas/ResponseFormatJSONSchema"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response Format"
+          },
+          "seed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed"
+          },
+          "stop": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stop"
+          },
+          "temperature": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperature"
+          },
+          "top_logprobs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Top Logprobs"
+          },
+          "top_p": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Top P"
+          },
+          "user": {
+            "type": "string",
+            "title": "User",
+            "default": ""
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "enum": [
+                  false
+                ],
+                "const": false
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          }
+        },
+        "type": "object",
+        "required": [
+          "messages",
+          "model"
+        ],
+        "title": "CompletionCreateParams",
+        "description": "A pydantic clone of `CompletionCreateParamsNonStreaming` from [1] for FastAPI compatabillity.\n\n[1]: https://github.com/openai/openai-python/blob/main/src/openai/types/chat/completion_create_params.py"
+      },
+      "CompletionTokensDetails": {
+        "properties": {
+          "audio_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audio Tokens"
+          },
+          "reasoning_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reasoning Tokens"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "CompletionTokensDetails"
+      },
+      "CompletionUsage": {
+        "properties": {
+          "completion_tokens": {
+            "type": "integer",
+            "title": "Completion Tokens"
+          },
+          "prompt_tokens": {
+            "type": "integer",
+            "title": "Prompt Tokens"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "title": "Total Tokens"
+          },
+          "completion_tokens_details": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CompletionTokensDetails"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "prompt_tokens_details": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PromptTokensDetails"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "completion_tokens",
+          "prompt_tokens",
+          "total_tokens"
+        ],
+        "title": "CompletionUsage"
+      },
+      "ConversationDTO": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Name"
+          },
+          "model_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Model Id"
+          },
+          "system_prompt": {
+            "type": "string",
+            "minLength": 1,
+            "title": "System Prompt"
+          },
+          "temperature": {
+            "type": "number",
+            "maximum": 2.0,
+            "minimum": 0.0,
+            "title": "Temperature"
+          },
+          "top_p": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Top P"
+          },
+          "rep_penalty": {
+            "type": "number",
+            "maximum": 2.0,
+            "minimum": -2.0,
+            "title": "Rep Penalty"
+          },
+          "tag": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tag"
+          },
+          "dataset_annotation": {
+            "$ref": "#/components/schemas/DatasetAnnotationCreateEnum",
+            "default": "NONE"
+          },
+          "messages": {
+            "items": {
+              "$ref": "#/components/schemas/OpenAIConversationMessage"
+            },
+            "type": "array",
+            "title": "Messages"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "model_id",
+          "system_prompt",
+          "temperature",
+          "top_p",
+          "rep_penalty",
+          "messages"
+        ],
+        "title": "ConversationDTO"
+      },
+      "ConversationMessage": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "title": "ConversationMessage"
+      },
+      "ConversationUpload": {
+        "properties": {
+          "space_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Space Id"
+          },
+          "conversations": {
+            "items": {
+              "$ref": "#/components/schemas/ConversationDTO"
+            },
+            "type": "array",
+            "title": "Conversations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "space_id",
+          "conversations"
+        ],
+        "title": "ConversationUpload"
+      },
+      "CreateNewDatasetRequestDTO": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "space_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Space Id"
+          },
+          "parent_dataset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Dataset Id"
+          },
+          "conversations": {
+            "items": {
+              "$ref": "#/components/schemas/DatasetAnnotationsRequestDTO"
+            },
+            "type": "array",
+            "title": "Conversations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "space_id",
+          "conversations"
+        ],
+        "title": "CreateNewDatasetRequestDTO"
+      },
+      "DatasetAnnotationCreateEnum": {
+        "type": "string",
+        "enum": [
+          "EVERY_TURN",
+          "LAST_TURN",
+          "NONE"
+        ],
+        "title": "DatasetAnnotationCreateEnum"
+      },
+      "DatasetAnnotationJudgementDTO": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "judgement": {
+            "title": "Judgement",
+            "default": {}
+          }
+        },
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "title": "DatasetAnnotationJudgementDTO"
+      },
+      "DatasetAnnotationsDTO": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "db_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Db Id"
+          },
+          "conv_prefix": {
+            "items": {
+              "$ref": "#/components/schemas/ConversationMessage"
+            },
+            "type": "array",
+            "title": "Conv Prefix"
+          },
+          "response": {
+            "type": "string",
+            "title": "Response"
+          },
+          "judge_feedback": {
+            "type": "object",
+            "title": "Judge Feedback"
+          },
+          "human_feedback": {
+            "type": "object",
+            "title": "Human Feedback"
+          },
+          "judge_feedback_rating": {
+            "type": "object",
+            "title": "Judge Feedback Rating"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "conversation_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conversation Id"
+          },
+          "ground_truth": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ground Truth"
+          },
+          "conv_prefix_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conv Prefix Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "db_id",
+          "conv_prefix",
+          "response",
+          "judge_feedback",
+          "human_feedback",
+          "judge_feedback_rating",
+          "created_at"
+        ],
+        "title": "DatasetAnnotationsDTO"
+      },
+      "DatasetAnnotationsRequestDTO": {
+        "properties": {
+          "conv_prefix": {
+            "items": {
+              "$ref": "#/components/schemas/ConversationMessage"
+            },
+            "type": "array",
+            "title": "Conv Prefix"
+          },
+          "response": {
+            "type": "string",
+            "title": "Response"
+          },
+          "judgements": {
+            "title": "Judgements",
+            "default": {}
+          },
+          "ground_truth": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ground Truth"
+          }
+        },
+        "type": "object",
+        "required": [
+          "conv_prefix",
+          "response"
+        ],
+        "title": "DatasetAnnotationsRequestDTO"
+      },
+      "DatasetByNameRequestDTO": {
+        "properties": {
+          "dataset_name": {
+            "type": "string",
+            "title": "Dataset Name"
+          },
+          "space_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Space Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "dataset_name",
+          "space_id"
+        ],
+        "title": "DatasetByNameRequestDTO"
+      },
+      "Function-Input": {
+        "properties": {
+          "arguments": {
+            "type": "string",
+            "title": "Arguments"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "arguments",
+          "name"
+        ],
+        "title": "Function"
+      },
+      "Function-Output": {
+        "properties": {
+          "arguments": {
+            "type": "string",
+            "title": "Arguments"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "arguments",
+          "name"
+        ],
+        "title": "Function"
+      },
+      "FunctionCall-Input": {
+        "properties": {
+          "arguments": {
+            "type": "string",
+            "title": "Arguments"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "arguments",
+          "name"
+        ],
+        "title": "FunctionCall"
+      },
+      "FunctionCall-Output": {
+        "properties": {
+          "arguments": {
+            "type": "string",
+            "title": "Arguments"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "arguments",
+          "name"
+        ],
+        "title": "FunctionCall"
+      },
+      "GetDatasetByNameResponseDTO": {
+        "properties": {
+          "dataset_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Dataset Id"
+          },
+          "dataset_annotations": {
+            "items": {
+              "$ref": "#/components/schemas/DatasetAnnotationsDTO"
+            },
+            "type": "array",
+            "title": "Dataset Annotations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "dataset_id",
+          "dataset_annotations"
+        ],
+        "title": "GetDatasetByNameResponseDTO"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ImageURL": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "detail": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "low",
+              "high"
+            ],
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "title": "ImageURL"
+      },
+      "InviteNewUser": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "role": {
+            "$ref": "#/components/schemas/RoleEnum"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "role"
+        ],
+        "title": "InviteNewUser"
+      },
+      "JSONSchema": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "schema": {
+            "type": "object",
+            "title": "Schema"
+          },
+          "strict": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Strict"
+          }
+        },
+        "type": "object",
         "required": [
           "name"
         ],
+        "title": "JSONSchema"
+      },
+      "JudgeBehaviorTypeEnum": {
+        "type": "string",
+        "enum": [
+          "safety",
+          "reliability",
+          "custom"
+        ],
+        "title": "JudgeBehaviorTypeEnum"
+      },
+      "JudgeCreateRequestDTO": {
+        "properties": {
+          "optimize_prompt": {
+            "type": "boolean",
+            "title": "Optimize Prompt"
+          },
+          "judge_values": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Judge Values"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "judge_behavior_type": {
+            "$ref": "#/components/schemas/JudgeBehaviorTypeEnum"
+          },
+          "model_name": {
+            "$ref": "#/components/schemas/JudgeModelTypeEnum"
+          },
+          "model_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Id"
+          },
+          "prompt_template": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt Template"
+          },
+          "space_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Space Id"
+          },
+          "dataset_annotation_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "title": "Dataset Annotation Ids",
+            "default": []
+          }
+        },
         "type": "object",
+        "required": [
+          "optimize_prompt",
+          "judge_values",
+          "name",
+          "judge_behavior_type",
+          "model_name",
+          "space_id"
+        ],
+        "title": "JudgeCreateRequestDTO"
+      },
+      "JudgeDashboardDTO": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "behavior_type": {
+            "$ref": "#/components/schemas/JudgeBehaviorTypeEnum"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "behavior_type"
+        ],
+        "title": "JudgeDashboardDTO"
+      },
+      "JudgeDatasetAnnotationRequest": {
+        "properties": {
+          "judge_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "title": "Judge Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "judge_ids"
+        ],
+        "title": "JudgeDatasetAnnotationRequest"
+      },
+      "JudgeModelTypeEnum": {
+        "type": "string",
+        "enum": [
+          "llama_guard",
+          "wild_guard",
+          "persona",
+          "collinear_guard",
+          "collinear_guard_classifier",
+          "prompted_model",
+          "veritas",
+          "lynx",
+          "custom"
+        ],
+        "title": "JudgeModelTypeEnum"
+      },
+      "MessageRoleEnum": {
+        "type": "string",
+        "enum": [
+          "user",
+          "assistant"
+        ],
+        "title": "MessageRoleEnum"
+      },
+      "Model": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "created": {
+            "type": "integer",
+            "title": "Created"
+          },
+          "object": {
+            "type": "string",
+            "enum": [
+              "model"
+            ],
+            "const": "model",
+            "title": "Object"
+          },
+          "owned_by": {
+            "type": "string",
+            "title": "Owned By"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "created",
+          "object",
+          "owned_by"
+        ],
+        "title": "Model"
+      },
+      "ModelList": {
+        "properties": {
+          "object": {
+            "type": "string",
+            "enum": [
+              "list"
+            ],
+            "const": "list",
+            "title": "Object"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Model"
+            },
+            "type": "array",
+            "title": "Data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "object",
+          "data"
+        ],
+        "title": "ModelList",
+        "description": "A wrapper of `Model` from [1] for FastAPI compatabillity.\n\n[1]: https://github.com/openai/openai-python/blob/main/src/openai/types/model.py"
+      },
+      "ModelTypeEnum": {
+        "type": "string",
+        "enum": [
+          "openai",
+          "anthropic"
+        ],
+        "title": "ModelTypeEnum"
+      },
+      "OpenAIConversationMessage": {
+        "properties": {
+          "role": {
+            "$ref": "#/components/schemas/MessageRoleEnum"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "title": "OpenAIConversationMessage"
+      },
+      "PromptTokensDetails": {
+        "properties": {
+          "audio_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audio Tokens"
+          },
+          "cached_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cached Tokens"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "PromptTokensDetails"
+      },
+      "ResponseFormatJSONObject": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "json_object"
+            ],
+            "const": "json_object",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "title": "ResponseFormatJSONObject"
+      },
+      "ResponseFormatJSONSchema": {
+        "properties": {
+          "json_schema": {
+            "$ref": "#/components/schemas/JSONSchema"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "json_schema"
+            ],
+            "const": "json_schema",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "json_schema",
+          "type"
+        ],
+        "title": "ResponseFormatJSONSchema"
+      },
+      "ResponseFormatText": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ],
+            "const": "text",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "title": "ResponseFormatText"
+      },
+      "RoleEnum": {
+        "type": "string",
+        "enum": [
+          "new_user",
+          "admin",
+          "user"
+        ],
+        "title": "RoleEnum"
+      },
+      "TopLogprob": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "title": "Token"
+          },
+          "bytes": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bytes"
+          },
+          "logprob": {
+            "type": "number",
+            "title": "Logprob"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "token",
+          "logprob"
+        ],
+        "title": "TopLogprob"
+      },
+      "User": {
         "properties": {
           "name": {
-            "description": "The name of the plant",
-            "type": "string"
+            "type": "string",
+            "title": "Name"
           },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
+          "email": {
+            "type": "string",
+            "title": "Email"
           },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
+          "role": {
+            "$ref": "#/components/schemas/RoleEnum"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "The UUID of the user"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Organization Id",
+            "description": "The UUID of the team this user belongs to"
+          },
+          "auth0_id": {
+            "type": "string",
+            "title": "Auth0 Id",
+            "description": "The Auth0 ID of the user"
           }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
+        },
         "type": "object",
+        "required": [
+          "name",
+          "email",
+          "role",
+          "auth0_id"
+        ],
+        "title": "User"
+      },
+      "ValidationError": {
         "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
           },
-          "message": {
-            "type": "string"
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
           }
-        }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
       }
     },
     "securitySchemes": {
-      "bearerAuth": {
+      "HTTPBearer": {
         "type": "http",
         "scheme": "bearer"
       }

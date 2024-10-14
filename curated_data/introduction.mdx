@@ -1,0 +1,55 @@
+---
+title: Curated Data
+description: The Curated Data Dashboard is a sophisticated tool designed for managing and evaluating conversational models within an organizational framework. This dashboard serves as a centralized platform where various parameters and metrics related to the performance of models can be assessed, curated, and monitored In this documentation, we will explore the core functionalities and components of the Judge Evaluation Dashboard, detailing their usage and significance in maintaining and enhancing conversational AI systems.
+
+---
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src='/images/curated_data_dashboard.png'
+/>
+## Key Features of the Judge Evaluation Dashboard
+
+### Evaluation Metrics Display
+At the top of the dashboard are several circular progress charts that display the evaluation metrics for the models being tested.
+Each chart represents different aspects of model performance,
+including the LLM judge outputs, human annotations.
+These metrics are crucial as they provide a quick visual assessment of the model's current operational status and its alignment with expected standards.
+
+### Query Console
+
+Below the metric charts is the Query Console.
+This feature allows users to perform specific searches or filter the data shown in the dashboard.
+User can type queries related to the conversational logs or data entries,
+facilitating efficient management by enabling quick access to relevant information.
+This console is instrumental in navigating through large volumes of data and pinpointing specific entries
+for detailed review or analysis. More details on query language [here](/flows/query_language).
+
+### Interactive Buttons
+
+Below the Query Console, a set of interactive buttons allows users to perform various operations:
+- **Run Judgements**: This button initiates the evaluation process where selected rows are judged by LLM judges,
+helping in assessing the model's decision-making capabilities and response appropriateness.
+
+
+- **Create Dataset**: Users can harness this functionality to compile selected rows into a structured dataset.
+This dataset can be used for further analysis, training new models, or enhancing the existing ones by providing them with real interaction data.
+
+- **Create Judge**: This option enables users to construct a custom judge setup based on human annotations.
+It allows for personalized assessment criteria to be embedded into the system,
+ensuring that the evaluations are aligned with specific organizational standards or objectives.
+
+### Data Table
+
+The central component of the dashboard is the Data Table.
+This table displays the annotations in a structured format,
+providing a comprehensive overview of the interactions between the model and users.
+
+The data table mainly consists of the following columns:
+- **ID**: A unique identifier for each entry in the table.
+- **Conversation Prefix**: The initial prompt or query that triggers the model's response.
+- **Response**: The generated output from the model in response to the conversation prefix.
+- **Judge Feedback**: The evaluation feedback provided by the LLM judge.
+- **Human Feedback**: The annotations provided by human evaluators, if available.
+
+

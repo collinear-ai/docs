@@ -8,7 +8,7 @@
   "favicon": "/images/collinearfavicon.svg",
   "colors": {
     "primary": "#F26124",
-    "light": "#70747B",
+    "light": "#F26124",
     "dark": "#F26124",
     "anchors": {
       "from": "#F26124",

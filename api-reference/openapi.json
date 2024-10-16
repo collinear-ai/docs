@@ -178,6 +178,92 @@
         }
       }
     },
+    "/api/v1/judge/safety": {
+      "post": {
+        "summary": "Judge Func",
+        "operationId": "judge_func_api_v1_judge_safety_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JudgeAnnotationDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JudgeOutputDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/judge/reliability": {
+      "post": {
+        "summary": "Judge Func Hallucination",
+        "operationId": "judge_func_hallucination_api_v1_judge_reliability_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JudgeAnnotationHallucinationDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JudgeOutputDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/judge/dataset-annotation/{dataset_annotation_id}": {
       "post": {
         "summary": "Run Judgement On Dataset Annotation",
@@ -2189,6 +2275,152 @@
         ],
         "title": "JSONSchema"
       },
+      "JudgeAnnotationDTO": {
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "title": "Model Name"
+          },
+          "nano_model_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "prompt",
+                  "refusal",
+                  "response"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nano Model Type"
+          },
+          "scoring_criteria": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/SafetyCriteria"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scoring Criteria"
+          },
+          "conversation": {
+            "items": {
+              "$ref": "#/components/schemas/ConversationMessage"
+            },
+            "type": "array",
+            "title": "Conversation"
+          },
+          "response": {
+            "$ref": "#/components/schemas/ConversationMessage"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_name",
+          "conversation",
+          "response"
+        ],
+        "title": "JudgeAnnotationDTO"
+      },
+      "JudgeAnnotationHallucinationDTO": {
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "title": "Model Name"
+          },
+          "type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "nli",
+                  "qa",
+                  "conversation"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          },
+          "context": {
+            "type": "string",
+            "title": "Context"
+          },
+          "conversation": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ConversationMessage"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conversation"
+          },
+          "response": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConversationMessage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "question": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Question"
+          },
+          "answer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Answer"
+          },
+          "claim": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Claim"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_name",
+          "context"
+        ],
+        "title": "JudgeAnnotationHallucinationDTO"
+      },
       "JudgeBehaviorTypeEnum": {
         "type": "string",
         "enum": [
@@ -2324,6 +2556,30 @@
           "custom"
         ],
         "title": "JudgeModelTypeEnum"
+      },
+      "JudgeOutputDTO": {
+        "properties": {
+          "judgement": {
+            "type": "integer",
+            "title": "Judgement"
+          },
+          "extra": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra"
+          }
+        },
+        "type": "object",
+        "required": [
+          "judgement"
+        ],
+        "title": "JudgeOutputDTO"
       },
       "MessageRoleEnum": {
         "type": "string",
@@ -2509,6 +2765,31 @@
           "user"
         ],
         "title": "RoleEnum"
+      },
+      "SafetyCriteria": {
+        "properties": {
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "examples": {
+            "items": {
+              "$ref": "#/components/schemas/ConversationMessage"
+            },
+            "type": "array",
+            "title": "Examples"
+          }
+        },
+        "type": "object",
+        "required": [
+          "score",
+          "description"
+        ],
+        "title": "SafetyCriteria"
       },
       "TopLogprob": {
         "properties": {

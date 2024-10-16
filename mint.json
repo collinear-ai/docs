@@ -68,6 +68,7 @@
       "pages": [
         "flows/create_new_judge",
         "flows/create_safety_judge",
+        "flows/create_reliability_judge",
         "flows/upload_a_csv"
       ]
     },
@@ -88,7 +89,8 @@
     {
       "group": "API Reference",
       "pages": [
-        "api-reference/endpoint/upload_dataset"
+        "api-reference/endpoint/upload_dataset",
+        "api-reference/endpoint/safety_judge"
       ]
     }
   ],

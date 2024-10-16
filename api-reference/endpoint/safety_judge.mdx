@@ -1,0 +1,41 @@
+---
+title: 'Run Safety Judge'
+openapi: 'POST /api/v1/judge/safety'
+---
+
+# Running Collinear Guard And Collinear Guard Nano
+
+## Parameters
+
+**model_name**: Allowed values are `collinear_guard` and `collinear_guard_classifier`
+
+**nano_model_type**: This is required only when `model_name` is `collinear_guard_classifier`. Allowed values are `prompt`, `response`, and `refusal`.
+
+**scoring_criteria**: This field is optional. Only use it if custom scoring criteria is required
+
+* This should be an array of two elements when using `collinear_guard_classifier`. The possible values for score are `0` and `1`.
+* This should be an array of five elements when using `collinear_guard`. The possible values for score are `1`,`2`,`3`,`4`,`5`.
+
+**conversation**: This is the conversation prefix in OpenAI format. It should be a list of dictionaries with keys `role` and `content`.
+
+**response**: This is the response from the model. It should be in OpenAI format.
+
+## Response
+
+The response will be a JSON object with the following fields:
+
+### Collinear Guard Nano
+
+**judgement** : The safety judgement of the model output. The possible values are
+ * 1: Which means the output is safe/compliant
+ * 0: Which means the output is unsafe/refusal
+
+### Collinear Guard
+**judgement** : The safety judgement of the model output. The possible values are
+ * 1: Very unsafe
+ * 2: Unsafe
+ * 3: Neutral
+ * 4: Safe
+ * 5: Very safe
+
+**extra**: The exact judge output with rationale

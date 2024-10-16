@@ -1,0 +1,135 @@
+---
+title: Create A Reliability Judge
+description: Use the Collinear AI Platform to create reliability judges.
+---
+
+# Introduction
+
+Reliability Judges help keep language models accurate by filtering out hallucinated content. They ensure that responses are:
+- accurate
+- factually correct
+- free from invented or fabricated information
+
+# Steps to Create a Reliability Judge
+
+## Select Reliability Judge
+To create Reliability Judges,
+you need to select 'Reliability' as the task type.
+Click on the `Reliability` radio button.
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_reliability_judge/select_reliability_judge.png"
+/>
+
+## Select Reliability Model
+
+After setting the task type, the next step is to choose the specific reliability model. We offer three primary models:
+
+1. **Lynx:** This is a [open source model](https://huggingface.co/PatronusAI/Llama-3-Patronus-Lynx-8B-Instruct) developed by Patronus AI, which uses sophisticated proprietary algorithms.
+
+2. **Prompted Model:** This is a closed source model, which uses sophisticated proprietary algorithms.
+An example of models that fall under this category includes the OpenAI and Claude models.
+
+2. **Veritas:** This is our state-of-the-art model specifically optimized for hallucination detection.
+It offers high accuracy and low latency.
+
+## Creating a Veritas judge
+The Veritas judge is designed to evaluate the factual correctness of model outputs, ensuring that the responses are accurate and free from hallucinated content.
+The responses are binary
+* `1`: Factually correct
+* `0`: Hallucinated content
+
+Once you select the Veritas judge, click on "Continue".
+
+### Configure RAG Details
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_reliability_judge/add_rag_details.png"
+/>
+To configure your RAG (Retrieval-Augmented Generation) endpoint, you'll need to provide the following details:
+
+- **RAG Host**: The host address of the RAG endpoint. This is where your requests will be sent.
+
+- **Context Engine API Key**: Your unique API key for authenticating requests to the RAG endpoint.
+
+- **Index**: The specific index within the RAG host that you wish to query.
+
+- **Namespace**: The namespace associated with your data in the RAG endpoint.
+
+- **Top K**: The number of top responses to retrieve and consider from the RAG endpoint. This helps determine how many relevant results to evaluate.
+
+Ensure you have all these details ready to successfully integrate with your RAG endpoint.
+
+### Set Judge Name
+
+Name your judge according to your preference and click on "Create Judge".
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_reliability_judge/set_judge_name_veritas.png"/>
+
+## Creating a Lynx judge
+The Lynx judge evaluates the factual correctness of model outputs, ensuring that the responses are accurate and free from hallucinated content.
+The responses are binary
+* `PASS`: Factually correct
+* `FAIL`: Hallucinated content
+
+It outputs a `reasoning` array which provides the reasoning behind the judgement.
+
+### Configure RAG Details
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_reliability_judge/add_rag_details.png"
+/>
+To configure your RAG (Retrieval-Augmented Generation) endpoint, you'll need to provide the following details:
+
+- **RAG Host**: The host address of the RAG endpoint. This is where your requests will be sent.
+
+- **Context Engine API Key**: Your unique API key for authenticating requests to the RAG endpoint.
+
+- **Index**: The specific index within the RAG host that you wish to query.
+
+- **Namespace**: The namespace associated with your data in the RAG endpoint.
+
+- **Top K**: The number of top responses to retrieve and consider from the RAG endpoint. This helps determine how many relevant results to evaluate.
+
+Ensure you have all these details ready to successfully integrate with your RAG endpoint.
+
+### Set Judge Name
+
+Name your judge according to your preference and click on "Create Judge".
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_reliability_judge/set_judge_name_lynx.png"/>
+
+## Creating a Prompted Model judge
+The **Prompted Model Judge** is designed to evaluate the factual correctness of model outputs, ensuring that responses are accurate and free from hallucinated content.
+The evaluation is based on the **Likert scale**, and the final output is determined according to the prompt template you provide.
+Once you select the Prompted Model judge, click on "Continue".
+
+### Configure Prompted Model Details
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_reliability_judge/configure_prompted_judge.png"
+/>
+To set up your Prompted Model Judge, you'll need to input the following details:
+
+- **Model**: Select the model for the judge. You may choose an existing model or create a new one.
+
+- **Prompt Template**: Define the template for the prompt used in evaluating model responses. You can customize this template according to your needs.
+
+- **Context Engine API Key**: Enter your API key for authenticating interactions with the Context Engine.
+
+- **Index**: Specify the index within the Context Engine you want to query.
+
+- **Namespace**: Provide the namespace linked with your data in the Context Engine.
+
+- **Top K**: Decide the number of top responses to retrieve from the Context Engine. This helps in evaluating the most pertinent results.
+
+Ensure that all these details are in place for seamless integration with your Prompted Model Judge.
+
+### Set Judge Name
+
+Name your judge according to your preference and proceed by clicking on **Create Judge**.
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_reliability_judge/set_judge_name_lynx.png"/>

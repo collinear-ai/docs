@@ -90,7 +90,8 @@
       "group": "API Reference",
       "pages": [
         "api-reference/endpoint/upload_dataset",
-        "api-reference/endpoint/safety_judge"
+        "api-reference/endpoint/safety_judge",
+        "api-reference/endpoint/reliability_judge"
       ]
     }
   ],

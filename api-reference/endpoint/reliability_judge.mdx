@@ -1,0 +1,44 @@
+---
+title: 'Run Reliability Judge'
+openapi: 'POST /api/v1/judge/reliability'
+---
+# Running Veritas
+
+## Parameters
+
+**model_name**: Allowed values are `veritas`
+
+**type**: Allowed values are
+* `qa`: Question-Answering
+* `nli`: Natural Language Inference
+* `conversation`: Conversation
+
+**context**: This is the context document for the judge. It contains the document which is used to evaluate whether
+the query is hallucinated or not.
+
+### Conversation
+**conversation**: This is required only when `type` is `conversation`.
+This is the conversation prefix in OpenAI format. It should be a list of dictionaries with keys `role` and `content`.
+
+**response**: This is required only when `type` is `conversation` .This is the response from the model. It should be in OpenAI format.
+
+### QA
+**question**: This is required only when `type` is `qa`.
+
+**answer**: This is required only when `type` is `qa`.
+
+### NLI
+**claim**: This is required only when `type` is `nli`.
+
+## Response
+
+
+The response will be a JSON object with the following fields:
+
+### Veritas
+
+**judgement** : The reliability judgement of the model output. The possible values are
+ * **1**: Which means the output is reliable
+ * **0**: Which means the output is unreliable
+
+**extra**: The output with label and score

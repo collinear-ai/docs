@@ -60,7 +60,8 @@
       "group": "Get Started",
       "pages": [
         "essentials/create_org",
-        "essentials/create_space"
+        "essentials/create_space",
+        "flows/get_api_key"
       ]
     },
     {

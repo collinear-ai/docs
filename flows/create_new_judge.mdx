@@ -12,7 +12,7 @@ Judges are used in various contexts such as competitions, assessments, and autom
 - Detects harmful, inappropriate, or unsafe content such as offensive language, hate speech, or personal information breaches.
 - Often used in platforms where user interactions or submissions need to be moderated for safe consumption.
 
-2. Hallucination Judge
+2. Reliability Judge
 - Assesses the factual correctness of a response.
 - Detects whether the response contains invented or fabricated information, a common issue in LLM-generated content.
 - Typically used in environments where factual accuracy is critical, such as in educational settings, research, or content generation.
@@ -70,16 +70,18 @@ Understanding each type will help you select the most appropriate judge for your
 - **Regulatory Compliance**: Ensuring that generated content complies with legal standards and industry regulations.
 - **User Protection**: Preventing the dissemination of violent, or harmful information that could distress users.
 
-## Hallucination Judges
+Click [here](/flows/create_safety_judge) for more information on adding a Safety Judge.
+## Reliability Judges
 
-**Hallucination Judges** focus on detecting factual inaccuracies in generated responses. Language models sometimes produce information that appears plausible but is incorrect or fabricated—this phenomenon is known as "hallucination."
+**Reliability Judges** focus on detecting factual inaccuracies in generated responses. Language models sometimes produce information that appears plausible but is incorrect or fabricated—this phenomenon is known as "hallucination."
 
-### Use Cases for Hallucination Judges
+### Use Cases for Reliability Judges
 
 - **Information Services**: Providing accurate data in applications like virtual assistants or information kiosks.
 - **Educational Content**: Ensuring correctness in learning materials or explanations.
 - **News and Reports**: Delivering reliable information in journalism or analytical reports.
 
+Click [here](/flows/create_reliability_judge) for more information on adding a Reliability Judge.
 ## Custom Judges
 
 **Custom Judges** offer the flexibility to define evaluation criteria tailored to your specific needs. They are ideal when standard safety or factual correctness checks are insufficient for your application.
@@ -90,12 +92,4 @@ Understanding each type will help you select the most appropriate judge for your
 - **Brand Voice and Tone**: Ensuring that responses align with your organization's branding guidelines.
 - **Creative and Stylistic Requirements**: Evaluating originality, style, or adherence to a particular writing convention.
 
-<img
-    style={{borderRadius: '0.5rem'}}
-    src='https://webresources-s3.s3.amazonaws.com/flows/create_judge/creating_judge_flow_1.png'
-/>
----
-<a href={'/flows/create_safety_judge'}>
-    Here is additional information on creating a Safety Judge.
-</a>
-
+Click [here](/flows/create_custom_judge) for more information on adding a Custom Judge.

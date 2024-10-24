@@ -1,0 +1,82 @@
+---
+title: Add A Custom Judge
+description: Use the Collinear AI Platform to create custom judges.
+---
+# Introduction
+
+Custom Judges help evaluate responses based on specific criteria or use cases. They are tailored to unique evaluation requirements, industry standards, or user-defined metrics. Custom Judges are versatile and can be designed to assess responses in various contexts, such as competitions, assessments, or automated content moderation.
+
+They ensure that response are:
+- aligned with specific evaluation criteria
+- adhere to specific standard
+- meet user-defined metrics
+
+
+You would have to initially [provide some human annotations](/flows/give_human_annotations) to train the custom judge.
+The custom judge will then be created based on the annotations provided.
+
+# Steps to Create a Custom Judge
+
+## Select Annotations In Curated Data
+Go to the [Curated Data](/flows/curated_data) section and select the annotations you want to use to train the custom judge.
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_custom_judge/select_curated_rows.png"
+/>
+
+## Click on Create Judge
+Click on the "Create Judge" button to start the process of creating a new judge.
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_custom_judge/click_create_judge.png"
+/>
+
+## Select Annotations To Use
+Clicking on the "Create Judge" button will open a modal where you can select the type of annotations.
+
+- Judgement Type: Select the type of judgement you want to use:
+  * Human Feedback - Use human annotations
+  * Judge Feedback - Use AI annotations
+- Scoring Criteria: Select the type of scoring criteria you want to use:
+    This auto populates based on the judgement type selected and scoring criteria available in all the selected rows.
+    It could be in the form of `binary_user`, `likert_user`,`binary_avg`, etc.
+    CLick on "Submit" to continue.
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_custom_judge/click_submit_modal.png"
+/>
+
+## Configure Custom Judge
+The next step is to configure the custom judge. You will provide the following details:
+- **Model** - Select the model you want to use for the custom judge.
+- **Prompt** -  We provide two options:
+  * **Write your own Prompt** - You can choose to write your own prompt.
+  Fill in the instructions and the  prompt template is default to use your examples as few shot
+  <img style={{borderRadius: '0.5rem'}} src="/images/create_custom_judge/write_instructions.png" />
+
+
+  * **Auto Generate A Prompt** - You can specify the list of values based on your human/judge annotations.
+  The instructions will be generated based on the examples provided.
+    As you could see in the image below, the prompt is auto generated based on the examples provided.
+    Fill in values based on judgement type selected: Eg. -1,1 for binary
+    And Click on the "Generate Prompt" button.
+    <img style={{borderRadius: '0.5rem'}} src="/images/create_custom_judge/auto_generate_prompt.png" />
+
+So now we have the prompt in place!
+Click on "Continue" to proceed.
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_custom_judge/click_continue.png" />
+
+
+## Add Judge Name
+Name your judge according to your preference and click on "Create Judge".
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_custom_judge/click_final_create_judge.png"
+/>
+
+## Judge Created
+Your custom judge has been successfully created. You can now view, edit, test, or delete the judge from the Judges Dashboard.

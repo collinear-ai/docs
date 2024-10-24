@@ -70,6 +70,7 @@
         "flows/create_new_judge",
         "flows/create_safety_judge",
         "flows/create_reliability_judge",
+        "flows/create_custom_judge",
         "flows/upload_a_csv"
       ]
     },

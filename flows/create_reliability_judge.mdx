@@ -18,7 +18,7 @@ you need to select 'Reliability' as the task type.
 Click on the `Reliability` radio button.
 <img
     style={{borderRadius: '0.5rem'}}
-    src="/images/create_reliability_judge/select_reliability_judge.png"
+    src="/images/select_reliability_judge.png"
 />
 
 ## Select Reliability Model
@@ -44,7 +44,7 @@ Once you select the Veritas judge, click on "Continue".
 ### Configure RAG Details
 <img
     style={{borderRadius: '0.5rem'}}
-    src="/images/create_reliability_judge/add_rag_details.png"
+    src="/images/add_rag_details.png"
 />
 To configure your RAG (Retrieval-Augmented Generation) endpoint, you'll need to provide the following details:
 
@@ -65,7 +65,7 @@ Ensure you have all these details ready to successfully integrate with your RAG 
 Name your judge according to your preference and click on "Create Judge".
 <img
     style={{borderRadius: '0.5rem'}}
-    src="/images/create_reliability_judge/set_judge_name_veritas.png"/>
+    src="/images/set_judge_name_reliability.png"/>
 
 ## Creating a Lynx judge
 The Lynx judge evaluates the factual correctness of model outputs, ensuring that the responses are accurate and free from hallucinated content.
@@ -73,12 +73,17 @@ The responses are binary
 * `PASS`: Factually correct
 * `FAIL`: Hallucinated content
 
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_lunx_judge.png"
+/>
+
 It outputs a `reasoning` array which provides the reasoning behind the judgement.
 
 ### Configure RAG Details
 <img
     style={{borderRadius: '0.5rem'}}
-    src="/images/create_reliability_judge/add_rag_details.png"
+    src="/images/add_rag_details.png"
 />
 To configure your RAG (Retrieval-Augmented Generation) endpoint, you'll need to provide the following details:
 
@@ -99,7 +104,7 @@ Ensure you have all these details ready to successfully integrate with your RAG 
 Name your judge according to your preference and click on "Create Judge".
 <img
     style={{borderRadius: '0.5rem'}}
-    src="/images/create_reliability_judge/set_judge_name_lynx.png"/>
+    src="/images/create_new_judge_name_reliability.png"/>
 
 ## Creating a Prompted Model judge
 The **Prompted Model Judge** is designed to evaluate the factual correctness of model outputs, ensuring that responses are accurate and free from hallucinated content.
@@ -109,7 +114,7 @@ Once you select the Prompted Model judge, click on "Continue".
 ### Configure Prompted Model Details
 <img
     style={{borderRadius: '0.5rem'}}
-    src="/images/create_reliability_judge/configure_prompted_judge.png"
+    src="/images/create_prompted_model_reliability.png"
 />
 To set up your Prompted Model Judge, you'll need to input the following details:
 
@@ -132,4 +137,4 @@ Ensure that all these details are in place for seamless integration with your Pr
 Name your judge according to your preference and proceed by clicking on **Create Judge**.
 <img
     style={{borderRadius: '0.5rem'}}
-    src="/images/create_reliability_judge/set_judge_name_lynx.png"/>
+    src="/images/set_judge_name_reliability_.png"/>

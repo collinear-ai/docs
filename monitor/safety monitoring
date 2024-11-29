@@ -1,0 +1,47 @@
+---
+title: Safety Monitoring Dahhboard
+description: Collinear  empowers your business with dashboard that tracks key metrics to ensure your AI performs safely, accurately, and reliably
+---
+The safety dashbaord allows you to monitor your model's performance and reliability with a comprehensive dashboard tracking key metrics, critical summaries, and live data insights
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/safetydashboard.png"
+/>
+
+# Key Metrics Overview
+1. Prompt Safety Violation Rate: % of times user sends unsafe requests or instructions.
+2. Response Safety Violation Rate: % of times the AI sends unsafe response to the user
+3. False Refusal Rate: % of times the AI refuses to follow a safe request or instruction
+
+The colours correspond to the following values:
+
+Colors:
+Red --> >5%
+Orange --> 1% to 5%
+Green --> <1%
+
+Response
+Red --> >3%
+Orange --> 1% to 3%
+Green --> <1%
+
+False refusal rate:
+Red --> >2%
+Orange --> 0.5-2%
+Green --> <0.5
+
+# Critical Summaries
+The Critical Summaries gives you insights about:
+1. Total Queries vs Flagged Queries graph over time
+2. Risk Levels 
+3. Flagged Categories
+
+# Live Data
+The Live Data table gives you data about 
+1. ID
+2. Conversation Prefix
+3. Assistant Response
+4. Judge Output	
+5. Feedback
+6. Categories

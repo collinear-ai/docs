@@ -1,0 +1,53 @@
+---
+title: Reliability Monitoring
+description: Use the Collinear AI Reliability Monitoring to view a dashboard that tracks key metrics to monitor your AI’s consistency, accuracy, and performance.
+---
+The reliability dashbaord allows you to monitor your model's performance and reliability with a comprehensive dashboard tracking key metrics, critical summaries, and live data insights
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/preventativecontrol.png"
+/>
+
+# Key Metrics Overview
+1. Total Volume: 
+2. Reliability Index: how consistently your AI solution performs accurately and without failure over time.
+3. Response Safety Violation Rate: % of times your AI solution provides incorrect or misleading information.
+4. Contextual Error Rate: how often your AI provides incorrect responses based on the context of a conversation.
+
+The colors correspond to the following values:
+
+Colors:
+Red --> >5%
+Orange --> 1% to 5%
+Green --> <1%
+
+Response
+Red --> >3%
+Orange --> 1% to 3%
+Green --> <1%
+
+False refusal rate:
+Red --> >2%
+Orange --> 0.5-2%
+Green --> <0.5
+
+# Critical Summaries
+The Critical Summaries gives you Total Queries vs Flagged Queries graph over time
+
+# Hallucination Categories
+The Hallucination Categories gives you insight into the types of hallucination, namely:
+- Logical 
+- Temporal
+- Entity
+- Contextual
+- Other
+
+# Live Data
+The Live Data table gives you data about 
+1. ID
+2. Conversation Prefix
+3. Assistant Response
+4. Judge Output	
+5. Feedback
+6. Categories

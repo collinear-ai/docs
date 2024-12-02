@@ -70,7 +70,8 @@
     {
       "group": "Judge",
       "pages": [
-        "essentials/veritas_judge",
+        "flows/collinear_judges/types_of_judges",
+        "flows/collinear_judges/veritas_judge",
         "flows/create_new_judge",
         "flows/create_safety_judge",
         "flows/create_reliability_judge",
@@ -84,6 +85,13 @@
         "flows/upload_dataset",
         "flows/run_judge_on_dataset",
         "flows/run_conversation_model_on_dataset"
+      ]
+    },
+    {
+      "group": "Monitor",
+      "pages": [
+        "monitor/reliability_monitoring",
+        "monitor/safety_monitoring"
       ]
     },
     {

@@ -72,6 +72,7 @@
       "pages": [
         "flows/collinear_judges/types_of_judges",
         "flows/collinear_judges/veritas_judge",
+        "flows/create_collinear_flex_judge",
         "flows/create_new_judge",
         "flows/create_safety_judge",
         "flows/create_reliability_judge",

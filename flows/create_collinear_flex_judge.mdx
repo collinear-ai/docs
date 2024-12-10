@@ -1,0 +1,82 @@
+---
+title: Creating a Collinear Flex Judge
+description: Use the Collinear AI Platform to create Collinear Flex judges.
+---
+# Introduction
+
+Collinear Flex Judges help evaluate responses based on specific criteria or use cases. They are tailored to unique evaluation requirements, industry standards, or user-defined metrics. Collinear Flex Judges are versatile and can be designed to assess responses in various contexts, such as competitions, assessments, or automated content moderation.
+
+They ensure that response are:
+- aligned with specific evaluation criteria
+- adhere to specific standard
+- meet user-defined metrics
+
+
+You would have to initially [provide some human annotations](/flows/give_human_annotations) to train the custom judge.
+The custom judge will then be created based on the annotations provided.
+
+# Steps to Create a Custom Judge
+
+## Select Annotations In Curated Data
+Go to the [Curated Data](/flows/curated_data) section and select the annotations you want to use to train the custom judge.
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_custom_judge/select_curated_rows.png"
+/>
+
+## Click on Create Judge
+Click on the "Create Judge" button to start the process of creating a new judge.
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_custom_judge/click_create_judge.png"
+/>
+
+## Select Annotations To Use
+Clicking on the "Create Judge" button will open a modal where you can select the type of annotations.
+
+- Judge Type: Select the type of judgement you want to use:
+  * Collinear Flex - Use Collinear Flex Judge
+  * Prompted Model - Use Other Prompted Models
+- Judgement Type: Select the type of judgement you want to use:
+  * Human Feedback - Use human annotations
+  * Judge Feedback - Use AI annotations
+- Scoring Criteria: Select the type of scoring criteria you want to use:
+    This auto populates based on the judgement type selected and scoring criteria available in all the selected rows.
+    It could be in the form of `binary_user`, `likert_user`,`binary_avg`, etc.
+    CLick on "Submit" to continue.
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_collinear_flex_judge/collinear_flex_modal.png"
+/>
+
+## Configure Custom Judge
+The next step is to configure the custom judge. You will provide the following details:
+- **Prompt** -  We provide two options:
+  * **Vanilla** - You can choose to use off the shelf Collinear Flex Judge. This judge is more suited on safety.
+  <img style={{borderRadius: '0.5rem'}} src="/images/create_collinear_flex_judge/vanilla_flex.png" />
+
+
+  * **Auto Generate Scoring Criteria** -
+  The instructions will be generated based on the examples provided.
+    The  scoring criteria is auto generated based on the examples provided.
+    And Click on the "Generate Prompt" button.
+    <img style={{borderRadius: '0.5rem'}} src="/images/create_collinear_flex_judge/generate_sc.png" />
+
+So now we have the configuration in place!
+Click on "Continue" to proceed.
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_custom_judge/click_continue.png" />
+
+
+## Add Judge Name
+Name your judge according to your preference and click on "Create Judge".
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_custom_judge/click_final_create_judge.png"
+/>
+
+## Judge Created
+Your Collinear Flex judge has been successfully created. You can now view, edit, test, or delete the judge from the Judges Dashboard.

@@ -186,7 +186,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JudgeAnnotationDTO"
+                "$ref": "#/components/schemas/JudgeSafetyRequestDTO"
               }
             }
           },
@@ -405,10 +405,51 @@
         ]
       }
     },
+    "/api/v1/judge/conversation": {
+      "post": {
+        "summary": "Fetch Judgement For Conversation",
+        "operationId": "fetch_judgement_for_conversation_api_v1_judge_conversation_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JudgementConversationReqInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/judge/upload/{judge_id}": {
       "post": {
-        "summary": "Upload Conversation Csv",
-        "operationId": "upload_conversation_csv_api_v1_judge_upload__judge_id__post",
+        "summary": "Upload Conversation Csv Or Json",
+        "operationId": "upload_conversation_csv_or_json_api_v1_judge_upload__judge_id__post",
         "security": [
           {
             "HTTPBearer": []
@@ -431,7 +472,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/Body_upload_conversation_csv_api_v1_judge_upload__judge_id__post"
+                "$ref": "#/components/schemas/Body_upload_conversation_csv_or_json_api_v1_judge_upload__judge_id__post"
               }
             }
           }
@@ -456,6 +497,50 @@
             }
           }
         }
+      }
+    },
+    "/api/v1/judge/create/sdk": {
+      "post": {
+        "summary": "Add New Judge Sdk",
+        "operationId": "add_new_judge_sdk_api_v1_judge_create_sdk_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JudgeCreateSdkRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Add New Judge Sdk Api V1 Judge Create Sdk Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/judge/": {
@@ -551,6 +636,159 @@
         }
       }
     },
+    "/api/v1/curated_data/space/{space_id}/new": {
+      "get": {
+        "summary": "Get Dataset Annotations By Space Id",
+        "operationId": "get_dataset_annotations_by_space_id_api_v1_curated_data_space__space_id__new_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "space_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Space Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DatasetAnnotationsNewDTO"
+                  },
+                  "title": "Response Get Dataset Annotations By Space Id Api V1 Curated Data Space  Space Id  New Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/curated_data/dataset/{dataset_id}": {
+      "get": {
+        "summary": "Dataset Annotations By Dataset Id",
+        "operationId": "dataset_annotations_by_dataset_id_api_v1_curated_data_dataset__dataset_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Dataset Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DatasetAnnotationsNewDTO"
+                  },
+                  "title": "Response Dataset Annotations By Dataset Id Api V1 Curated Data Dataset  Dataset Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/curated_data/space/{space_id}/upload": {
+      "post": {
+        "summary": "Upload Dataset Annotations",
+        "operationId": "upload_dataset_annotations_api_v1_curated_data_space__space_id__upload_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "space_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Space Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_dataset_annotations_api_v1_curated_data_space__space_id__upload_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/dataset/name": {
       "post": {
         "summary": "Get Dataset Annotations By Space Id",
@@ -614,6 +852,49 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "$ref": "#/components/schemas/CreateDatasetResponseDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/dataset/upload": {
+      "post": {
+        "summary": "Upload New Dataset",
+        "operationId": "upload_new_dataset_api_v1_dataset_upload_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_new_dataset_api_v1_dataset_upload_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
                   "$ref": "#/components/schemas/ApiResponse"
                 }
               }
@@ -635,6 +916,49 @@
             "HTTPBearer": []
           }
         ]
+      }
+    },
+    "/api/v1/dataset/{dataset_id}/download": {
+      "get": {
+        "summary": "Download Json For Evaluation",
+        "operationId": "download_json_for_evaluation_api_v1_dataset__dataset_id__download_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Dataset Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/model/": {
@@ -660,6 +984,525 @@
                   "type": "string",
                   "title": "Response Add New Model Api V1 Model  Post"
                 }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/model/{model_id}": {
+      "get": {
+        "summary": "Get Model By Id",
+        "operationId": "get_model_by_id_api_v1_model__model_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "model_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Model Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelResponseDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/model/inference": {
+      "post": {
+        "summary": "Run Model For Inference",
+        "operationId": "run_model_for_inference_api_v1_model_inference_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunInferenceRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Run Model For Inference Api V1 Model Inference Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/model/logs": {
+      "post": {
+        "summary": "Sdk Logs",
+        "operationId": "sdk_logs_api_v1_model_logs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogsAdditionRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Sdk Logs Api V1 Model Logs Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/synth_data/{synth_data_id}": {
+      "get": {
+        "summary": "Trigger Evaluation",
+        "operationId": "trigger_evaluation_api_v1_synth_data__synth_data_id__get",
+        "parameters": [
+          {
+            "name": "synth_data_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Synth Data Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/synth_data/generate/{model_id}/{n}": {
+      "post": {
+        "summary": "Generate Data",
+        "operationId": "generate_data_api_v1_synth_data_generate__model_id___n__post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "model_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Model Id"
+            }
+          },
+          {
+            "name": "n",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "N"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_generate_data_api_v1_synth_data_generate__model_id___n__post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/synth_data/generate": {
+      "post": {
+        "summary": "Generate Data From Body",
+        "operationId": "generate_data_from_body_api_v1_synth_data_generate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SynthDataGenerateRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SynthDataGenerateResponseDTO"
+                  },
+                  "type": "array",
+                  "title": "Response Generate Data From Body Api V1 Synth Data Generate Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/synth_data/{synth_data_id}/download": {
+      "get": {
+        "summary": "Download Json For Evaluation",
+        "operationId": "download_json_for_evaluation_api_v1_synth_data__synth_data_id__download_get",
+        "parameters": [
+          {
+            "name": "synth_data_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Synth Data Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/evaluation/{evaluation_id}": {
+      "get": {
+        "summary": "Trigger Evaluation",
+        "operationId": "trigger_evaluation_api_v1_evaluation__evaluation_id__get",
+        "parameters": [
+          {
+            "name": "evaluation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Evaluation Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/evaluation/{evaluation_id}/download": {
+      "get": {
+        "summary": "Download Json For Evaluation",
+        "operationId": "download_json_for_evaluation_api_v1_evaluation__evaluation_id__download_get",
+        "parameters": [
+          {
+            "name": "evaluation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Evaluation Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/evaluation/compare/judge": {
+      "post": {
+        "summary": "Get Compare Rows Responses For Same Dataset",
+        "operationId": "get_compare_rows_responses_for_same_dataset_api_v1_evaluation_compare_judge_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompareEvaluationRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CompareEvaluationSameDatasetResponseTypeDTO"
+                  },
+                  "type": "array",
+                  "title": "Response Get Compare Rows Responses For Same Dataset Api V1 Evaluation Compare Judge Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/evaluation/compare/dataset": {
+      "post": {
+        "summary": "Get Compare Rows Response For Same Judge",
+        "operationId": "get_compare_rows_response_for_same_judge_api_v1_evaluation_compare_dataset_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompareEvaluationRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CompareEvaluationSameDatasetResponseTypeDTO"
+                  },
+                  "type": "array",
+                  "title": "Response Get Compare Rows Response For Same Judge Api V1 Evaluation Compare Dataset Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/logs/veritas/download": {
+      "post": {
+        "summary": "Download Json For Evaluation",
+        "operationId": "download_json_for_evaluation_api_v1_logs_veritas_download_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DownloadVeritasLogsRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           },
@@ -854,6 +1697,18 @@
           "message": {
             "type": "string",
             "title": "Message"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data",
+            "default": {}
           }
         },
         "type": "object",
@@ -862,7 +1717,20 @@
         ],
         "title": "ApiResponse"
       },
-      "Body_upload_conversation_csv_api_v1_judge_upload__judge_id__post": {
+      "Audio": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "title": "Audio"
+      },
+      "Body_generate_data_api_v1_synth_data_generate__model_id___n__post": {
         "properties": {
           "file": {
             "type": "string",
@@ -874,7 +1742,21 @@
         "required": [
           "file"
         ],
-        "title": "Body_upload_conversation_csv_api_v1_judge_upload__judge_id__post"
+        "title": "Body_generate_data_api_v1_synth_data_generate__model_id___n__post"
+      },
+      "Body_upload_conversation_csv_or_json_api_v1_judge_upload__judge_id__post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_conversation_csv_or_json_api_v1_judge_upload__judge_id__post"
       },
       "Body_upload_curated_data_api_v1_judge_upload_curated_data_post": {
         "properties": {
@@ -889,6 +1771,50 @@
           "file"
         ],
         "title": "Body_upload_curated_data_api_v1_judge_upload_curated_data_post"
+      },
+      "Body_upload_dataset_annotations_api_v1_curated_data_space__space_id__upload_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_dataset_annotations_api_v1_curated_data_space__space_id__upload_post"
+      },
+      "Body_upload_new_dataset_api_v1_dataset_upload_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          },
+          "dataset_name": {
+            "type": "string",
+            "title": "Dataset Name"
+          },
+          "space_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Space Id"
+          },
+          "dataset_type": {
+            "type": "string",
+            "title": "Dataset Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file",
+          "dataset_name",
+          "space_id",
+          "dataset_type"
+        ],
+        "title": "Body_upload_new_dataset_api_v1_dataset_upload_post"
       },
       "ChatCompletion": {
         "properties": {
@@ -977,6 +1903,16 @@
             "const": "assistant",
             "title": "Role"
           },
+          "audio": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Audio"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "content": {
             "anyOf": [
               {
@@ -1040,6 +1976,35 @@
         ],
         "title": "ChatCompletionAssistantMessageParam"
       },
+      "ChatCompletionAudio": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "data": {
+            "type": "string",
+            "title": "Data"
+          },
+          "expires_at": {
+            "type": "integer",
+            "title": "Expires At"
+          },
+          "transcript": {
+            "type": "string",
+            "title": "Transcript"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "data",
+          "expires_at",
+          "transcript"
+        ],
+        "title": "ChatCompletionAudio"
+      },
       "ChatCompletionContentPartImageParam": {
         "properties": {
           "image_url": {
@@ -1060,6 +2025,27 @@
           "type"
         ],
         "title": "ChatCompletionContentPartImageParam"
+      },
+      "ChatCompletionContentPartInputAudioParam": {
+        "properties": {
+          "input_audio": {
+            "$ref": "#/components/schemas/InputAudio"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "input_audio"
+            ],
+            "const": "input_audio",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "input_audio",
+          "type"
+        ],
+        "title": "ChatCompletionContentPartInputAudioParam"
       },
       "ChatCompletionContentPartRefusalParam": {
         "properties": {
@@ -1104,6 +2090,42 @@
           "type"
         ],
         "title": "ChatCompletionContentPartTextParam"
+      },
+      "ChatCompletionDeveloperMessageParam": {
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ChatCompletionContentPartTextParam"
+                },
+                "type": "array"
+              }
+            ],
+            "title": "Content"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "developer"
+            ],
+            "const": "developer",
+            "title": "Role"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content",
+          "role"
+        ],
+        "title": "ChatCompletionDeveloperMessageParam"
       },
       "ChatCompletionFunctionMessageParam": {
         "properties": {
@@ -1170,6 +2192,16 @@
             ],
             "const": "assistant",
             "title": "Role"
+          },
+          "audio": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ChatCompletionAudio"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "function_call": {
             "anyOf": [
@@ -1385,6 +2417,9 @@
                     },
                     {
                       "$ref": "#/components/schemas/ChatCompletionContentPartImageParam"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ChatCompletionContentPartInputAudioParam"
                     }
                   ]
                 },
@@ -1488,11 +2523,109 @@
         "type": "object",
         "title": "ChoiceLogprobs"
       },
+      "CompareEvaluationRequestDTO": {
+        "properties": {
+          "evaluation_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "title": "Evaluation Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "evaluation_ids"
+        ],
+        "title": "CompareEvaluationRequestDTO"
+      },
+      "CompareEvaluationSameDatasetResponseTypeDTO": {
+        "properties": {
+          "rowId": {
+            "type": "string",
+            "title": "Rowid"
+          },
+          "convPrefix": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Convprefix"
+          },
+          "response": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response"
+          },
+          "context": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context"
+          },
+          "eval1": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EvalTypeDTO"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "eval2": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EvalTypeDTO"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "eval3": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EvalTypeDTO"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "rowId",
+          "convPrefix",
+          "response",
+          "context",
+          "eval1",
+          "eval2",
+          "eval3"
+        ],
+        "title": "CompareEvaluationSameDatasetResponseTypeDTO"
+      },
       "CompletionCreateParams": {
         "properties": {
           "messages": {
             "items": {
               "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ChatCompletionDeveloperMessageParam"
+                },
                 {
                   "$ref": "#/components/schemas/ChatCompletionSystemMessageParam"
                 },
@@ -1700,6 +2833,17 @@
       },
       "CompletionTokensDetails": {
         "properties": {
+          "accepted_prediction_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accepted Prediction Tokens"
+          },
           "audio_tokens": {
             "anyOf": [
               {
@@ -1721,6 +2865,17 @@
               }
             ],
             "title": "Reasoning Tokens"
+          },
+          "rejected_prediction_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rejected Prediction Tokens"
           }
         },
         "additionalProperties": true,
@@ -1859,6 +3014,24 @@
         ],
         "title": "ConversationMessage"
       },
+      "ConversationMessageDTO": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "title": "ConversationMessageDTO"
+      },
       "ConversationUpload": {
         "properties": {
           "space_id": {
@@ -1880,6 +3053,25 @@
           "conversations"
         ],
         "title": "ConversationUpload"
+      },
+      "CreateDatasetResponseDTO": {
+        "properties": {
+          "dataset_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Dataset Id"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "dataset_id",
+          "message"
+        ],
+        "title": "CreateDatasetResponseDTO"
       },
       "CreateNewDatasetRequestDTO": {
         "properties": {
@@ -2035,6 +3227,94 @@
         ],
         "title": "DatasetAnnotationsDTO"
       },
+      "DatasetAnnotationsNewDTO": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "dbId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Dbid"
+          },
+          "convPrefix": {
+            "items": {
+              "$ref": "#/components/schemas/ConversationMessage"
+            },
+            "type": "array",
+            "title": "Convprefix"
+          },
+          "response": {
+            "type": "string",
+            "title": "Response"
+          },
+          "judgeFeedback": {
+            "type": "object",
+            "title": "Judgefeedback"
+          },
+          "humanFeedback": {
+            "type": "object",
+            "title": "Humanfeedback"
+          },
+          "judgeFeedbackRating": {
+            "type": "object",
+            "title": "Judgefeedbackrating"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "conversationId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conversationid"
+          },
+          "groundTruth": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Groundtruth"
+          },
+          "convPrefixId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Convprefixid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "dbId",
+          "convPrefix",
+          "response",
+          "judgeFeedback",
+          "humanFeedback",
+          "judgeFeedbackRating",
+          "createdAt"
+        ],
+        "title": "DatasetAnnotationsNewDTO"
+      },
       "DatasetAnnotationsRequestDTO": {
         "properties": {
           "conv_prefix": {
@@ -2089,6 +3369,105 @@
           "space_id"
         ],
         "title": "DatasetByNameRequestDTO"
+      },
+      "DownloadVeritasLogsRequestDTO": {
+        "properties": {
+          "start_ts": {
+            "type": "string",
+            "title": "Start Ts"
+          },
+          "end_ts": {
+            "type": "string",
+            "title": "End Ts"
+          },
+          "space_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Space Id"
+          },
+          "selected_rows": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Selected Rows",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "start_ts",
+          "end_ts",
+          "space_id"
+        ],
+        "title": "DownloadVeritasLogsRequestDTO"
+      },
+      "EvalTypeDTO": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "judgement": {
+            "type": "integer",
+            "title": "Judgement"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "rationale": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rationale"
+          },
+          "raw": {
+            "title": "Raw"
+          },
+          "response": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "judgement",
+          "category",
+          "rationale",
+          "raw",
+          "response"
+        ],
+        "title": "EvalTypeDTO"
       },
       "Function-Input": {
         "properties": {
@@ -2221,6 +3600,28 @@
         ],
         "title": "ImageURL"
       },
+      "InputAudio": {
+        "properties": {
+          "data": {
+            "type": "string",
+            "title": "Data"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "wav",
+              "mp3"
+            ],
+            "title": "Format"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "format"
+        ],
+        "title": "InputAudio"
+      },
       "InviteNewUser": {
         "properties": {
           "name": {
@@ -2275,67 +3676,8 @@
         ],
         "title": "JSONSchema"
       },
-      "JudgeAnnotationDTO": {
-        "properties": {
-          "model_name": {
-            "type": "string",
-            "title": "Model Name"
-          },
-          "nano_model_type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "prompt",
-                  "refusal",
-                  "response"
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Nano Model Type"
-          },
-          "scoring_criteria": {
-            "anyOf": [
-              {
-                "items": {
-                  "$ref": "#/components/schemas/SafetyCriteria"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Scoring Criteria"
-          },
-          "conversation": {
-            "items": {
-              "$ref": "#/components/schemas/ConversationMessage"
-            },
-            "type": "array",
-            "title": "Conversation"
-          },
-          "response": {
-            "$ref": "#/components/schemas/ConversationMessage"
-          }
-        },
-        "type": "object",
-        "required": [
-          "model_name",
-          "conversation",
-          "response"
-        ],
-        "title": "JudgeAnnotationDTO"
-      },
       "JudgeAnnotationHallucinationDTO": {
         "properties": {
-          "model_name": {
-            "type": "string",
-            "title": "Model Name"
-          },
           "type": {
             "anyOf": [
               {
@@ -2412,12 +3754,23 @@
               }
             ],
             "title": "Claim"
+          },
+          "judge_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Judge Id"
+          },
+          "space_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Space Id"
           }
         },
         "type": "object",
         "required": [
-          "model_name",
-          "context"
+          "context",
+          "judge_id",
+          "space_id"
         ],
         "title": "JudgeAnnotationHallucinationDTO"
       },
@@ -2502,6 +3855,143 @@
         ],
         "title": "JudgeCreateRequestDTO"
       },
+      "JudgeCreateSdkRequestDTO": {
+        "properties": {
+          "judge_name": {
+            "type": "string",
+            "title": "Judge Name"
+          },
+          "space_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Space Id"
+          },
+          "model_name": {
+            "type": "string",
+            "title": "Model Name"
+          },
+          "nano_model_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "prompt",
+                  "refusal",
+                  "response"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nano Model Type"
+          },
+          "qa_few_shot": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Qa Few Shot"
+          },
+          "nli_few_shot": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nli Few Shot"
+          },
+          "conv_few_shot": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conv Few Shot"
+          },
+          "rag_api_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rag Api Key"
+          },
+          "rag_index": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rag Index"
+          },
+          "rag_namespace": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rag Namespace"
+          },
+          "rag_top_k": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rag Top K"
+          },
+          "rag_host": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rag Host"
+          }
+        },
+        "type": "object",
+        "required": [
+          "judge_name",
+          "space_id",
+          "model_name"
+        ],
+        "title": "JudgeCreateSdkRequestDTO"
+      },
       "JudgeDashboardDTO": {
         "properties": {
           "id": {
@@ -2549,11 +4039,15 @@
           "wild_guard",
           "persona",
           "collinear_guard",
+          "collinear_guard_beta",
           "collinear_guard_classifier",
+          "collinear_guard_classifier_beta",
           "prompted_model",
           "veritas",
+          "veritas_large",
           "lynx",
-          "custom"
+          "custom",
+          "collinear_guard_category"
         ],
         "title": "JudgeModelTypeEnum"
       },
@@ -2573,6 +4067,17 @@
               }
             ],
             "title": "Extra"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
           }
         },
         "type": "object",
@@ -2580,6 +4085,86 @@
           "judgement"
         ],
         "title": "JudgeOutputDTO"
+      },
+      "JudgeSafetyRequestDTO": {
+        "properties": {
+          "conv_prefix": {
+            "items": {
+              "$ref": "#/components/schemas/ConversationMessage"
+            },
+            "type": "array",
+            "title": "Conv Prefix"
+          },
+          "response": {
+            "$ref": "#/components/schemas/ConversationMessage"
+          },
+          "judge_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Judge Id"
+          },
+          "space_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Space Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "conv_prefix",
+          "response",
+          "judge_id",
+          "space_id"
+        ],
+        "title": "JudgeSafetyRequestDTO"
+      },
+      "JudgementConversationReqInput": {
+        "properties": {
+          "conversation_prefix": {
+            "items": {
+              "$ref": "#/components/schemas/ConversationMessageDTO"
+            },
+            "type": "array",
+            "title": "Conversation Prefix"
+          },
+          "response": {
+            "$ref": "#/components/schemas/ConversationMessageDTO"
+          },
+          "space_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Space Id"
+          },
+          "judge_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Judge Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "conversation_prefix",
+          "response",
+          "space_id",
+          "judge_id"
+        ],
+        "title": "JudgementConversationReqInput"
+      },
+      "LogsAdditionRequestDTO": {
+        "properties": {
+          "entries": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Entries"
+          }
+        },
+        "type": "object",
+        "required": [
+          "entries"
+        ],
+        "title": "LogsAdditionRequestDTO"
       },
       "MessageRoleEnum": {
         "type": "string",
@@ -2647,6 +4232,50 @@
         ],
         "title": "ModelList",
         "description": "A wrapper of `Model` from [1] for FastAPI compatabillity.\n\n[1]: https://github.com/openai/openai-python/blob/main/src/openai/types/model.py"
+      },
+      "ModelResponseDTO": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "nickname": {
+            "type": "string",
+            "title": "Nickname"
+          },
+          "base_url": {
+            "type": "string",
+            "title": "Base Url"
+          },
+          "api_key": {
+            "type": "string",
+            "title": "Api Key"
+          },
+          "space_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Space Id"
+          },
+          "model_type": {
+            "$ref": "#/components/schemas/ModelTypeEnum"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "nickname",
+          "base_url",
+          "api_key",
+          "space_id",
+          "model_type"
+        ],
+        "title": "ModelResponseDTO"
       },
       "ModelTypeEnum": {
         "type": "string",
@@ -2766,30 +4395,89 @@
         ],
         "title": "RoleEnum"
       },
-      "SafetyCriteria": {
+      "RunInferenceRequestDTO": {
         "properties": {
-          "score": {
-            "type": "integer",
-            "title": "Score"
-          },
-          "description": {
+          "model_id": {
             "type": "string",
-            "title": "Description"
+            "format": "uuid",
+            "title": "Model Id"
           },
-          "examples": {
+          "messages": {
             "items": {
-              "$ref": "#/components/schemas/ConversationMessage"
+              "$ref": "#/components/schemas/ConversationMessageDTO"
             },
             "type": "array",
-            "title": "Examples"
+            "title": "Messages"
+          },
+          "generation_kwargs": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Generation Kwargs",
+            "default": {}
           }
         },
         "type": "object",
         "required": [
-          "score",
-          "description"
+          "model_id",
+          "messages"
         ],
-        "title": "SafetyCriteria"
+        "title": "RunInferenceRequestDTO"
+      },
+      "SynthDataGenerateRequestDTO": {
+        "properties": {
+          "model_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Model Id"
+          },
+          "multiplier": {
+            "type": "integer",
+            "title": "Multiplier"
+          },
+          "examples": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Examples"
+          },
+          "prompt": {
+            "type": "string",
+            "title": "Prompt"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_id",
+          "multiplier",
+          "examples",
+          "prompt"
+        ],
+        "title": "SynthDataGenerateRequestDTO"
+      },
+      "SynthDataGenerateResponseDTO": {
+        "properties": {
+          "original": {
+            "type": "object",
+            "title": "Original"
+          },
+          "generated": {
+            "type": "string",
+            "title": "Generated"
+          }
+        },
+        "type": "object",
+        "required": [
+          "original",
+          "generated"
+        ],
+        "title": "SynthDataGenerateResponseDTO"
       },
       "TopLogprob": {
         "properties": {

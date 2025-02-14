@@ -3678,82 +3678,19 @@
       },
       "JudgeAnnotationHallucinationDTO": {
         "properties": {
-          "type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "nli",
-                  "qa",
-                  "conversation"
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Type"
-          },
           "context": {
             "type": "string",
             "title": "Context"
           },
-          "conversation": {
-            "anyOf": [
-              {
-                "items": {
-                  "$ref": "#/components/schemas/ConversationMessage"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Conversation"
+          "conv_prefix": {
+            "items": {
+              "$ref": "#/components/schemas/ConversationMessage"
+            },
+            "type": "array",
+            "title": "Conv Prefix"
           },
           "response": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ConversationMessage"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "question": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Question"
-          },
-          "answer": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Answer"
-          },
-          "claim": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Claim"
+            "$ref": "#/components/schemas/ConversationMessage"
           },
           "judge_id": {
             "type": "string",
@@ -3769,6 +3706,8 @@
         "type": "object",
         "required": [
           "context",
+          "conv_prefix",
+          "response",
           "judge_id",
           "space_id"
         ],

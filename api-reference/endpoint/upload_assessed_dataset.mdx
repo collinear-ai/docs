@@ -1,0 +1,28 @@
+---
+title: 'Upload Assessed Dataset'
+openapi: 'POST /api/v1/dataset/assess/upload'
+---
+## Parameters
+
+- **evaluation_name**: The name of your evaluation
+
+- **dataset_id**: The unique identifier for the dataset. [Learn more about obtaining a dataset ID](/essentials/get_dataset_id).
+
+- **space_id**: The unique identifier for your space. [Learn more about obtaining a space ID](/essentials/get_space_id).
+
+- **file**: The file should be in JSON Format. Here is how the sample file should look like[Learn more about obtaining dataset row ids](/essentials/exporting_dataset)
+```
+[
+  {
+    "id": "<your dataset_row_id>",
+    "judgement": <your_binary_judgement>
+  },
+  {
+    "id": "<your dataset_row_id>",
+    "judgement": <your_binary_judgement>
+  }
+]
+```
+
+## Response
+Go to evaluation overview page to see your new evaluation

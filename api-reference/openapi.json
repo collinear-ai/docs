@@ -961,6 +961,49 @@
         }
       }
     },
+    "/api/v1/dataset/assess/upload": {
+      "post": {
+        "summary": "Upload New Assessed Dataset",
+        "operationId": "upload_new_assessed_dataset_api_v1_dataset_assess_upload_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_new_assessed_dataset_api_v1_dataset_assess_upload_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/model/": {
       "post": {
         "summary": "Add New Model",
@@ -1785,6 +1828,37 @@
           "file"
         ],
         "title": "Body_upload_dataset_annotations_api_v1_curated_data_space__space_id__upload_post"
+      },
+      "Body_upload_new_assessed_dataset_api_v1_dataset_assess_upload_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          },
+          "evaluation_name": {
+            "type": "string",
+            "title": "Evaluation Name"
+          },
+          "dataset_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Dataset Id"
+          },
+          "space_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Space Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file",
+          "evaluation_name",
+          "dataset_id",
+          "space_id"
+        ],
+        "title": "Body_upload_new_assessed_dataset_api_v1_dataset_assess_upload_post"
       },
       "Body_upload_new_dataset_api_v1_dataset_upload_post": {
         "properties": {

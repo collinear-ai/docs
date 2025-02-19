@@ -1,4 +1,47 @@
 ---
 title: 'Upload Dataset'
-openapi: 'POST /api/v1/dataset/'
+openapi: 'POST /api/v1/dataset/upload'
 ---
+
+
+## Parameters
+
+- **file**: The file should be in JSON/CSV Format
+
+- **space_id**: The unique identifier for your space. [Learn more about obtaining a space ID](/essentials/get_space_id).
+
+- **dataset_name**:  The name of your dataset
+
+If you are creating a new dataset your file format would be:
+```
+[
+  {
+    "conv_prefix": [
+      {
+        "role": "user",
+        "content": "Hey how are you?"
+      }
+    ],
+    "response": {
+      "role": "assistant",
+      "content": "I'm good, how are you?"
+    },
+    "ground_truth": <GROUND_TRUTH_VALUE>(optional),
+    "context":<CONTEXT>(Optional)
+  },
+  {
+    "conv_prefix": [
+      {
+        "role": "user",
+        "content": "Hey how are you?"
+      }
+    ],
+    "response": {
+      "role": "assistant",
+      "content": "I'm bad, how are you?"
+    },
+    "ground_truth": <GROUND_TRUTH_VALUE>(optional),
+    "context":<CONTEXT>(Optional)
+  }
+]
+```

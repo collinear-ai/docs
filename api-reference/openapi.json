@@ -894,9 +894,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponse"
-                }
+                "schema": {}
               }
             }
           },
@@ -1842,8 +1840,11 @@
           },
           "dataset_id": {
             "type": "string",
-            "format": "uuid",
             "title": "Dataset Id"
+          },
+          "dataset_name": {
+            "type": "string",
+            "title": "Dataset Name"
           },
           "space_id": {
             "type": "string",
@@ -1855,7 +1856,6 @@
         "required": [
           "file",
           "evaluation_name",
-          "dataset_id",
           "space_id"
         ],
         "title": "Body_upload_new_assessed_dataset_api_v1_dataset_assess_upload_post"
@@ -1875,18 +1875,13 @@
             "type": "string",
             "format": "uuid",
             "title": "Space Id"
-          },
-          "dataset_type": {
-            "type": "string",
-            "title": "Dataset Type"
           }
         },
         "type": "object",
         "required": [
           "file",
           "dataset_name",
-          "space_id",
-          "dataset_type"
+          "space_id"
         ],
         "title": "Body_upload_new_dataset_api_v1_dataset_upload_post"
       },

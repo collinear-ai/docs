@@ -6,11 +6,15 @@ openapi: 'POST /api/v1/dataset/assess/upload'
 
 - **evaluation_name**: The name of your evaluation
 
-- **dataset_id**: The unique identifier for the dataset. [Learn more about obtaining a dataset ID](/essentials/get_dataset_id).
+- **dataset_id**: (Optional: Required if you are using an existing dataset) The unique identifier for the dataset. [Learn more about obtaining a dataset ID](/essentials/get_dataset_id).
+
+- **dataset_name**: (Optional: Required if you are creating a new dataset)  The name for your dataset
 
 - **space_id**: The unique identifier for your space. [Learn more about obtaining a space ID](/essentials/get_space_id).
 
-- **file**: The file should be in JSON Format. Here is how the sample file should look like[Learn more about obtaining dataset row ids](/essentials/exporting_dataset)
+- **file**: The file should be in JSON Format
+
+If you are using an existing dataset your file format would be [Learn more about obtaining dataset row ids](/essentials/exporting_dataset):
 ```
 [
   {
@@ -20,6 +24,38 @@ openapi: 'POST /api/v1/dataset/assess/upload'
   {
     "id": "<your dataset_row_id>",
     "judgement": <your_binary_judgement>
+  }
+]
+```
+
+If you are creating a new dataset your file format would be:
+```
+[
+  {
+    "conv_prefix": [
+      {
+        "role": "user",
+        "content": "Hey how are you?"
+      }
+    ],
+    "response": {
+      "role": "assistant",
+      "content": "I'm good, how are you?"
+    },
+    "judgement": <YOUR JUDGEMENT>
+  },
+  {
+    "conv_prefix": [
+      {
+        "role": "user",
+        "content": "Hey how are you?"
+      }
+    ],
+    "response": {
+      "role": "assistant",
+      "content": "I'm bad, how are you?"
+    },
+    "judgement": <YOUR JUDGEMENT>
   }
 ]
 ```

@@ -53,6 +53,7 @@
     {
       "group": "Introduction",
       "pages": [
+        "introduction",
         "introduction"
       ]
     },
@@ -67,7 +68,6 @@
         "essentials/get_judge_id",
         "essentials/get_dataset_id",
         "essentials/exporting_dataset"
-
       ]
     },
     {
@@ -95,12 +95,15 @@
       "group": "Monitor",
       "pages": [
         "monitor/reliability_monitoring",
-        "monitor/safety_monitoring"
+        "monitor/safety_monitoring",
+        "monitor/safety_monitoring",
+        "monitor/reliability_monitoring"
       ]
     },
     {
       "group": "Curated Data",
       "pages": [
+        "curated_data/introduction",
         "curated_data/introduction"
       ]
     },

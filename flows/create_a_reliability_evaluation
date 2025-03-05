@@ -1,0 +1,66 @@
+---
+title: Creating a Reliability Evaluation
+description: Use the Collinear AI Platform to create a new reliability evaluation
+---
+# Introduction
+
+Once you connect your model or upload your dataset, you can run a safety evaluation on it using Collinear AI's suite of reliability judges.
+
+# Steps to Create a Reliability evaluation 
+
+## Select Reliability Evaluation 
+Click on Reliability 
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_a_new_run/select_reliability_evaluation.png"
+/>
+
+## Select a Judge
+Select the type of reliability judge you want to use 
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="images/create_a_new_run/select_type_of_reliability_judge.png"
+/>
+
+1. Lynx 8B - Patronus AI's proprietary off the shelf model for detecting hallucinations 
+
+2. Veritas Nano - Collinear AI's proprietary model low latency binary model for hallucination detection
+
+3. Veritas - Collinear AI's proprietary larger model for advanced hallucination detection
+
+4. Prompted Model - Use any off the shelf model with a custom prompt
+
+## Select a Context Engine 
+Select from one of 2 options
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_a_new_run/select_context_engine.png"
+/>
+
+1. Use Context From Dataset: Users can choose to use context from the dataset
+
+2. Add Context Engine: Users can choose to add context from a RAG engine 
+
+Add details for:
+- Content Engine API Key: A unique key required to authenticate and interact securely with a content engine's API.
+- RAG Host: The server environment that supports the Retrieve-and-Generate model, facilitating document retrieval and response generation.
+- Index: An optimized data structure designed for rapid retrieval of database records.
+- Namespace: A context that groups identifiers, functions, or variables to prevent naming conflicts across different scopes.
+- Top K: Represents the top 'K' results or outputs selected from a set, based on defined criteria.
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_a_new_run/add_context_engine.png"
+/>
+
+## Enter Judge Name 
+Name your judge
+
+## Enter Description
+Enter a short description of your judge and click "Confirm" once you're done
+
+## Finalize Run 
+Enter a name for your run and click "Confirm" once you're done.

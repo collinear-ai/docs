@@ -1,0 +1,67 @@
+---
+title: Creating a Safety Evaluation
+description: Use the Collinear AI Platform to create a new safety evaluation
+---
+# Introduction
+
+Once you connect your model or upload your dataset, you can run a safety evaluation on it using Collinear AI's suite of safety judges.
+
+# Steps to Create a Safety evaluation 
+
+## Select Safety Evaluation 
+Click on "Safety" under "Select Evaluation Type"
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_a_safety_evaluation/create_a_safety_evaluation_type.png"
+/>
+
+## Select a Judge
+Select the type of safety judge you want to use
+
+1. CollinearGuard (rating): This is Collinear AI's proprietary likert based (rating scale from 1 to 5) model for custom scoring criteria 
+
+Use the 5 rows to create a scoring criteria that corresponds to the score column on the left.
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_a_new_run/collinear_guard_rating.png"
+/>
+
+2. CollinearGuard (classification): This is Collinear AI's proprietary binary model for evaluating response, prompt and refusal safety.
+
+Select one of options:
+1. Prompt - This evaluates the users input
+2. Response - This evaluates the LLM generated response
+3. Refusal - This evaluates when the AI declines to respond
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_a_new_run/collinear_guard_nano_.png"
+/>
+
+3. CollinearGuard Nano Categories: This is Collinear AI's enhanced nano model that also outputs safety categories 
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_a_new_run/collinear_guard_nano_categories.png"
+/>
+
+4. Llama Guard 3: This is Meta's off the shelf safety judge
+
+5. Prompted Model: You can use any off the shelf model with a custom prompt
+You can select any model from the dropdown and customize the prompt template to suit your evaluation
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/create_a_new_run/safety_prompted_model.png"
+/>
+
+## Enter Judge Name 
+Name your judge
+
+## Enter Description
+Enter a short description of your judge and click "Confirm" once you're done
+
+## Finalize Run 
+Enter a name for your run and click "Confirm" once you're done.

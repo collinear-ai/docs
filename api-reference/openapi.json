@@ -5,6 +5,49 @@
     "version": "0.1.0"
   },
   "paths": {
+
+    "/api/v1/judge/curator": {
+      "post": {
+        "summary": "Run Curator Judge",
+        "operationId": "curator_judge__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CuratorJudgeRequestDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CuratorJudgeResponseDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/user/": {
       "post": {
         "summary": "Invite New User",
@@ -3713,6 +3756,66 @@
         ],
         "title": "InviteNewUser"
       },
+
+      "CuratorJudgeRequestDTO": {
+        "properties": {
+          "conv_prefix": {
+            "items": {
+              "$ref": "#/components/schemas/ConversationMessage"
+            },
+            "type": "array",
+            "title": "Conv Prefix"
+          },
+          "response": {
+            "$ref": "#/components/schemas/ConversationMessage"
+          },
+          "instruction_following": {
+            "type": "boolean",
+            "title": "Instruction Following"
+          },
+          "quality_of_reasoning": {
+            "type": "boolean",
+            "title": "Quality Of Reasoning"
+          },
+          "coherence": {
+            "type": "boolean",
+            "title": "Coherence"
+          },
+          "instruction_complexity": {
+            "type": "boolean",
+            "title": "Instruction Complexity"
+          }
+        },
+        "type": "object",
+        "required": [
+          "conv_prefix",
+          "response",
+          "role"
+        ],
+        "title": "Curator Judge Request"
+      },
+      "CuratorJudgeResponseDTO": {
+        "properties": {
+          "instruction_following": {
+            "type": "number",
+            "title": "Instruction Following"
+          },
+          "quality_of_reasoning": {
+            "type": "number",
+            "title": "Quality Of Reasoning"
+          },
+          "coherence": {
+            "type": "number",
+            "title": "Coherence"
+          },
+          "instruction_complexity": {
+            "type": "number",
+            "title": "Instruction Complexity"
+          }
+        },
+        "type": "object",
+        "title": "Curator Judge Response"
+      },
       "JSONSchema": {
         "properties": {
           "name": {
@@ -4094,6 +4197,7 @@
         ],
         "title": "JudgeOutputDTO"
       },
+
       "JudgeSafetyRequestDTO": {
         "properties": {
           "conv_prefix": {

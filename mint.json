@@ -117,6 +117,12 @@
       ]
     },
     {
+      "group": "Redteaming",
+      "pages": [
+        "essentials/redteam_report"
+      ]
+    },
+    {
       "group": "API Reference",
       "pages": [
         "api-reference/endpoint/upload_dataset",

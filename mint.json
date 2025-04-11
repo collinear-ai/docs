@@ -76,6 +76,7 @@
       "group": "Evaluation",
       "pages": [
         "flows/create_a_new_run",
+        "flows/create_collinear_flex_evaluation",
         "flows/create_a_custom_evaluation",
         "flows/create_a_reliability_evaluation",
         "flows/create_a_safety_evaluation"

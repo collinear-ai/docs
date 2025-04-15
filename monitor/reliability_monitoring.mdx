@@ -1,53 +1,71 @@
 ---
-title: Reliability Monitoring
-description: Use the Collinear AI Reliability Monitoring to view a dashboard that tracks key metrics to monitor your AI’s consistency, accuracy, and performance.
+title: Reliability Monitor
+description: Track your AI system's consistency and accuracy with the Collinear AI Reliability Monitoring dashboard.
 ---
-The reliability dashbaord allows you to monitor your model's performance and reliability with a comprehensive dashboard tracking key metrics, critical summaries, and live data insights
 
-<img
-    style={{borderRadius: '0.5rem'}}
-    src="/images/preventativecontrol.png"
-/>
+## 🎥 Interactive Walkthrough
 
-# Key Metrics Overview
-1. Total Volume: 
-2. Reliability Index: how consistently your AI solution performs accurately and without failure over time.
-3. Response Safety Violation Rate: % of times your AI solution provides incorrect or misleading information.
-4. Contextual Error Rate: how often your AI provides incorrect responses based on the context of a conversation.
+Explore the Reliability Monitoring dashboard in action:
 
-The colors correspond to the following values:
+<div style={{position: 'relative', paddingBottom: 'calc(56.67989417989418% + 41px)', height: 0, width: '100%'}}>
+    <iframe
+        src="https://demo.arcade.software/sbDUq2EgK9L4GK6B7TRi?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true"
+        title="Explore and Secure AI with Collinear AI"
+        frameBorder="0"
+        loading="lazy"
+        allowFullScreen
+        allow="clipboard-write"
+        style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', colorScheme: 'light'}}
+    />
+</div>
 
-Colors:
-Red --> >5%
-Orange --> 1% to 5%
-Green --> &lt; 1%
+---
+## 📊 Key Metrics Overview
 
-Response
-Red --> >3%
-Orange --> 1% to 3%
-Green --> &lt; 1%
+Monitor the most important indicators of AI reliability:
 
-False refusal rate:
-Red --> >2%
-Orange --> 0.5-2%
-Green --> &lt; 0.5
+1. **Total Volume** – The number of queries processed.
+2. **Reliability Index** – A measure of how consistently your AI performs without failures or inaccuracies.
+3. **Factual Error Rate** – The percentage of responses that were factually incorrect.
+4. **Contextual Error Rate** – The frequency at which responses are incorrect due to misinterpretation of context.
 
-# Critical Summaries
-The Critical Summaries gives you Total Queries vs Flagged Queries graph over time
 
-# Hallucination Categories
-The Hallucination Categories gives you insight into the types of hallucination, namely:
-- Logical 
-- Temporal
-- Entity
-- Contextual
-- Other
+---
 
-# Live Data
-The Live Data table gives you data about 
-1. ID
-2. Conversation Prefix
-3. Assistant Response
-4. Judge Output	
-5. Feedback
-6. Categories
+## 📈 Critical Summaries
+
+Understand trends over time with visual insights:
+
+- **Total Queries vs. Flagged Queries**
+View a time-series graph that compares the number of total queries with the number of flagged ones.
+
+- **Flagged Categories**
+Categorization of flagged queries to identify common reliability issues.
+---
+
+## 🧠 Hallucination Categories
+
+Identify and classify the types of hallucinations detected in AI responses:
+
+- **Logical** – Incorrect reasoning or fallacies.
+- **Temporal** – Misstatements about time, dates, or sequencing.
+- **Entity** – Inaccuracies about named entities (people, places, organizations).
+- **Contextual** – Misunderstandings within conversational context.
+- **Other** – Unclassified or ambiguous errors.
+
+---
+
+## 🔍 Live Data
+
+Access detailed evaluation records in real time:
+
+| Field                   | Description                                            |
+|-------------------------|--------------------------------------------------------|
+| **ID**                  | Unique identifier for the conversation or query        |
+| **Conversation Prefix** | Initial input or prompt given to the assistant         |
+| **Model Response**      | The generated response from the Model                  |
+| **Judge Output**        | Evaluation or score given by the system or human judge |
+| **Feedback**            | Reviewer feedback                                      |
+| **Categories**          | Labeled types of hallucination or issues               |
+
+---

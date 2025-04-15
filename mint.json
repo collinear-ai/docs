@@ -110,13 +110,6 @@
       ]
     },
     {
-      "group": "Monitor",
-      "pages": [
-        "monitor/reliability_monitoring",
-        "monitor/safety_monitoring"
-      ]
-    },
-    {
       "group": "Curated Data",
       "pages": [
         "curated_data/introduction"

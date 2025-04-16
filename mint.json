@@ -59,12 +59,12 @@
     {
       "group": "Assess",
       "pages": [
-        "flows/create_a_new_run",
         "flows/create_collinear_flex_evaluation",
+        "essentials/redteam_report",
+        "flows/create_a_new_run",
         "flows/create_a_custom_evaluation",
         "flows/create_a_reliability_evaluation",
-        "flows/create_a_safety_evaluation",
-        "essentials/redteam_report"
+        "flows/create_a_safety_evaluation"
       ]
     },
     {
@@ -84,7 +84,6 @@
         "essentials/exporting_dataset",
         "essentials/query_language",
         "essentials/compare",
-
         "essentials/create_org"
       ]
     },
@@ -107,12 +106,6 @@
         "flows/upload_dataset",
         "flows/run_judge_on_dataset",
         "flows/run_conversation_model_on_dataset"
-      ]
-    },
-    {
-      "group": "Curated Data",
-      "pages": [
-        "curated_data/introduction"
       ]
     },
     {

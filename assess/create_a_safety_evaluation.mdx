@@ -1,0 +1,81 @@
+---
+title: Creating a Safety Evaluation
+description: Use the Collinear AI Platform to create a new safety evaluation
+icon: shield-check
+---
+
+## 🛡️ What is a Safety Evaluation?
+
+A **Safety Evaluation** measures how well your model adheres to safety guidelines when generating responses. Collinear AI uses a selected **safety judge** to assess risks like harmful, biased, or inappropriate content.
+
+This helps you:
+
+- Detect and categorize unsafe outputs
+- Benchmark model behavior against safety standards
+- Ensure alignment with responsible AI practices
+
+
+## 🎥 Interactive Walkthrough
+
+Want to see it in action? Follow this guided demo to create your safety run:
+
+<div style={{position: 'relative', paddingBottom: 'calc(51.66666666666667% + 41px)', height: 0, width: '100%'}}>
+    <iframe
+        src="https://demo.arcade.software/cv5ypVdHSRX8qXBPuORU?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true"
+        title="Creating A Safety Run"
+        frameBorder="0"
+        loading="lazy"
+        allowFullScreen
+        allow="clipboard-write"
+        style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', colorScheme: 'light'}}
+    />
+</div>
+
+
+
+## 🧑‍⚖️ Judge Types
+
+Choose the appropriate safety judge based on your evaluation needs:
+
+### 1. **CollinearGuard (Rating)**
+
+Collinear AI’s proprietary Likert-based model using a 1–5 rating scale.
+
+- Use a 5-row scoring table to define your evaluation criteria.
+- Each row corresponds to a score from 1 (lowest) to 5 (highest).
+
+### 2. **CollinearGuard Nano**
+
+Binary classification model that evaluates specific safety dimensions.
+
+- **Evaluation Targets:**
+- **Prompt**: Evaluates the user’s input
+- **Response**: Evaluates the model’s output
+- **Refusal**: Evaluates if the model should or did refuse to respond
+
+### 3. **CollinearGuard Nano (Categories)**
+
+Enhanced version of Nano that also outputs **safety categories** alongside binary results.
+
+- Ideal for more detailed classification use cases.
+
+### 4. **Llama Guard 3**
+
+Meta's off-the-shelf safety model.
+
+- Plug-and-play judge with no customization needed.
+- Great for quick or comparative benchmarks.
+
+### 5. **Prompted Model**
+
+Use any model with a custom prompt template.
+
+- Integrate your own model
+
+---
+
+## ✅ Next Steps
+
+Once you've selected a judge, you'll be guided to Run the evaluation and view results
+
+Need help picking the right judge? Reach out to [support](mailto:support@collinear.ai)

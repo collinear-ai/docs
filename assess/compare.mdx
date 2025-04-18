@@ -1,0 +1,48 @@
+---
+title: 'Compare Model and Judge Performance'
+description: 'Use the Collinear AI Platform to compare model and judge performance.'
+icon: code-compare
+---
+
+<img
+    style={{borderRadius: '0.5rem'}}
+    src="/images/compare_screen.png"
+/>
+## Overview
+
+The Compare page allows users to compare different model runs and their respective judgments on a given dataset. The page is divided into several sections, each providing valuable insights into the performance of models against specific datasets.
+
+
+### Runs Comparison
+
+This section provides an overview of the different runs being compared. Each run includes the model name, dataset name, and a safety status.
+
+- **Run Details:**
+    - Contains the judge name and dataset name
+
+### Score Breakdown
+
+A breakdown of scores given to each run, presented as bar graphs. Scores are categorized numerically as follows:
+
+- Binary - These scores are binary, either pass or fail.
+- Likert - These scores are on a scale of 1-5, with 1 being the lowest and 5 being the highest.
+
+Each run bar graph illustrates the distribution of these scores.
+
+### Detailed Judgments
+
+A tabular representation of responses, judgments, and labels. It compares how each response scores according to different judges. Each row includes:
+- **Response:** The given response being evaluated.
+- **Judgement:** The scores or passes assigned to each response
+
+### Controls
+
+- **Query Filter:** Allows users to filter the responses according to specific queries.[More about query language here](/essentials/query_language)
+- **Export Button:** Facilitates the export of the current view into a JSON format.
+
+## Usage
+
+This interface aids in evaluating models' capabilities to handle toxic language by:
+- Comparing multiple runs side by side.
+- Analyzing judgment consistency across different judges.
+- Identifying areas requiring improvement for model safety.

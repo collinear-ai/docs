@@ -57,6 +57,17 @@
       ]
     },
     {
+      "group": "Get Started",
+      "pages": [
+        "essentials/create_space",
+        "flows/get_api_key",
+        "essentials/get_space_id",
+        "essentials/get_judge_id",
+        "essentials/exporting_dataset",
+        "essentials/create_org"
+      ]
+    },
+    {
       "group": "Assess",
       "pages": [
         "assess/create_a_safety_evaluation",
@@ -72,17 +83,6 @@
       "pages": [
         "monitor/safety_monitoring",
         "monitor/reliability_monitoring"
-      ]
-    },
-    {
-      "group": "Get Started",
-      "pages": [
-        "essentials/create_space",
-        "flows/get_api_key",
-        "essentials/get_space_id",
-        "essentials/get_judge_id",
-        "essentials/exporting_dataset",
-        "essentials/create_org"
       ]
     },
     {

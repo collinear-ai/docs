@@ -59,6 +59,7 @@
     {
       "group": "Get Started",
       "pages": [
+        "essentials/login",
         "essentials/create_space",
         "flows/get_api_key",
         "essentials/get_space_id",
@@ -83,6 +84,12 @@
       "pages": [
         "monitor/safety_monitoring",
         "monitor/reliability_monitoring"
+      ]
+    },
+    {
+      "group": "Improve",
+      "pages": [
+        "improve/create_curation_run"
       ]
     },
     {

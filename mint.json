@@ -76,7 +76,8 @@
         "assess/create_collinear_flex_evaluation",
         "assess/compare",
         "assess/query_language",
-        "assess/redteam_report"
+        "assess/redteam_report",
+        "assess/conversation_builder"
       ]
     },
     {

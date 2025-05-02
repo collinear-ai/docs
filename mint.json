@@ -101,10 +101,10 @@
     {
       "group": "Datasets",
       "pages": [
-        "assess/conversation_builder",
-        "flows/upload_dataset",
-        "flows/run_judge_on_dataset",
-        "flows/run_conversation_model_on_dataset"
+        "datasets/conversation_builder",
+        "datasets/upload_dataset",
+        "datasets/run_judge_on_dataset",
+        "datasets/run_conversation_model_on_dataset"
       ]
     },
     {

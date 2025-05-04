@@ -59,12 +59,12 @@
     {
       "group": "Get Started",
       "pages": [
-        "essentials/login",
-        "essentials/create_space",
-        "flows/get_api_key",
-        "essentials/get_space_id",
-        "essentials/get_judge_id",
-        "essentials/exporting_dataset"
+        "get-started/login",
+        "get-started/create_space",
+        "get-started/get_api_key",
+        "get-started/get_space_id",
+        "get-started/get_judge_id",
+        "get-started/exporting_dataset"
       ]
     },
     {
@@ -101,10 +101,10 @@
     {
       "group": "Datasets",
       "pages": [
-        "assess/conversation_builder",
-        "flows/upload_dataset",
-        "flows/run_judge_on_dataset",
-        "flows/run_conversation_model_on_dataset"
+        "datasets/conversation_builder",
+        "datasets/upload_dataset",
+        "datasets/run_judge_on_dataset",
+        "datasets/run_conversation_model_on_dataset"
       ]
     },
     {

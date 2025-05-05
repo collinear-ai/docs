@@ -100,6 +100,7 @@
     {
       "group": "Datasets",
       "pages": [
+        "datasets/uploading_dataset",
         "datasets/conversation_builder",
         "datasets/upload_dataset",
         "datasets/run_judge_on_dataset",

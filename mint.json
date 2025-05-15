@@ -29,6 +29,10 @@
     {
       "name": "API Reference",
       "url": "api-reference"
+    },
+    {
+      "name": "Blog",
+      "url": "https://blog.collinear.ai"
     }
   ],
   "api": {
@@ -38,16 +42,7 @@
     }
   },
   "anchors": [
-    {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "https://docs.collinear.ai"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://blog.collinear.ai"
-    }
+    
   ],
   "navigation": [
     {
@@ -73,8 +68,15 @@
         "assess/create_a_reliability_evaluation",
         "assess/create_collinear_flex_evaluation",
         "assess/compare",
-        "assess/query_language",
-        "assess/redteam_report"
+        "assess/query_language"
+        ]
+    },
+    {
+      "group": "Agentic AI",
+      "pages": [
+        "assess/agentic-ai/overview",
+        "assess/agentic-ai/generate_evaluation_data",
+        "assess/agentic-ai/evaluate_synthetic_data"
       ]
     },
     {
@@ -109,14 +111,31 @@
       ]
     },
     {
-      "group": "API Reference",
+      "group": "Upload",
       "pages": [
         "api-reference/endpoint/upload_dataset",
-        "api-reference/endpoint/safety_judge",
-        "api-reference/endpoint/reliability_judge",
-        "api-reference/endpoint/judge_conversation",
-        "api-reference/endpoint/curator_judge",
         "api-reference/endpoint/upload_assessed_dataset"
+      ]
+    },
+    {
+      "group": "Assess",
+      "pages": [
+        "api-reference/endpoint/judge_conversation",
+        "api-reference/endpoint/curator_judge"     
+      ]
+    },
+    {
+      "group": "Guard",
+      "pages": [
+        "api-reference/endpoint/safety_judge",
+        "api-reference/endpoint/reliability_judge"
+      ]
+    },
+    {
+      "group": "Agentic AI",
+      "pages": [
+        "api-reference/endpoint/generate_evaluation_data",
+        "api-reference/endpoint/evaluate_generated_data"
       ]
     }
   ],

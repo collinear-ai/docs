@@ -5,7 +5,6 @@
     "version": "0.1.0"
   },
   "paths": {
-
     "/api/v1/judge/curator": {
       "post": {
         "summary": "Run Curator Judge",
@@ -1322,6 +1321,59 @@
         }
       }
     },
+    "/api/v1/synth_data/evaluate/{model_id}": {
+      "post": {
+        "summary": "Evaluate Generated Data",
+        "operationId": "evaluate_generated_data_api_v1_synth_data_evaluate__model_id__post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "model_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Model Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_evaluate_generated_data_api_v1_synth_data_evaluate__model_id__post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/synth_data/generate": {
       "post": {
         "summary": "Generate Data From Body",
@@ -1827,6 +1879,20 @@
           "file"
         ],
         "title": "Body_generate_data_api_v1_synth_data_generate__model_id___n__post"
+      },
+      "Body_evaluate_generated_data_api_v1_synth_data_evaluate__model_id__post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_evaluate_generated_data_api_v1_synth_data_evaluate__model_id__post"
       },
       "Body_upload_conversation_csv_or_json_api_v1_judge_upload__judge_id__post": {
         "properties": {

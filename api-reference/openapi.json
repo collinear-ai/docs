@@ -5,6 +5,103 @@
     "version": "0.1.0"
   },
   "paths": {
+    "/api/v1/agentic/generate/{model_id}/{workflow_id}": {
+      "post": {
+        "summary": "Generate Data From Workflow",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "model_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Model Id"
+            }
+          },
+          {
+            "name": "workflow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Workflow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SynthDataGenerateResponseDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/agentic/workflows/upload": {
+      "post": {
+        "summary": "Upload Workflow Logs",
+        "operationId": "upload_workflow_logs_api_v1_agentic_workflows_upload_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkflowUpload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowUploadResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/judge/curator": {
       "post": {
         "summary": "Run Curator Judge",
@@ -1259,10 +1356,10 @@
         }
       }
     },
-    "/api/v1/synth_data/generate/{model_id}/{n}": {
+    "/api/v1/agentic/evaluate/{model_id}": {
       "post": {
-        "summary": "Generate Data",
-        "operationId": "generate_data_api_v1_synth_data_generate__model_id___n__post",
+        "summary": "Evaluate Generated Data",
+        "operationId": "evaluate_generated_data_api_v1_agentic_evaluate__model_id__post",
         "security": [
           {
             "HTTPBearer": []
@@ -1280,31 +1377,34 @@
             }
           },
           {
-            "name": "n",
-            "in": "path",
+            "name": "generation_id",
+            "in": "query",
             "required": true,
             "schema": {
-              "type": "integer",
-              "title": "N"
+              "type": "string",
+              "format": "uuid",
+              "title": "Generation Id"
             }
-          }
+          } 
         ],
         "requestBody": {
-          "required": true,
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Body_generate_data_api_v1_synth_data_generate__model_id___n__post"
+                "$ref": "#/components/schemas/MetricsDTO"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluateGeneratedDataResponseDTO"
+                }
               }
             }
           },
@@ -1321,10 +1421,10 @@
         }
       }
     },
-    "/api/v1/synth_data/evaluate/{model_id}": {
+    "/api/v1/agentic/evaluate/{evaluation_id}/download": {
       "post": {
-        "summary": "Evaluate Generated Data",
-        "operationId": "evaluate_generated_data_api_v1_synth_data_evaluate__model_id__post",
+        "summary": "Download Generated and Evaluated Data",
+        "operationId": "download_generated_and_evaluated_data_api_v1_agentic_evaluate__evaluation_id__download_post",
         "security": [
           {
             "HTTPBearer": []
@@ -1332,26 +1432,36 @@
         ],
         "parameters": [
           {
-            "name": "model_id",
+            "name": "evaluation_id",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
               "format": "uuid",
-              "title": "Model Id"
+              "title": "Evaluation Id"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Format",
+              "default": "json"
+            }
+          },
+          {
+            "name": "detail_level",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Detail Level",
+              "default": "detailed"
             }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/Body_evaluate_generated_data_api_v1_synth_data_evaluate__model_id__post"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -1764,6 +1874,160 @@
   },
   "components": {
     "schemas": {
+      "EvaluateGeneratedDataResponseDTO": {
+        "properties": {
+          "assessment_id": {
+            "type": "string",
+            "title": "Assessment Id"
+          },
+          "results": {
+            "type": "object",
+            "title": "Results",
+            "properties": {
+              "action_completion": {
+                "type": "object",
+                "title": "Action Completion",
+                "properties": {
+                  "score": {
+                    "type": "number",
+                    "title": "Score"
+                  },
+                  "failed_sessions": {
+                    "type": "array",
+                    "title": "Failed Sessions",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "tool_selection_quality": {
+                  "type": "object",
+                  "title": "Tool Selection Quality",
+                  "properties": {
+                    "score": {
+                      "type": "number",
+                      "title": "Score"
+                    },
+                    "common_errors": {
+                      "type": "array",
+                      "title": "Common Errors",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "conversation_flow": {
+                  "type": "object",
+                  "title": "Conversation Flow",
+                  "properties": {
+                    "score": {
+                      "type": "number",
+                      "title": "Score"
+                    },
+                    "suggestions": {
+                      "type": "array",
+                      "title": "Suggestions",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "MetricsDTO": {
+        "properties": {
+          "metrics": {
+            "type": "object",
+            "title": "Metrics",
+            "properties": {
+              "preset": {
+                "type": "array",
+                "title": "Preset",
+                "items": {
+                  "type": "string",
+                  "title": "Preset"
+                }
+              },
+              "custom": {
+                "type": "array",
+                "title": "Custom",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "title": "Name"
+                  },
+                  "definition": {
+                    "type": "string",
+                    "title": "Definition"
+                  },
+                  "weight": {
+                    "type": "number",
+                    "title": "Weight"
+                  }
+                }
+              } 
+            }
+          },
+          "thresholds": {
+            "type": "object",
+            "title": "Thresholds",
+            "properties": {
+              "warning": {
+                "type": "number",
+                "title": "Warning"
+              },
+              "critical": {
+                "type": "number",
+                "title": "Critical"
+              }
+            }
+          }
+        },
+        "type": "object",
+        "title": "MetricsDTO"
+      }
+    },
+    "WorkflowUpload": {
+      "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File",
+            "default": "sample_agent_workflow.json" 
+          } 
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "WorkflowUpload"
+    },
+      "WorkflowUploadResponse": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "default": "Workflow logs uploaded successfully"
+          },
+          "workflow_id": {
+            "type": "string",
+            "title": "Workflow Id",
+            "default": "d9f82ea2-3cb4-4fd9-a8bb-1d9b293fab67"
+          }
+        },
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "title": "WorkflowUploadResponse"
+      },
       "AddJudgementsDTO": {
         "properties": {
           "judgements": {
@@ -1866,33 +2130,39 @@
         ],
         "title": "Audio"
       },
-      "Body_generate_data_api_v1_synth_data_generate__model_id___n__post": {
+      "Body_generate_data_api_v1_agentic_generate__model_id__workflow_id__post": {
         "properties": {
-          "file": {
+          "model_id": {
             "type": "string",
-            "format": "binary",
-            "title": "File"
+            "format": "uuid",
+            "title": "Model Id"
+          },
+          "workflow_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Workflow Id"
           }
         },
         "type": "object",
         "required": [
-          "file"
+          "model_id",
+          "workflow_id"
         ],
-        "title": "Body_generate_data_api_v1_synth_data_generate__model_id___n__post"
+        "title": "Body_generate_data_api_v1_agentic_generate__model_id__workflow_id__post"
       },
-      "Body_evaluate_generated_data_api_v1_synth_data_evaluate__model_id__post": {
+      "Body_evaluate_generated_data_api_v1_agentic_evaluate__evaluation_id__post": {
         "properties": {
-          "file": {
+          "workflow_id": {
             "type": "string",
-            "format": "binary",
-            "title": "File"
+            "format": "uuid",
+            "title": "Workflow Id"
           }
         },
         "type": "object",
         "required": [
-          "file"
+          "workflow_id"
         ],
-        "title": "Body_evaluate_generated_data_api_v1_synth_data_evaluate__model_id__post"
+        "title": "Body_evaluate_generated_data_api_v1_agentic_evaluate__evaluation_id__post"
       },
       "Body_upload_conversation_csv_or_json_api_v1_judge_upload__judge_id__post": {
         "properties": {
@@ -4646,7 +4916,7 @@
             "title": "Original"
           },
           "generated": {
-            "type": "string",
+            "type": "object",
             "title": "Generated"
           }
         },

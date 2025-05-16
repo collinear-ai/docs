@@ -1,0 +1,36 @@
+---
+title: Generate Evaluation Data
+description: Automatically create evaluation datasets from workflow logs
+icon: 🧪
+---
+
+Transform raw workflow logs into structured evaluation datasets.
+
+### Key Features
+- Automatic parsing of workflow patterns
+- Synthetic data generation for edge cases
+- Context-aware dataset creation
+- Multi-format output support
+
+### Generation Process
+1. Select uploaded workflow logs
+2. Choose generation parameters:
+   - Fidelity level (close to original vs. creative variations)
+   - Volume multiplier
+   - Specific workflow segments to focus on
+3. Initiate generation
+4. Review generated dataset
+
+### Output Formats
+```json
+{
+  "original_workflow": "user>agent>system>agent",
+  "generated_variations": [
+    "user>agent>system>agent>user",
+    "user>agent>system>user>agent"
+  ],
+  "metadata": {
+    "generation_model": "collinear-agentic-v1",
+    "fidelity": 0.85
+  }
+}

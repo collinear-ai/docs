@@ -74,9 +74,11 @@
     {
       "group": "Agentic AI",
       "pages": [
-        "assess/agentic-ai/overview",
-        "assess/agentic-ai/generate_evaluation_data",
-        "assess/agentic-ai/evaluate_synthetic_data"
+        "agentic-ai/overview",
+        "agentic-ai/01_Upload_Agent_Workflow_Logs",
+        "agentic-ai/02_Generate_Evaluation_Data",
+        "agentic-ai/03_Assess_Usecases",
+        "agentic-ai/04_Review_Export_Results"
       ]
     },
     {
@@ -134,8 +136,10 @@
     {
       "group": "Agentic AI",
       "pages": [
-        "api-reference/endpoint/generate_evaluation_data",
-        "api-reference/endpoint/evaluate_generated_data"
+        "api-reference/endpoint/01_Upload_Agent_Workflow_Logs",
+        "api-reference/endpoint/02_Generate_Evaluation_Data",
+        "api-reference/endpoint/03_Assess_Usecases",
+        "api-reference/endpoint/04_Review_Export_Results"
       ]
     }
   ],

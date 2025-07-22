@@ -1,9 +1,8 @@
 ---
-title: Uploading Dataset
-description: The Collinear AI Platform allows you to upload datasets in JSON or CSV format.
-icon: upload
+title: "Uploading Dataset"
+description: "The Collinear AI Platform allows you to upload datasets in JSON or CSV format."
+icon: "upload"
 ---
-
 
 ---
 
@@ -11,7 +10,7 @@ To assess or improve your models, your dataset needs to follow a specific struct
 
 ---
 
-## ✅ Supported Formats
+## Supported Formats
 
 ### 1. JSON Format
 
@@ -21,7 +20,6 @@ Each entry should be a dictionary with the following keys:
 - `response` — A dictionary with the assistant's reply.
 - `ground_truth` _(optional)_ — Integer rating (e.g., 1–5) for the response quality.
 - `context` _(optional)_ — A string providing additional context.
-
 
 Here is a sample JSON
 
@@ -40,23 +38,20 @@ Here is a sample JSON
 ]
 ```
 
-
 ### 2. CSV Format
+
 Each row represents one example and should contain:
 
 | Column         | Type                  | Description                                       |
-|----------------|-----------------------|---------------------------------------------------|
+| -------------- | --------------------- | ------------------------------------------------- |
 | `conv_prefix`  | `string`              | Raw string representing user message.             |
 | `response`     | `string`              | Assistant's reply (plain text).                   |
 | `ground_truth` | `int` _(optional)_    | Integer rating (1–5) of how good the response is. |
 | `context`      | `string` _(optional)_ | Extra context string that may assist evaluation.  |
 
-
 Download a sample CSV file [here](https://webresources-s3.s3.us-east-1.amazonaws.com/sample-csv.csv).
-
 
 **Note** :
 
-* _conv_prefix should be a plain string version of the user message._
-
-* The CSV format is flattened — it does not store role metadata. It assumes all conv_prefix entries are from the user role.
+- _conv_prefix should be a plain string version of the user message._
+- The CSV format is flattened — it does not store role metadata. It assumes all conv_prefix entries are from the user role.

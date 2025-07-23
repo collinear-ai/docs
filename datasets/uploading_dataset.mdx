@@ -1,29 +1,27 @@
 ---
-title: Uploading Dataset
-description: The Collinear AI Platform allows you to upload datasets in JSON or CSV format.
-icon: upload
+title: "Uploading Dataset"
+description: "The Collinear AI Platform allows you to upload datasets in JSON or CSV format."
+icon: "upload"
 ---
-
-
----
-
-To assess or improve your models, your dataset needs to follow a specific structure. We support two input formats: **JSON** and **CSV**, with optional fields for `ground_truth` and `context`.
 
 ---
 
-## ✅ Supported Formats
+To assess or improve your models, your dataset needs to follow a specific structure. We support two input formats: **JSON** and **CSV**, with field requirements varying by run type. 
+
+---
+
+## Supported Formats
 
 ### 1. JSON Format
 
 Each entry should be a dictionary with the following keys:
 
-- `conv_prefix` — A list of message objects (with `role` and `content`) representing the conversation history.
-- `response` — A dictionary with the assistant's reply.
-- `ground_truth` _(optional)_ — Integer rating (e.g., 1–5) for the response quality.
-- `context` _(optional)_ — A string providing additional context.
+- `conv_prefix` — A list of message objects (with `role` and `content`) representing the conversation history. The last turn should be from the user. Required for all run types.
+- `response` — A dictionary with the assistant's reply to the last user's input message. Required for all run types.
+- `ground_truth` — Integer rating (e.g., 1–5) for the response quality. Required for Performance runs.
+- `context` — A string providing additional context. Required for Reliability runs.
 
-
-Here is a sample JSON
+Here is a sample JSON:
 
 ```json
 [
@@ -40,23 +38,20 @@ Here is a sample JSON
 ]
 ```
 
-
 ### 2. CSV Format
+
 Each row represents one example and should contain:
 
-| Column         | Type                  | Description                                       |
-|----------------|-----------------------|---------------------------------------------------|
-| `conv_prefix`  | `string`              | Raw string representing user message.             |
-| `response`     | `string`              | Assistant's reply (plain text).                   |
-| `ground_truth` | `int` _(optional)_    | Integer rating (1–5) of how good the response is. |
-| `context`      | `string` _(optional)_ | Extra context string that may assist evaluation.  |
-
+| Column         | Type                                            | Description                                       |
+| -------------- | ----------------------------------------------- | ------------------------------------------------- |
+| `conv_prefix`  | `string`                                        | Raw string representing user message.             |
+| `response`     | `string`                                        | Assistant's reply (plain text).                   |
+| `ground_truth` | `int` _(required for Performance runs only)_    | Integer rating (1–5) of how good the response is. |
+| `context`      | `string` _(required for Reliability runs only)_ | Extra context string that may assist evaluation.  |
 
 Download a sample CSV file [here](https://webresources-s3.s3.us-east-1.amazonaws.com/sample-csv.csv).
 
-
 **Note** :
 
-* _conv_prefix should be a plain string version of the user message._
-
-* The CSV format is flattened — it does not store role metadata. It assumes all conv_prefix entries are from the user role.
+- _conv_prefix should be a plain string version of the user message._
+- The CSV format is flattened — it does not store role metadata. It assumes all conv_prefix entries are from the user role.

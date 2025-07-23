@@ -82,13 +82,6 @@
       ]
     },
     {
-      "group": "Guard",
-      "pages": [
-        "monitor/safety_monitoring",
-        "monitor/reliability_monitoring"
-      ]
-    },
-    {
       "group": "Improve",
       "pages": [
         "improve/create_curation_run"
@@ -104,8 +97,7 @@
     {
       "group": "Datasets",
       "pages": [
-        "datasets/uploading_dataset",
-        "datasets/conversation_builder",
+        "datasets/format_dataset",
         "datasets/upload_dataset",
         "datasets/run_judge_on_dataset",
         "datasets/run_conversation_model_on_dataset",

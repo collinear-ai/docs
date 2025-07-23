@@ -99,6 +99,7 @@
       "pages": [
         "datasets/format_dataset",
         "datasets/upload_dataset",
+        "datasets/conversation_builder",
         "datasets/run_judge_on_dataset",
         "datasets/run_conversation_model_on_dataset",
         "datasets/exporting_dataset"

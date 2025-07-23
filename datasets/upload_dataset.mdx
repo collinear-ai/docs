@@ -1,34 +1,39 @@
 ---
-title: Upload Dataset
-description: Use the Collinear AI API to upload a dataset to your space.
-icon: 'recycle'
+title: "Upload Dataset"
+description: "Use the Collinear AI API to upload a dataset to your space."
+icon: "recycle"
 ---
 
 ### Parameters
 
 The input dataset in the form of a pandas DataFrame. Each row in the DataFrame should contain:
-* conv_prefix: A list of strings representing the conversation prefix.
-* response: A dictionary containing the conversation response with a key 'content'.
-* ground_truth: Ground truth values for the corresponding conversation.
+
+- conv_prefix: A list of strings representing the conversation prefix.
+- response: A dictionary containing the conversation response with a key 'content'.
+- ground_truth: Ground truth values for the corresponding conversation.
+- context: A string providing context for the answer. Required for Reliability runs only.
 
 ### API Request Details
+
 The function makes a POST request to the API endpoint to upload the dataset.
 Check the API documentation [here](/api-reference/endpoint/upload_dataset).
 
 #### Request Body:
+
 The body of the request is a JSON object with the following fields:
 
-* name: Name of the dataset being uploaded (e.g., 'benchmark-db').
-* space_id: Identifier for the space to which the dataset belongs.
-* conversations: An array of conversation objects, each containing:
-    * conv_prefix: A list of conversation prefixes.
-        * role: The role of the message['user','assistant']
-        * content: The content of the message.
-    * response: The content of the response.
-    * judgements: An empty dictionary to store future judgements.
-    * ground_truth: The ground truth value for the conversation.
+- name: Name of the dataset being uploaded (e.g., 'benchmark-db').
+- space_id: Identifier for the space to which the dataset belongs.
+- conversations: An array of conversation objects, each containing:
+  - conv_prefix: A list of conversation prefixes.
+    - role: The role of the message['user','assistant']
+    - content: The content of the message.
+  - response: The content of the response.
+  - judgements: An empty dictionary to store future judgements.
+  - ground_truth: The ground truth value for the conversation.
 
 #### Sample Request:
+
 ```json
 {
   "name": "benchmark-db",
@@ -43,7 +48,6 @@ The body of the request is a JSON object with the following fields:
   ]
 }
 ```
-
 
 ## Example Python Code
 

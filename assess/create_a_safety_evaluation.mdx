@@ -6,7 +6,7 @@ icon: "shield-check"
 
 ## What is a Safety Evaluation?
 
-A **Safety Evaluation** measures how well your model adheres to safety guidelines when generating responses. Collinear AI uses a selected **safety judge** to assess risks like harmful, biased, or inappropriate content.
+A **Safety Evaluation** measures how well your model adheres to safety guidelines when generating responses. Collinear AI uses proprietary **safety judges** to assess risks like harmful, biased, or inappropriate content.
 
 This helps you:
 
@@ -27,40 +27,32 @@ Want to see it in action? Follow this guided demo to create your safety run:
 
 Choose the appropriate safety judge based on your evaluation needs:
 
-### 1. **CollinearGuard (Rating)**
+### 1. **Collinear Guard**
 
 Collinear AI’s proprietary Likert-based model using a 1–5 rating scale.
 
-- Use a 5-row scoring table to define your evaluation criteria.
-- Each row corresponds to a score from 1 (lowest) to 5 (highest).
+- This judge allows the user to customize the rating scale to match your evaluation criteria using a 1 (lowest) to 5 (highest) likert scale.
+- It assigns each conversation a primary risk category to accelerate vulnerability identification.
 
-### 2. **CollinearGuard Nano**
+### 2. **Collinear Guard Nano**
 
-Binary classification model that evaluates specific safety dimensions.
+Collinear AI's proprietary binary classification model that evaluates specific safety dimensions.
 
-- **Evaluation Targets:**
-- **Prompt**: Evaluates the user’s input
-- **Response**: Evaluates the model’s output
-- **Refusal**: Evaluates if the model should or did refuse to respond
+- This judge provides a pass or fail rating to each conversation within a dataset based on Collinear's safety criteria.
+- Similar to Collinear Guard, it also assigns each conversation a primary risk category to accelerate vulnerability identification.
 
-### 3. **CollinearGuard Nano (Categories)**
+### 3. **Llama Guard 3**
 
-Enhanced version of Nano that also outputs **safety categories** alongside binary results.
-
-- Ideal for more detailed classification use cases.
-
-### 4. **Llama Guard 3**
-
-Meta's off-the-shelf safety model.
+Meta's off-the-shelf safety evaluation model.
 
 - Plug-and-play judge with no customization needed.
 - Great for quick or comparative benchmarks.
 
-### 5. **Prompted Model**
+### 4. **LLM-as-a-Judge**
 
 Use any model with a custom prompt template.
 
-- Integrate your own model
+- Integrate your own model and customize the rating criteria or the entire prompt.
 
 ---
 

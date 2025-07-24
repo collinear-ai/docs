@@ -1,37 +1,42 @@
 ---
-title: What is Collinear AI
-description: "Collinear AI offers solution to continuously improve your model by generating high-quality, safety-aware post-training data using specialized judge models.
+title: What is Collinear AI?
+description: "Collinear is a one-stop post-training platform, purpose-built to help teams evaluate, pressure-test, and align their AI systems for real-world use.
 
-The API provides access to Collinear's proprietary post-training technologies:
+Collinear’s platform and API provide a unified workflow for post-training improvement — combining AI-driven assessment, adversarial testing, and targeted data generation to equip enterprises throughout the AI improvement flywheel. Collinear's core capabilities include:
 
-1. AI Judges for assessing eneterprise AI for Safety, Reliability, and Bespoke quality criteria
+1. Assess: Leverages AI Judges to evaluate eneterprise AI for Safety, Reliability, and Performance.
 
-2. Synthetic data generation and curation capabilities
+2. Red-team: Simulate adversarial prompts and regulatory edge cases to identify tool vulnerabilities and failure modes.
 
-3. Automated redteaming for predefined budget and use case spec"
+3. Curate: Generate and filter high-signal synthetic data using our proprietary Judges to use for targeted model post-training."
 ---
 
 <img
     src="/images/collinear-stack.svg"
 />
 
+Collinear is designed to fit directly into your post-training workflow — whether you're evaluating models in staging or continuously improving production systems. By combining structured evaluation, automated red-teaming, and high-signal data generation, the platform helps you:
 
+- **Debug model behavior with precision:** Use Judges to pinpoint where outputs break down—across safety, reliability, and custom metrics.
 
-Developers can leverage these tools to create custom AI models that comply with application specific safety requirements, ensure factual accuracy, and maintain brand alignment.
-The API supports various integration options and includes comprehensive documentation to facilitate seamless implementation. With Collinear's API, businesses can unlock the full potential of AI technologies while addressing current limitations in off-the-shelf models.
+- **Automate testing at scale:** Replace manual QA and prompt hacking with reproducible, adversarial test runs mapped to real-world risks.
+
+- **Generate retrain-ready data:** Curate synthetic examples tailored to known gaps, filtered and scored by policy-aligned models.
+
+- **Integrate flexibly:** Access everything via API or platform UI — whether you're building eval pipelines, tuning loops, or review dashboards.
 
 <CardGroup cols={2}>
     <Card
-        title="Judge"
+        title="Assess"
         icon="gavel"
-        href="https://docs.collinear.ai/flows/create_new_judge"
+        href="https://docs.collinear.ai/assess/create_a_safety_evaluation"
     >
-        Create and run judges for safety, realiability, and bespoke criteria
+        Create and run judges for safety, realiability, and performance criteria
     </Card>
     <Card
-        title="Datasets"
+        title="Curate"
         icon="table"
-        href="https://docs.collinear.ai/flows/upload_dataset"
+        href="https://docs.collinear.ai/improve/create_curation_run"
     >
         Upload, curate, and download datasets
     </Card>

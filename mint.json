@@ -62,6 +62,16 @@
       ]
     },
     {
+      "group": "SDK",
+      "pages": [
+        "sdk/overview",
+        "sdk/simulations",
+        "sdk/assessment",
+        "sdk/notebooks",
+        "sdk/recipes"
+      ]
+    },
+    {
       "group": "Assess",
       "pages": [
         "assess/create_a_safety_evaluation",

@@ -1,0 +1,93 @@
+---
+title: Run Persona Simulations
+description: Configure steers, personas, and batching when generating conversations with the Collinear Python SDK.
+---
+
+## Configure Steer Personas
+
+A `steer_config` describes the space of personas and intents that the SDK will sample from. Define axes as lists and traits as intensity buckets (`0–5` accepted; the SDK will coerce numbers). Example inspired by the bundled configs:
+
+```python
+from collinear.schemas.steer import SteerConfigInput
+
+steer_config: SteerConfigInput = {
+    "ages": ["young adult", "middle-aged", "senior"],
+    "genders": ["man", "woman"],
+    "occupations": ["teacher", "software engineer", "nurse"],
+    "intents": [
+        "Resolve billing issue",
+        "Cancel service",
+        "Device troubleshooting",
+    ],
+    "traits": {
+        "confusion": [2],
+        "impatience": [0, 3],
+    },
+}
+```
+
+## Controlling Sample Volume
+
+`Client.simulate` exposes levers for scale and pacing:
+
+- `k`: number of persona combinations to draw; omit it to exhaust the full cartesian product.
+- `num_exchanges`: user/assistant pairs per conversation. Each exchange adds one user line and one assistant line.
+- `batch_delay`: seconds to sleep between samples to avoid rate limits.
+- `mix_traits`: set `True` to mix two traits per persona (requires at least two traits defined).
+- `steer_temperature` and `steer_max_tokens`: passed through to the steer service when generating user turns.
+
+```python
+simulations = client.simulate(
+    steer_config=steer_config,
+    k=5,
+    num_exchanges=4,
+    batch_delay=0.5,
+    mix_traits=True,
+    steer_temperature=0.6,
+    steer_max_tokens=200,
+)
+```
+
+Each `SimulationResult` contains the conversation prefix (`conv_prefix`), the assistant's final response (`response`), and the resolved persona attributes (`steer`).
+
+## Custom Prompts and Tone
+
+Override system prompts by editing the `SimulationRunner` attached to the client. Before calling `simulate`, set the templates you want to use:
+
+```python
+runner = client.simulation_runner
+runner.USER_PROMPT_TEMPLATE = "You are a {age} traveler..."
+runner.ASSISTANT_PROMPT_TEMPLATE = "You are a concierge..."
+```
+
+If you leave templates unset, the runner falls back to the SDK defaults defined in `SimulationRunner.ASSISTANT_PROMPT_TEMPLATE` and its generated user instructions.
+
+## Logging and Progress
+
+- Set `progress=False` on `simulate` to disable the tqdm progress bar (useful in headless environments).
+- The runner logs each generated turn via the `collinear` logger. Configure logging in your script (`logging.basicConfig(level=logging.INFO)`) to see persona details and turn content.
+
+## Saving Outputs
+
+Convert results into JSONL for downstream tooling:
+
+```python
+from pathlib import Path
+import json
+
+out_path = Path("data/simulations.jsonl")
+out_path.parent.mkdir(exist_ok=True)
+
+with out_path.open("w", encoding="utf-8") as f:
+    for sim in simulations:
+        f.write(json.dumps(
+            {
+                "persona": sim.steer.model_dump() if sim.steer else None,
+                "conversation": sim.conv_prefix,
+                "assistant_response": sim.response,
+            },
+            ensure_ascii=False,
+        ) + "\n")
+```
+
+Pair this with the recipes in the dedicated page to plug simulations into evaluation pipelines.

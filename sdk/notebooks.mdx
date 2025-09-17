@@ -1,0 +1,128 @@
+---
+title: Notebook Workflows
+description: Recreate the JSON-configured simulation workflow inside Jupyter or Colab notebooks.
+---
+
+## Define Config In-Notebook
+
+Keep everything self-contained by declaring the configuration directly inside the notebook:
+
+```python
+config = {
+    "client": {
+        "assistant_model_url": "https://api.openai.com/v1",
+        "assistant_model_api_key": "<paste your key>",
+        "assistant_model_name": "gpt-4o-mini",
+        "steer_api_key": "demo-001",
+        "timeout": 120,
+        "max_retries": 3,
+        "rate_limit_retries": 6,
+    },
+    "simulate": {
+        "k": 2,
+        "num_exchanges": 3,
+        "batch_delay": 0.2,
+        "steer_temperature": 0.7,
+        "steer_max_tokens": 256,
+        "mix_traits": False,
+    },
+    "assess": {
+        "temperature": 0.0,
+        "max_tokens": 512,
+    },
+    "prompts": {
+        "user_system_prompt": None,
+        "assistant_system_prompt": None,
+    },
+}
+
+steering = {
+    "ages": ["young adult", "middle-aged"],
+    "genders": ["woman", "man"],
+    "occupations": ["teacher", "nurse"],
+    "intents": ["Resolve billing issue", "Update plan"],
+    "traits": {"impatience": [0, 3], "confusion": [2]},
+}
+```
+
+Adjust the dictionaries to match your use case or load them from your own storage if you prefer to keep configs on disk.
+
+## Initialize the Client
+
+```python
+from collinear.client import Client
+
+client_settings = config.get("client", {})
+client = Client(
+    assistant_model_url=client_settings.get("assistant_model_url", "https://api.openai.com/v1"),
+    assistant_model_api_key=client_settings["assistant_model_api_key"],
+    assistant_model_name=client_settings.get("assistant_model_name", "gpt-4o-mini"),
+    steer_api_key=client_settings.get("steer_api_key", "demo-001"),
+    timeout=float(client_settings.get("timeout", 120)),
+    max_retries=int(client_settings.get("max_retries", 3)),
+    rate_limit_retries=int(client_settings.get("rate_limit_retries", 6)),
+)
+```
+
+Swap the placeholder API key for a secure value. For collaborative notebooks, rely on environment variables or the platform’s secret storage rather than embedding keys directly in the notebook.
+
+## Apply Optional Prompts
+
+```python
+runner = client.simulation_runner
+user_prompt = config.get("prompts", {}).get("user_system_prompt")
+assistant_prompt = config.get("prompts", {}).get("assistant_system_prompt")
+
+if isinstance(user_prompt, str) and user_prompt.strip():
+    runner.USER_PROMPT_TEMPLATE = user_prompt
+if isinstance(assistant_prompt, str) and assistant_prompt.strip():
+    runner.ASSISTANT_PROMPT_TEMPLATE = assistant_prompt
+```
+
+This mirrors the pattern in the quick-start notebooks so you can toggle between structured prompts and the SDK defaults.
+
+## Run Simulations and Display Results
+
+```python
+simulate_opts = config.get("simulate", {})
+simulations = client.simulate(
+    steer_config=steering,
+    k=simulate_opts.get("k", 1),
+    num_exchanges=simulate_opts.get("num_exchanges", 2),
+    batch_delay=simulate_opts.get("batch_delay", 0.2),
+    steer_temperature=simulate_opts.get("steer_temperature"),
+    steer_max_tokens=simulate_opts.get("steer_max_tokens"),
+    mix_traits=bool(simulate_opts.get("mix_traits", False)),
+)
+```
+
+Render each conversation cell-by-cell to keep notebook output readable:
+
+```python
+for sim in simulations:
+    display({
+        "persona": sim.steer.model_dump() if sim.steer else None,
+        "conversation": [f"{m['role']}: {m['content']}" for m in sim.conv_prefix],
+        "assistant": sim.response,
+    })
+```
+
+## Assess Inside the Notebook
+
+Compose the assessor call directly beneath simulations so you can inspect scores inline:
+
+```python
+assess_cfg = config.get("assess", {})
+assessment = client.assess(
+    dataset=simulations,
+    judge_model_url=assess_cfg.get("judge_model_url"),
+    judge_model_api_key=assess_cfg.get("judge_model_api_key"),
+    judge_model_name=assess_cfg.get("judge_model_name"),
+    temperature=assess_cfg.get("temperature", 0.0),
+    max_tokens=assess_cfg.get("max_tokens", 512),
+)
+
+assessment
+```
+
+Add cells for any domain-specific post-processing you need (visualizations, exports, etc.). The structure above keeps the simulation pipeline explicit and easy to tweak without relying on hidden helper files.

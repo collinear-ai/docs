@@ -1,0 +1,51 @@
+---
+title: Run Local Assessments
+description: Score simulated conversations with your own judge model through the SDK's local assessor.
+---
+
+## What the Assessor Does
+
+`Client.assess` runs a rubric-guided evaluation locally by calling an OpenAI-compatible model that you supply. It returns an `AssessmentResponse` with:
+
+- `message`: general status text (e.g., "ok").
+- `evaluation_result`: list of maps containing `score` and `rationale` per conversation.
+
+No data leaves your environment beyond the models you call.
+
+## Supplying Judge Credentials
+
+By default, the assessor reuses the assistant credentials you passed to `Client`. Override any part of the judge connection as needed:
+
+```python
+result = client.assess(
+    dataset=simulations,
+    judge_model_url=os.getenv("JUDGE_BASE_URL", "https://api.openai.com/v1"),
+    judge_model_api_key=os.getenv("JUDGE_API_KEY", os.environ["OPENAI_API_KEY"]),
+    judge_model_name=os.getenv("JUDGE_MODEL", "gpt-4o-mini"),
+    temperature=0.0,
+    max_tokens=512,
+)
+```
+
+Ensure `simulations` is a non-empty list of `SimulationResult` objects returned from `client.simulate`.
+
+## Interpreting Results
+
+```python
+for idx, row in enumerate(result.evaluation_result, start=1):
+    scores = next(iter(row.values()), None)
+    if scores:
+        print(f"Conversation {idx}: score={scores.score}\n  {scores.rationale}")
+```
+
+Treat the rationale as model-generated text. Post-process or threshold scores to fit your use case.
+
+## Handling Errors
+
+- Missing credentials raise `SystemExit` in the example helpers; validate env vars up front in production.
+- A `ValueError` is thrown if you pass an empty dataset.
+- Judge timeouts or rate limits surface from the underlying HTTP client; adjust `timeout`, `max_retries`, or run with smaller batches.
+
+## Moving into the Dashboard
+
+If you plan to publish assessed results into the Collinear platform, export the dataset (for example as JSONL) and use the upload endpoints covered in the API docs. Keep the SDK and dashboard credentials separate to avoid accidental cross-use.

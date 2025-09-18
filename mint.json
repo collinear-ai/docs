@@ -52,43 +52,30 @@
       ]
     },
     {
-      "group": "Get Started",
+      "group": "Get started",
       "pages": [
-        "get-started/login",
-        "get-started/create_space",
-        "get-started/get_api_key",
-        "get-started/get_space_id",
-        "get-started/get_judge_id"
+        "get-started/overview",
+        "get-started/quickstart",
+        "get-started/simulations"
       ]
     },
     {
-      "group": "SDK",
+      "group": "Core concepts",
       "pages": [
-        "sdk/overview",
-        "sdk/simulations",
-        "sdk/assessment",
-        "sdk/notebooks",
-        "sdk/recipes"
+        "core-concepts/datasets",
+        "core-concepts/judges",
+        "core-concepts/runs",
+        "core-concepts/personas"
       ]
     },
     {
-      "group": "Assess",
+      "group": "Agents",
       "pages": [
-        "assess/create_a_safety_evaluation",
-        "assess/create_a_reliability_evaluation",
-        "assess/create_collinear_flex_evaluation",
-        "assess/compare",
-        "assess/query_language"
-        ]
-    },
-    {
-      "group": "Agentic AI",
-      "pages": [
-        "agentic-ai/overview",
-        "agentic-ai/01_Upload_Agent_Workflow_Logs",
-        "agentic-ai/02_Generate_Evaluation_Data",
-        "agentic-ai/03_Assess_Usecases",
-        "agentic-ai/04_Review_Export_Results"
+        "agents/overview",
+        "agents/01_Upload_Agent_Workflow_Logs",
+        "agents/02_Generate_Evaluation_Data",
+        "agents/03_Assess_Usecases",
+        "agents/04_Review_Export_Results"
       ]
     },
     {
@@ -122,17 +109,10 @@
       ]
     },
     {
-      "group": "Assess",
+      "group": "Analyze",
       "pages": [
         "api-reference/endpoint/judge_conversation",
         "api-reference/endpoint/curator_judge"     
-      ]
-    },
-    {
-      "group": "Guard",
-      "pages": [
-        "api-reference/endpoint/safety_judge",
-        "api-reference/endpoint/reliability_judge"
       ]
     },
     {

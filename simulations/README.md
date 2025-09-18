@@ -25,16 +25,10 @@ Generate realistic, high-fidelity, multi-turn user interactions conditioned on u
 
 ### Examples & Tutorials
 - [Basic Simulation](examples/basic-simulation.md)
-- [RL Training Data](examples/rl-training.md)
 - [Agent Evaluation](examples/agent-evaluation.md)
 - [Custom Personas](examples/custom-personas.md)
 - [Batch Processing](examples/batch-processing.md)
-
-### Advanced Topics
-- [Trait Mixing](advanced/trait-mixing.md)
-- [Custom Assessment](advanced/custom-assessment.md)
-- [Performance Optimization](advanced/performance.md)
-- [Integration with External Tools](advanced/integrations.md)
+- [RL Training Data](examples/rl-training.md)
 
 ## 🚀 Quick Example
 
@@ -68,10 +62,10 @@ print(f"Assessment: {assessment.message}")
 
 ## 📖 What's Next?
 
-1. **New to Collinear?** Start with the [Installation & Setup](getting-started/installation.md) guide
-2. **Ready to run simulations?** Follow the [Quick Start Guide](getting-started/quick-start.md)
-3. **Need specific examples?** Check out the [Examples & Tutorials](examples/) section
-4. **Building something complex?** Explore the [Advanced Topics](advanced/) section
+1. **Install the SDK** with the [Installation & Setup](getting-started/installation.md) guide.
+2. **Run your first workflow** using the [Quick Start Guide](getting-started/quick-start.md).
+3. **Tune configurations** with the [Configuration Guide](getting-started/configuration.md).
+4. **Learn from examples** in [Basic Simulation](examples/basic-simulation.md) and [Agent Evaluation](examples/agent-evaluation.md).
 
 ## 🤝 Support
 

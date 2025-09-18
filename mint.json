@@ -41,9 +41,7 @@
       "method": "bearer"
     }
   },
-  "anchors": [
-    
-  ],
+  "anchors": [],
   "navigation": [
     {
       "group": "Introduction",
@@ -76,6 +74,32 @@
         "agents/02_Generate_Evaluation_Data",
         "agents/03_Assess_Usecases",
         "agents/04_Review_Export_Results"
+      ]
+    },
+    {
+      "group": "SDK",
+      "pages": [
+        "sdk/overview",
+        "sdk/simulations",
+        "sdk/assessment",
+        "sdk/notebooks",
+        "sdk/recipes"
+      ]
+    },
+    {
+      "group": "Simulations",
+      "pages": [
+        "simulations/getting-started/installation",
+        "simulations/getting-started/quick-start",
+        "simulations/getting-started/configuration",
+        "simulations/examples/basic-simulation",
+        "simulations/examples/agent-evaluation",
+        "simulations/examples/custom-personas",
+        "simulations/examples/batch-processing",
+        "simulations/examples/rl-training",
+        "simulations/api/client",
+        "simulations/api/configuration",
+        "simulations/api/schemas"
       ]
     },
     {
@@ -112,7 +136,7 @@
       "group": "Analyze",
       "pages": [
         "api-reference/endpoint/judge_conversation",
-        "api-reference/endpoint/curator_judge"     
+        "api-reference/endpoint/curator_judge"
       ]
     },
     {

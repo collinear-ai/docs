@@ -1,0 +1,177 @@
+---
+title: Assessments
+description: Learn about the Collinear Platform API and Trait Basis SDK.
+---
+
+## Core Capabilities
+
+**Simulate** – Generate high-fidelity, multi-turn conversations across millions of trait combinations. Trait levels live in the \[0, 2\] range, so you can dial personalities precisely and keep runs consistent.
+
+**Analyze** – Score conversations with production-grade judges for safety, reliability, and task success. Surface regressions immediately.
+
+
+## Platform vs SDK
+
+| Surface | Primary use | How to call it today |
+| --- | --- | --- |
+| **Collinear Platform API** | Visualizations, judges, and dataset export | cURL (SDK support coming soon) |
+| **Trait Basis SDK** | Generate simulations driven by the Trait Basis API | Python package: `pip install collinear` |
+
+### Platform API example
+
+First, synthesize conversations with the Trait Basis SDK and persist them as JSONL:
+
+```python
+import json
+import os
+from pathlib import Path
+
+from collinear.client import Client
+
+client = Client(
+    assistant_model_url="https://api.openai.com/v1",
+    assistant_model_api_key=os.environ["OPENAI_API_KEY"],
+    assistant_model_name="gpt-4o-mini",
+    steer_api_key=os.environ["TRAIT_BASIS_API_KEY"],
+)
+
+trait_basis = {
+    "ages": [25, 41],
+    "genders": ["woman", "man"],
+    "occupations": ["product_manager", "support_lead"],
+    "intents": ["billing_dispute", "cancel_service"],
+    "traits": {"impatience": [0, 2], "confusion": [0, 2]},
+    "locations": ["United States", "China"],
+    "languages": ["Spanish", "English", "French"],
+    "tasks": ["airline support", "ski resort guide"]
+}
+
+simulations = client.simulate(trait_basis, k=3, num_exchanges=4)
+
+output_path = Path("synthetic/conversations.jsonl")
+output_path.parent.mkdir(parents=True, exist_ok=True)
+
+with output_path.open("w", encoding="utf-8") as dataset_file:
+    for simulation in simulations:
+        lines = [
+            f"{message.get('role')}: {message.get('content')}"
+            for message in simulation.conv_prefix
+            if message.get("content")
+        ]
+        persona = simulation.steer
+        payload = {
+            "conversation": "\n".join(lines),
+            "assistant_response": simulation.response,
+        }
+        if persona:
+            characteristics = {
+                key: value
+                for key, value in {
+                    "age": persona.age,
+                    "gender": persona.gender,
+                    "occupation": persona.occupation,
+                    "intent": persona.intent,
+                    "location": persona.location,
+                    "language": persona.language,
+                    "task": persona.task,
+                }.items()
+                if value is not None
+            }
+            payload["steering_persona"] = {
+                "characteristics": characteristics,
+                "traits": persona.traits,
+            }
+        dataset_file.write(json.dumps(payload, ensure_ascii=False) + "\n")
+
+print(f"Wrote dataset to {output_path}")
+```
+
+Then, upload that JSONL file to your hosted judge on the platform (set `COLLINEAR_API_KEY` to your platform token first):
+
+```bash
+JUDGE_ID="YOUR_JUDGE_ID"
+curl -X POST https://api.collinear.ai/api/v1/judge/upload/${JUDGE_ID} \
+  -H "Authorization: Bearer ${COLLINEAR_API_KEY}" \
+  -F "file=@synthetic/conversations.jsonl;type=application/json"
+```
+
+### Assess conversations
+
+#### Use the Trait Basis SDK (local judge)
+
+```python
+import os
+from collinear.client import Client
+
+client = Client(
+    assistant_model_url=os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
+    assistant_model_api_key=os.environ["OPENAI_API_KEY"],
+    assistant_model_name=os.getenv("OPENAI_ASSISTANT_MODEL", "gpt-4o-mini"),
+    steer_api_key=os.environ["TRAIT_BASIS_API_KEY"],
+)
+
+trait_basis = {
+    "ages": [25, 41],
+    "genders": ["woman", "man"],
+    "occupations": ["product_manager", "support_lead"],
+    "intents": ["billing_dispute", "cancel_service"],
+    "traits": {"impatience": [0, 2], "confusion": [0, 2]},
+}
+
+dataset = client.simulate(trait_basis, k=3, num_exchanges=4)
+
+assessment = client.assess(
+    dataset=dataset,
+    judge_model_name=os.getenv("OPENAI_JUDGE_MODEL", "gpt-4o-mini"),
+    temperature=0.0,
+)
+
+for idx, scores_map in enumerate(assessment.evaluation_result, start=1):
+    scores = next(iter(scores_map.values()))
+    print(f"Conversation {idx}: score={scores.score} rationale={scores.rationale}")
+```
+
+This mirrors the SDK's `examples/example_assess.py` script and keeps the assessment local—you do not need a Collinear platform token for these runs.
+
+#### Use the Platform API (hosted judge)
+
+Upload the JSONL you saved earlier, then trigger an evaluation run against one or more hosted judges.
+
+```bash
+DATASET_NAME="billing-dispute-batch-1"
+
+# Upload dataset and capture the dataset_id from the response
+curl -X POST https://api.collinear.ai/api/v1/dataset/upload \
+  -H "Authorization: Bearer ${COLLINEAR_API_KEY}" \
+  -F "space_id=${SPACE_ID}" \
+  -F "dataset_name=${DATASET_NAME}" \
+  -F "file=@synthetic/conversations.jsonl;type=application/json"
+
+# Start an assessment run with your hosted judge
+DATASET_ID="YOUR_DATASET_ID"      # returned by the upload step
+RUN_NAME="support-safety-check"
+
+curl -X POST https://api.collinear.ai/api/v1/dataset/assess/run \
+  -H "Authorization: Bearer ${COLLINEAR_API_KEY}" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "space_id": "'"${SPACE_ID}"'",
+        "dataset_id": "'"${DATASET_ID}"'",
+        "name": "'"${RUN_NAME}"'",
+        "judge_ids": ["'"${JUDGE_ID}"'"],
+        "roll_data": true
+      }'
+
+# Poll the evaluation status
+EVALUATION_ID="YOUR_EVALUATION_ID"
+curl -X GET https://api.collinear.ai/api/v1/evaluation/${EVALUATION_ID} \
+  -H "Authorization: Bearer ${COLLINEAR_API_KEY}"
+```
+
+The `/api/v1/dataset/upload` and `/api/v1/dataset/assess/run` shapes come directly from the OpenAPI spec, so ensure you pass a valid UUID for `space_id`, `dataset_id`, and `judge_ids`. Store the `evaluation_id` returned in the run response to monitor completion or download results later.
+
+## Pick your next step
+
+1. [Run the Quickstart](quickstart) to execute your first Trait Basis simulation and judgment locally.
+2. [Configure simulations](simulations) when you are ready to scale persona grids.
+3. Browse the [API reference](/api-reference/endpoint/judge_conversation) for hosted workflows.

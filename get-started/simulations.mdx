@@ -1,553 +1,77 @@
 ---
-title: "Simulations"
-description: "Learn how to create realistic user simulations with diverse personas, traits, and scenarios for comprehensive AI testing"
+title: Trait Basis Simulations
+description: Configure trait basis payloads for large-scale conversation generation.
 ---
 
-# Simulations Guide
+The Trait Basis API samples personas by taking the Cartesian product of the axes you supply. Keep the structure tight and you can generate millions of consistent conversations without hand-written prompts.
 
-Simulations dyanmic, realistic, multi-turn user interactions that expose real-world failure modes and edge cases that manual testing would miss.
+## Trait Basis payload fields
 
-## What Are Simulations?
+| Key | Type | Notes |
+| --- | --- | --- |
+| `ages` | `list[int]` | Optional. Use integers. |
+| `genders` | `list[str]` | Strings such as `"woman"`, `"man"`, `"non_binary"`. |
+| `occupations` | `list[str]` | Any domain label that helps your reviewers interpret results. |
+| `intents` | `list[str]` | Required. Tie these to business flows (e.g. `billing_dispute`). |
+| `traits` | `dict[str, list[int]]` | Trait intensity range is **0–2**. Each list entry expands the grid. |
+| `locations` | `list[str]` | ISO-style or internal geo labels. |
+| `languages` | `list[str]` | ISO-639 or custom tokens (`"en"`, `"es"`). |
+| `tasks` | `list[str]` | High-level scenario label, e.g. `"telecom_retention"`. |
 
-Simulations are dynamic rollouts between diverse user personas and your AI system. Each simulation includes:
+Every combination produces one persona. With two traits at three intensity levels you already have nine persona variants; add more axes carefully to avoid unbounded growth.
 
-- **Realistic user personas** with specific demographics, traits, and intents
-- **Multi-turn conversations** that maintain persona consistency
-- **Edge cases and stress scenarios** that test system robustness
-- **Diverse interaction patterns** covering various user types and situations
-- **Tool use** testing for agentic AI
-
-## Core Concepts
-
-### Personas
-
-Personas are user profiles that define who is interacting with your AI system. Each persona includes:
-
-<CardGroup cols={2}>
-  <Card title="Demographics" icon="users">
-    Age, gender, occupation, location, language preferences
-  </Card>
-  <Card title="Personality Traits" icon="brain">
-    Impatience, confusion, skepticism, urgency, politeness levels
-  </Card>
-  <Card title="Intent" icon="target">
-    What the user wants to accomplish (complaint, booking, support)
-  </Card>
-  <Card title="Context" icon="map-pin">
-    Domain, task type, and scenario background
-  </Card>
-</CardGroup>
-
-### Traits and Intensity Levels
-
-Traits define personality characteristics with intensity levels from -2 to +2:
-
-| Trait | Low (-2, -1) | High (+1, +2) |
-|-------|--------------|---------------|
-| **Impatience** | Patient, understanding | Impatient, demanding |
-| **Confusion** | Clear, confident | Confused, uncertain |
-| **Skeptical** | Trusting, accepting | Skeptical, questioning |
-| **Urgency** | Relaxed, no rush | Urgent, time-sensitive |
-| **Incoherence** | fluent, native | non-native, typos | 
-| **Technical** | Non-technical, simple | Technical, complex |
-
-## Creating Your First Simulation
-
-### Basic Persona Configuration
+## Minimal configuration
 
 ```python
-from collinear import Client
-
-client = Client(api_key="your-api-key")
-
-# Define a simple persona
-persona = {
-    "name": "frustrated_customer",
-    "demographics": {
-        "age": 35,
-        "gender": "female",
-        "occupation": "business_owner",
-        "location": "USA"
-    },
+trait_basis = {
+    "ages": [24, 38, 57],
+    "genders": ["woman", "man"],
+    "occupations": ["support_manager", "field_technician"],
+    "intents": ["billing_dispute", "cancel_service"],
     "traits": {
-        "impatience": 2,      # Very impatient
-        "skeptical": 1,       # Somewhat skeptical
-        "urgency": 2,         # Very urgent
-        "politeness": 0       # Neutral politeness
+        "impatience": [0, 1, 2],
+        "confusion": [0, 2],
     },
-    "intent": "complaint",
-    "context": {
-        "domain": "customer_service",
-        "task": "resolve_billing_issue"
-    }
+    "locations": ["united_states"],
+    "languages": ["en"],
+    "tasks": ["telecom_retention"],
 }
+```
 
-# Generate simulation
-simulation = client.simulate(
-    personas=[persona],
-    num_scenarios=1,
-    exchanges_per_scenario=3
+## Running at scale with the SDK
+
+```python
+import os
+from collinear.client import Client
+
+client = Client(
+    assistant_model_url=os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
+    assistant_model_api_key=os.environ["OPENAI_API_KEY"],
+    assistant_model_name=os.getenv("OPENAI_ASSISTANT_MODEL", "gpt-4o-mini"),
+    steer_api_key=os.environ["TRAIT_BASIS_API_KEY"],
+)
+
+conversations = client.simulate(
+    trait_basis,
+    k=500,              # Optional: sample subset instead of full Cartesian product
+    num_exchanges=4,
+    batch_delay=0.1,
+    max_concurrency=4,  # Switches to Trait Basis batch endpoint when >1
 )
 ```
 
-### Multiple Personas
+### Tips
 
-```python
-# Define multiple personas for diverse testing
-personas = [
-    {
-        "name": "frustrated_customer",
-        "demographics": {"age": 35, "gender": "female", "occupation": "business_owner"},
-        "traits": {"impatience": 2, "skeptical": 1, "urgency": 2},
-        "intent": "complaint"
-    },
-    {
-        "name": "confused_elderly",
-        "demographics": {"age": 70, "gender": "male", "occupation": "retired"},
-        "traits": {"confusion": 2, "impatience": -1, "politeness": 2},
-        "intent": "technical_support"
-    },
-    {
-        "name": "impatient_business_traveler",
-        "demographics": {"age": 45, "gender": "male", "occupation": "executive"},
-        "traits": {"impatience": 2, "urgency": 2, "technical": 1},
-        "intent": "urgent_booking"
-    }
-]
+- **Start narrow.** Validate a small grid before expanding to millions of combinations.
+- **Name traits clearly.** Reviewers should know what `impatience=2` means without a legend.
+- **Cache configs.** Store JSON alongside your runs so you can replay identical grids later.
+- **Batch responsibly.** Increase `max_concurrency` only after confirming your model endpoint quota.
 
-simulations = client.simulate(
-    personas=personas,
-    num_scenarios=10,
-    exchanges_per_scenario=4
-)
-```
+### Trait availability
 
-## Advanced Persona Design
+`client.simulation_runner.list_traits()` returns the Trait Basis catalog recognised by your key. If a run fails with “unknown trait”, inspect that list, adjust the payload, and retry.
 
-### Trait Combinations
+### Next steps
 
-Create complex personas by combining multiple traits:
-
-```python
-# High-stress persona
-high_stress_persona = {
-    "name": "high_stress_customer",
-    "traits": {
-        "impatience": 2,
-        "urgency": 2,
-        "skeptical": 1,
-        "emotional": 2
-    },
-    "intent": "escalation"
-}
-
-# Confused but polite persona
-confused_polite_persona = {
-    "name": "confused_polite_user",
-    "traits": {
-        "confusion": 2,
-        "politeness": 2,
-        "impatience": -1,
-        "technical": -2
-    },
-    "intent": "general_inquiry"
-}
-```
-
-### Demographic Diversity
-
-```python
-# Age diversity
-age_groups = {
-    "young_adult": {"ages": [18, 22, 25]},
-    "middle_aged": {"ages": [30, 35, 40, 45]},
-    "senior": {"ages": [55, 60, 65, 70, 75]}
-}
-
-# Gender diversity
-gender_options = {
-    "male": {"genders": ["male"]},
-    "female": {"genders": ["female"]},
-    "diverse": {"genders": ["male", "female", "other"]}
-}
-
-# Occupation variety
-occupation_types = {
-    "professional": {"occupations": ["engineer", "doctor", "lawyer", "manager"]},
-    "service": {"occupations": ["teacher", "nurse", "retail", "customer_service"]},
-    "business": {"occupations": ["business_owner", "entrepreneur", "consultant"]}
-}
-```
-
-### Intent Categories
-
-```python
-# Customer service intents
-customer_service_intents = [
-    "complaint",
-    "escalation", 
-    "refund_request",
-    "technical_issue",
-    "billing_question",
-    "general_inquiry"
-]
-
-# E-commerce intents
-ecommerce_intents = [
-    "product_inquiry",
-    "order_status",
-    "return_request",
-    "shipping_question",
-    "payment_issue"
-]
-
-# Technical support intents
-tech_support_intents = [
-    "setup_help",
-    "troubleshooting",
-    "feature_request",
-    "bug_report",
-    "integration_help"
-]
-```
-
-## Simulation Parameters
-
-### Core Parameters
-
-```python
-simulations = client.simulate(
-    personas=personas,
-    num_scenarios=100,           # Number of conversations to generate
-    exchanges_per_scenario=3,    # Turns per conversation
-    temperature=0.7,             # Creativity level (0.0-1.0)
-    max_tokens=256,              # Maximum response length
-    seed=42                      # For reproducible results
-)
-```
-
-### Advanced Parameters
-
-```python
-simulations = client.simulate(
-    personas=personas,
-    num_scenarios=1000,
-    exchanges_per_scenario=5,
-    
-    # Persona sampling
-    persona_sampling="balanced",  # "balanced", "weighted", "random"
-    trait_mixing=True,           # Combine multiple traits per persona
-    
-    # Conversation control
-    conversation_style="natural", # "natural", "formal", "casual"
-    include_context=True,        # Include background context
-    stress_testing=True,         # Include edge cases and stress scenarios
-    
-    # Quality control
-    min_quality_score=7.0,       # Minimum quality threshold
-    filter_inappropriate=True,   # Filter out inappropriate content
-    validate_consistency=True    # Ensure persona consistency
-)
-```
-
-## Domain-Specific Configurations
-
-### Customer Service
-
-```python
-customer_service_config = {
-    "personas": [
-        {
-            "name": "angry_customer",
-            "traits": {"impatience": 2, "emotional": 2, "skeptical": 1},
-            "intents": ["complaint", "escalation", "refund_request"]
-        },
-        {
-            "name": "confused_customer", 
-            "traits": {"confusion": 2, "politeness": 1, "impatience": 0},
-            "intents": ["technical_issue", "billing_question", "general_inquiry"]
-        }
-    ],
-    "context": {
-        "domain": "customer_service",
-        "scenarios": ["billing_dispute", "product_issue", "service_complaint"]
-    }
-}
-```
-
-### E-commerce
-
-```python
-ecommerce_config = {
-    "personas": [
-        {
-            "name": "bargain_hunter",
-            "traits": {"impatience": 1, "skeptical": 1, "urgency": 0},
-            "intents": ["product_inquiry", "price_question", "discount_request"]
-        },
-        {
-            "name": "urgent_buyer",
-            "traits": {"urgency": 2, "impatience": 2, "technical": 1},
-            "intents": ["urgent_order", "shipping_upgrade", "immediate_purchase"]
-        }
-    ],
-    "context": {
-        "domain": "ecommerce",
-        "scenarios": ["product_search", "checkout_issue", "delivery_problem"]
-    }
-}
-```
-
-### Technical Support
-
-```python
-tech_support_config = {
-    "personas": [
-        {
-            "name": "technical_expert",
-            "traits": {"technical": 2, "impatience": 1, "assertiveness": 1},
-            "intents": ["advanced_troubleshooting", "integration_help", "feature_request"]
-        },
-        {
-            "name": "beginner_user",
-            "traits": {"technical": -2, "confusion": 2, "politeness": 2},
-            "intents": ["setup_help", "basic_troubleshooting", "how_to_guide"]
-        }
-    ],
-    "context": {
-        "domain": "technical_support",
-        "scenarios": ["software_issue", "hardware_problem", "account_setup"]
-    }
-}
-```
-
-## Scaling Simulations
-
-### Batch Processing
-
-```python
-# Process large numbers of simulations in batches
-def generate_large_dataset(personas, total_scenarios=10000, batch_size=100):
-    all_simulations = []
-    
-    for batch_start in range(0, total_scenarios, batch_size):
-        batch_size_actual = min(batch_size, total_scenarios - batch_start)
-        
-        print(f"Processing batch {batch_start//batch_size + 1}")
-        
-        batch_simulations = client.simulate(
-            personas=personas,
-            num_scenarios=batch_size_actual,
-            exchanges_per_scenario=3
-        )
-        
-        all_simulations.extend(batch_simulations)
-        
-        # Save intermediate results
-        client.save_simulations(
-            batch_simulations, 
-            f"batch_{batch_start//batch_size + 1}.jsonl"
-        )
-    
-    return all_simulations
-
-# Generate 10,000 simulations
-large_dataset = generate_large_dataset(personas, total_scenarios=10000)
-```
-
-### Parallel Processing
-
-```python
-import concurrent.futures
-import threading
-
-def parallel_simulation_generation(personas, total_scenarios=1000, num_workers=4):
-    def generate_batch(batch_id, batch_size):
-        return client.simulate(
-            personas=personas,
-            num_scenarios=batch_size,
-            exchanges_per_scenario=3
-        )
-    
-    # Split work across workers
-    batch_size = total_scenarios // num_workers
-    with concurrent.futures.ThreadPoolExecutor(max_workers=num_workers) as executor:
-        futures = [
-            executor.submit(generate_batch, i, batch_size)
-            for i in range(num_workers)
-        ]
-        
-        all_simulations = []
-        for future in concurrent.futures.as_completed(futures):
-            batch_simulations = future.result()
-            all_simulations.extend(batch_simulations)
-    
-    return all_simulations
-```
-
-## Quality Control and Validation
-
-### Persona Consistency
-
-```python
-def validate_persona_consistency(simulations):
-    """Ensure personas behave consistently throughout conversations."""
-    for sim in simulations:
-        persona = sim.persona
-        conversation = sim.conversation
-        
-        # Check trait consistency
-        if persona.traits.get("impatience", 0) > 0:
-            # Should see urgency indicators in user messages
-            urgency_indicators = ["urgent", "asap", "quickly", "immediately"]
-            has_urgency = any(
-                any(word in msg.content.lower() for word in urgency_indicators)
-                for msg in conversation if msg.role == "user"
-            )
-            assert has_urgency, f"Impatient persona lacks urgency indicators"
-        
-        # Check politeness consistency
-        if persona.traits.get("politeness", 0) > 0:
-            polite_words = ["please", "thank you", "sorry", "excuse me"]
-            has_politeness = any(
-                any(word in msg.content.lower() for word in polite_words)
-                for msg in conversation if msg.role == "user"
-            )
-            assert has_politeness, f"Polite persona lacks politeness indicators"
-```
-
-### Conversation Quality
-
-```python
-def validate_conversation_quality(simulations):
-    """Ensure conversations meet quality standards."""
-    for sim in simulations:
-        conversation = sim.conversation
-        
-        # Check minimum length
-        assert len(conversation) >= 2, "Conversation too short"
-        
-        # Check for appropriate responses
-        for msg in conversation:
-            if msg.role == "assistant":
-                assert len(msg.content) > 10, "Assistant response too short"
-                assert not any(word in msg.content.lower() 
-                              for word in ["error", "failed", "cannot"]), \
-                    "Assistant response contains error indicators"
-```
-
-## Integration with Analysis
-
-### Connecting Simulations to Analysis
-
-```python
-# Generate simulations
-simulations = client.simulate(personas=personas, num_scenarios=100)
-
-# Analyze with specific judges
-analysis = client.analyze(
-    conversations=simulations,
-    judges=["safety", "helpfulness", "empathy", "reliability"]
-)
-
-# Filter simulations based on analysis
-low_performing = [
-    sim for sim, scores in zip(simulations, analysis.scores)
-    if scores.overall < 7.0
-]
-
-# Generate targeted training data
-training_data = client.curate(
-    insights=analysis,
-    target_improvements=["safety", "empathy"],
-    source_simulations=low_performing
-)
-```
-
-## Best Practices
-
-### 1. Start Simple
-Begin with basic personas and gradually add complexity:
-
-```python
-# Start with simple personas
-basic_personas = [
-    {"name": "happy_customer", "traits": {"politeness": 2}},
-    {"name": "frustrated_customer", "traits": {"impatience": 2}}
-]
-
-# Gradually add complexity
-complex_personas = [
-    {
-        "name": "complex_customer",
-        "traits": {
-            "impatience": 1,
-            "skeptical": 1,
-            "urgency": 1,
-            "politeness": 1
-        }
-    }
-]
-```
-
-### 2. Balance Diversity
-Include a good mix of personas and scenarios:
-
-```python
-# Balanced persona distribution
-balanced_personas = {
-    "demographics": {
-        "ages": [18, 25, 35, 45, 55, 65, 75],
-        "genders": ["male", "female", "other"],
-        "occupations": ["student", "employed", "business_owner", "retired"]
-    },
-    "traits": {
-        "impatience": [-2, -1, 0, 1, 2],
-        "confusion": [-1, 0, 1, 2],
-        "politeness": [-1, 0, 1, 2]
-    },
-    "intents": ["search", "book", "modify", "cancel", "support", "complaint"]
-}
-```
-
-### 3. Iterate and Refine
-Continuously improve based on results:
-
-```python
-# Analyze results
-analysis = client.analyze(simulations)
-
-# Identify gaps
-gaps = analysis.identify_gaps()
-
-# Refine personas to address gaps
-refined_personas = client.refine_personas(
-    original_personas=personas,
-    identified_gaps=gaps
-)
-
-# Generate new simulations
-new_simulations = client.simulate(personas=refined_personas)
-```
-
-## Next Steps
-
-Now that you understand simulations:
-
-1. **Create custom personas** for your specific domain
-2. **Scale up** to larger datasets
-3. **Integrate with analysis** to identify gaps
-4. **Generate training data** based on insights
-
-<CardGroup cols={2}>
-  <Card title="Analysis Guide" icon="bar-chart" href="/core-concepts/judges">
-    Learn how to analyze simulation results
-  </Card>
-  <Card title="Data Curation" icon="table" href="/improve/create_curation_run">
-    Generate training data from insights
-  </Card>
-</CardGroup>
-
----
-
-*Ready to analyze your simulations? Check out our [Analysis Guide](/core-concepts/judges) to learn how to evaluate performance across multiple metrics!*
+- Use the [Quickstart](quickstart) for a copy-paste demo.
+- Feed the same dataset into the [Collinear Platform API](/api-reference/endpoint/judge_conversation) when you need hosted scoring.

@@ -9,8 +9,8 @@ description: Understand what the standalone Collinear Python SDK provides and ho
 
 Use the SDK when you want to:
 
-- Script persona-driven simulations directly against an OpenAI-compatible model endpoint.
-- Generate synthetic conversations for evaluation, RL fine-tuning, or data analysis without touching the dashboard.
+- Script Trait Basis simulations directly against an OpenAI-compatible model endpoint.
+- Generate synthetic conversations for evaluation, RL fine-tuning, or data analysis without touching the hosted platform.
 - Run local guardrail assessments with your own judge model credentials.
 
 Reach for the dashboard API when you need to orchestrate runs inside Collinear's hosted platform or manage Spaces, Judges, and datasets via the product backend.
@@ -33,7 +33,7 @@ Set the required credentials before running examples:
 
 ```bash
 export OPENAI_API_KEY=sk-...
-export STEER_API_KEY=demo-001  # Replace with your issued key when available
+export TRAIT_BASIS_API_KEY=tb-...
 ```
 
 Optional environment variables let you point at a custom assistant base URL (`OPENAI_BASE_URL`) or model name (`OPENAI_ASSISTANT_MODEL`).
@@ -48,18 +48,18 @@ client = Client(
     assistant_model_url=os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
     assistant_model_api_key=os.environ["OPENAI_API_KEY"],
     assistant_model_name=os.getenv("OPENAI_ASSISTANT_MODEL", "gpt-4o-mini"),
-    steer_api_key=os.getenv("STEER_API_KEY", "demo-001"),
+    steer_api_key=os.getenv("TRAIT_BASIS_API_KEY", os.getenv("STEER_API_KEY", "demo-001")),
 )
 
-steer_config = {
-    "ages": ["young adult"],
+trait_basis = {
+    "ages": ["young_adult"],
     "genders": ["woman"],
     "occupations": ["teacher"],
-    "intents": ["Resolve billing issue"],
-    "traits": {"impatience": [0, 3]},
+    "intents": ["billing_dispute"],
+    "traits": {"impatience": [0, 2]},
 }
 
-simulations = client.simulate(steer_config, k=1, num_exchanges=2)
+simulations = client.simulate(trait_basis, k=1, num_exchanges=2)
 for turn in simulations[0].conv_prefix:
     print(f"{turn['role']}: {turn['content']}")
 print("assistant:", simulations[0].response)

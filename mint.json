@@ -52,18 +52,16 @@
     {
       "group": "Get started",
       "pages": [
-        "get-started/overview",
         "get-started/quickstart",
+        "get-started/platform-access",
+        "get-started/assessment",
         "get-started/simulations"
       ]
     },
     {
       "group": "Core concepts",
       "pages": [
-        "core-concepts/datasets",
-        "core-concepts/judges",
-        "core-concepts/runs",
-        "core-concepts/personas"
+        "core-concepts/judges"
       ]
     },
     {
@@ -87,42 +85,9 @@
       ]
     },
     {
-      "group": "Simulations",
-      "pages": [
-        "simulations/getting-started/installation",
-        "simulations/getting-started/quick-start",
-        "simulations/getting-started/configuration",
-        "simulations/examples/basic-simulation",
-        "simulations/examples/agent-evaluation",
-        "simulations/examples/custom-personas",
-        "simulations/examples/batch-processing",
-        "simulations/examples/rl-training",
-        "simulations/api/client",
-        "simulations/api/configuration",
-        "simulations/api/schemas"
-      ]
-    },
-    {
       "group": "Improve",
       "pages": [
         "improve/create_curation_run"
-      ]
-    },
-    {
-      "group": "Judge",
-      "pages": [
-        "flows/collinear_judges/types_of_judges",
-        "flows/collinear_judges/veritas_judge"
-      ]
-    },
-    {
-      "group": "Datasets",
-      "pages": [
-        "datasets/format_dataset",
-        "datasets/upload_dataset",
-        "datasets/run_judge_on_dataset",
-        "datasets/run_conversation_model_on_dataset",
-        "datasets/exporting_dataset"
       ]
     },
     {

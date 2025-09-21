@@ -1,309 +1,59 @@
 ---
-title: "Quickstart"
-description: "Get up and running with Collinear in 5 minutes - run your first simulation, analyze results, and generate training data"
+title: Quickstart
+description: Run your first Trait Basis simulation and assessment in minutes.
 ---
 
-# Quickstart Guide
-
-Get started with Collinear's data flywheel in just 5 minutes. This guide will walk you through running your first simulation, analyzing the results, and generating training data.
-
-## Prerequisites
-
-Before you begin, you'll need:
-
-- A Collinear API key ([get one here](https://collinear.ai))
-- Python 3.8+ installed
-- Basic familiarity with command line tools
-
-## Step 1: Install the Collinear SDK
-
-Install the Collinear Python SDK:
+## 1. Create an environment with uv
 
 ```bash
-pip install collinear
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv venv --python 3.12
+source .venv/bin/activate
+uv pip install --upgrade pip collinear
 ```
 
-## Step 2: Set Up Your API Key
-
-Set your API key as an environment variable:
-
-```bash
-export COLLINEAR_API_KEY="your-api-key-here"
-```
-
-Or create a `.env` file:
-
-```bash
-echo "COLLINEAR_API_KEY=your-api-key-here" > .env
-```
-
-## Step 3: Run Your First Simulation
-
-Create a new Python file `quickstart.py`:
+## 2. Create a short script `quickstart.py`
 
 ```python
-from collinear import Client
+from collinear.client import Client
 
-# Initialize the client
-client = Client(api_key="your-api-key-here")
+client = Client(
+    assistant_model_url="https://api.openai.com/v1",
+    assistant_model_api_key=OPENAI_API_KEY,
+    assistant_model_name="gpt-4o-mini",
+    steer_api_key=TRAIT_BASIS_API_KEY,
+)
 
-# Define a simple persona configuration
-personas = {
-    "frustrated_customer": {
-        "traits": {
-            "impatience": [-1,0, 2],
-            "skeptical": [-2, 1, 2],
-            "incoherence": [1, 2]
-        },
-        "intents": ["complaint", "escalation", "refund_request"],
-        "demographics": {
-            "ages": [25, 35, 45],
-            "genders": ["male", "female"],
-            "occupations": ["employed", "business_owner"]
-        }
-    }
+trait_basis = {
+    "ages": [27, 46],
+    "genders": ["woman", "man"],
+    "occupations": ["support_manager", "field_technician", "network_engineer"],
+    "intents": ["billing_dispute", "service_cancellation", "device_troubleshooting"],
+    "traits": {
+        "confusion": [-1],
+        "impatience": [0, 2],
+    },
+    "locations": ["united_states", "canada"],
+    "languages": ["en", "es"],
+    "tasks": ["Airline", "Ski Resort"],
 }
 
-# Generate simulations
-print("Generating simulations...")
-simulations = client.simulate(
-    personas=personas,
-    num_scenarios=5,
-    exchanges_per_scenario=3
-)
-
-print(f"Generated {len(simulations)} simulations")
+conversations = client.simulate(trait_basis, k=3, num_exchanges=3)
+assessment = client.assess(conversations)
+print(assessment)
 ```
 
-Run the simulation:
+Replace the placeholder keys with your own before running.
+
+## 3. Execute the run
 
 ```bash
-python quickstart.py
+uv run python quickstart.py
 ```
 
-## Step 4: Analyze the Results
+The script leaves you with two Python objects:
 
-Add analysis to your script:
+- `conversations`: the generated Trait Basis conversations.
+- `assessment`: safety scores for each conversation.
 
-```python
-# Analyze the simulations
-print("Analyzing simulations...")
-analysis = client.analyze(
-    conversations=simulations,
-    judges=["safety", "helpfulness", "empathy"]
-)
-
-print(f"Analysis complete!")
-print(f"Average safety score: {analysis.average_safety_score:.2f}")
-print(f"Average helpfulness score: {analysis.average_helpfulness_score:.2f}")
-```
-
-## Step 5: Generate Training Data
-
-Create targeted training data based on the analysis:
-
-```python
-# Generate training data
-print("Generating training data...")
-training_data = client.curate(
-    insights=analysis,
-    target_improvements=["safety", "empathy"],
-    num_examples=100
-)
-
-print(f"Generated {len(training_data)} training examples")
-```
-
-## Complete Example
-
-Here's the complete `quickstart.py` script:
-
-```python
-from collinear import Client
-
-def main():
-    # Initialize the client
-    client = Client(api_key="your-api-key-here")
-    
-    # Define personas
-    personas = {
-        "frustrated_customer": {
-            "traits": {
-                "impatience": [1, 2],
-                "skeptical": [1, 2],
-                "urgency": [1, 2]
-            },
-            "intents": ["complaint", "escalation", "refund_request"],
-            "demographics": {
-                "ages": [25, 35, 45],
-                "genders": ["male", "female"],
-                "occupations": ["employed", "business_owner"]
-            }
-        },
-        "confused_user": {
-            "traits": {
-                "confusion": [1, 2],
-                "impatience": [0, 1],
-                "politeness": [1, 2]
-            },
-            "intents": ["technical_issue", "billing_question", "general_inquiry"],
-            "demographics": {
-                "ages": [55, 65, 75],
-                "genders": ["male", "female"],
-                "occupations": ["retired", "unemployed"]
-            }
-        }
-    }
-    
-    # Step 1: Generate simulations
-    print("🎭 Generating simulations...")
-    simulations = client.simulate(
-        personas=personas,
-        num_scenarios=10,
-        exchanges_per_scenario=3
-    )
-    print(f"✅ Generated {len(simulations)} simulations")
-    
-    # Step 2: Analyze results
-    print("🔍 Analyzing simulations...")
-    analysis = client.analyze(
-        conversations=simulations,
-        judges=["safety", "accuracy", "empathy", "role_adherence", "intent_understanding"]
-    )
-    print(f"✅ Analysis complete!")
-    print(f"   Average safety score: {analysis.average_safety_score:.2f}")
-    print(f"   Average helpfulness score: {analysis.average_helpfulness_score:.2f}")
-    print(f"   Average empathy score: {analysis.average_empathy_score:.2f}")
-    print(f"   Average role adherence score: {analysis.average_role_adherence_score:.2f}")
-    print(f"   Average intent understanding score: {analysis.average_intent_understanding_score:.2f}")
-    
-    # Step 3: Generate training data
-    print("📚 Generating training data...")
-    training_data = client.curate(
-        insights=analysis,
-        target_improvements=["safety", "empathy"],
-        num_examples=50
-    )
-    print(f"✅ Generated {len(training_data)} training examples")
-    
-    # Step 4: Save results
-    print("💾 Saving results...")
-    client.save_results(
-        simulations=simulations,
-        analysis=analysis,
-        training_data=training_data,
-        output_dir="./quickstart_results"
-    )
-    print("✅ Results saved to ./quickstart_results/")
-    
-    print("\n🎉 Quickstart complete! You've successfully:")
-    print("   1. Generated diverse user simulations")
-    print("   2. Analyzed performance across multiple metrics")
-    print("   3. Created targeted training data")
-    print("   4. Saved everything for further use")
-
-if __name__ == "__main__":
-    main()
-```
-
-## Expected Output
-
-When you run the script, you should see output like this:
-
-```
-🎭 Generating simulations...
-✅ Generated 10 simulations
-
-🔍 Analyzing simulations...
-✅ Analysis complete!
-   Average safety score: 4.2
-   Average accuracy score: 3.8
-   Average empathy score: 2.9
-   Average role adherence score: 4.8
-   Average intent understanding score: 4.0
-
-📚 Generating training data...
-✅ Generated 50 training examples
-
-💾 Saving results...
-✅ Results saved to ./quickstart_results/
-
-🎉 Quickstart complete! You've successfully:
-   1. Generated diverse user simulations
-   2. Analyzed performance across multiple metrics
-   3. Created targeted training data
-   4. Saved everything for further use
-```
-
-## Understanding the Results
-
-### Simulations
-Each simulation contains:
-- **Conversation**: Multi-turn dialogue between user and AI
-- **Persona**: User characteristics (age, traits, intent)
-- **Task**: Task or goal that the user is intending to achieve
-
-### Analysis
-The analysis provides scores across multiple dimensions:
-- **Safety**: Harmful content, bias, inappropriate responses
-- **Accuracy**: Task completion accuracy
-- **Empathy**: Emotional understanding and appropriate responses
-- **Role Adherence**: Adherence to assistant role
-- **Intent Understanding**: Understanding user intent for a task
-
-### Training Data
-Generated examples include:
-- **Input**: User messages and context
-- **Output**: Improved AI responses
-- **Metadata**: Persona details and improvement rationale
-
-## Next Steps
-
-Now that you've completed the quickstart:
-
-1. **Explore the results** in the `./quickstart_results/` directory
-2. **Customize personas** for your specific use case
-3. **Add custom judges** for domain-specific evaluation
-4. **Scale up** to larger datasets and more complex scenarios
-
-<CardGroup cols={2}>
-  <Card title="Simulations Guide" icon="users" href="/get-started/simulations">
-    Learn how to create custom personas and scenarios
-  </Card>
-  <Card title="API Reference" icon="code" href="/api-reference">
-    Explore all available endpoints and parameters
-  </Card>
-</CardGroup>
-
-## Troubleshooting
-
-### Common Issues
-
-**API Key Error**
-```
-Error: Invalid API key
-```
-Make sure your API key is correctly set in the environment variable or `.env` file.
-
-**Import Error**
-```
-ModuleNotFoundError: No module named 'collinear'
-```
-Install the SDK: `pip install collinear`
-
-**Rate Limit Error**
-```
-Error: Rate limit exceeded
-```
-Add a delay between requests or contact support for higher limits.
-
-### Getting Help
-
-- **Documentation**: Check our comprehensive guides
-- **API Reference**: Detailed endpoint documentation
-- **Support**: Email support@collinear.ai
-- **Community**: Join our Discord for discussions
-
----
-
-*Ready to dive deeper? Check out our [Simulations Guide](/get-started/simulations) to learn how to create custom personas and scenarios!*
+Inspect them in your editor or an interactive shell, then move on to the [Trait Basis simulation guide](simulations) for deeper configuration or the [Platform API](/api-reference/endpoint/judge_conversation) when you need hosted runs.

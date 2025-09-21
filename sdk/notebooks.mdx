@@ -13,7 +13,7 @@ config = {
         "assistant_model_url": "https://api.openai.com/v1",
         "assistant_model_api_key": "<paste your key>",
         "assistant_model_name": "gpt-4o-mini",
-        "steer_api_key": "demo-001",
+        "trait_basis_api_key": "tb-...",
         "timeout": 120,
         "max_retries": 3,
         "rate_limit_retries": 6,
@@ -36,20 +36,24 @@ config = {
     },
 }
 
-steering = {
-    "ages": ["young adult", "middle-aged"],
+trait_basis = {
+    "ages": ["young_adult", "middle_aged"],
     "genders": ["woman", "man"],
     "occupations": ["teacher", "nurse"],
-    "intents": ["Resolve billing issue", "Update plan"],
-    "traits": {"impatience": [0, 3], "confusion": [2]},
+    "intents": ["billing_dispute", "update_plan"],
+    "traits": {"impatience": [0, 2], "confusion": [0, 2]},
 }
 ```
+
+All trait intensity values live in the required 0–2 range.
 
 Adjust the dictionaries to match your use case or load them from your own storage if you prefer to keep configs on disk.
 
 ## Initialize the Client
 
 ```python
+import os
+
 from collinear.client import Client
 
 client_settings = config.get("client", {})
@@ -57,7 +61,10 @@ client = Client(
     assistant_model_url=client_settings.get("assistant_model_url", "https://api.openai.com/v1"),
     assistant_model_api_key=client_settings["assistant_model_api_key"],
     assistant_model_name=client_settings.get("assistant_model_name", "gpt-4o-mini"),
-    steer_api_key=client_settings.get("steer_api_key", "demo-001"),
+    steer_api_key=client_settings.get("trait_basis_api_key")
+    or os.getenv("TRAIT_BASIS_API_KEY")
+    or os.getenv("STEER_API_KEY")
+    or "demo-001",
     timeout=float(client_settings.get("timeout", 120)),
     max_retries=int(client_settings.get("max_retries", 3)),
     rate_limit_retries=int(client_settings.get("rate_limit_retries", 6)),
@@ -86,7 +93,7 @@ This mirrors the pattern in the quick-start notebooks so you can toggle between 
 ```python
 simulate_opts = config.get("simulate", {})
 simulations = client.simulate(
-    steer_config=steering,
+    steer_config=trait_basis,
     k=simulate_opts.get("k", 1),
     num_exchanges=simulate_opts.get("num_exchanges", 2),
     batch_delay=simulate_opts.get("batch_delay", 0.2),

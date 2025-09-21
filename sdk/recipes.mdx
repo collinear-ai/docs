@@ -14,13 +14,15 @@ import time
 runs = []
 for _ in range(5):
     start = time.perf_counter()
-    client.simulate(steer_config, k=1, num_exchanges=6, batch_delay=0)
+    client.simulate(trait_basis, k=1, num_exchanges=6, batch_delay=0)
     runs.append(time.perf_counter() - start)
 
 avg_conv = fmean(runs)
 print(f"Average conversation duration: {avg_conv:.2f}s")
 print(f"Average round trip: {avg_conv / 6:.2f}s")
 ```
+
+`trait_basis` refers to the Trait Basis payload you defined earlier (see the simulations guide).
 
 Increase `k` or decrease `num_exchanges` to focus on different traffic shapes.
 
@@ -58,7 +60,7 @@ Loop on `t.evaluation.status` until the run reports completion, then retrieve th
 - Use structured logging to capture persona metadata per sample:
 
 ```python
-for sim in client.simulate(steer_config, k=20, num_exchanges=2, progress=False):
+for sim in client.simulate(trait_basis, k=20, num_exchanges=2, progress=False):
     logger.info(
         "persona=%s intent=%s response=%s",
         sim.steer.traits if sim.steer else {},
@@ -73,4 +75,4 @@ Export the dataset and assessment outputs, then call the dashboard upload endpoi
 
 ## Customize Trait Availability
 
-If the steer service rejects an unknown trait (`422 Unprocessable Entity`), call `client.simulation_runner.list_traits()` to inspect supported trait names, update your config, and retry. This mirrors the guardrail logic inside `SimulationRunner` that skips unsupported mixes in scripts such as `example_mix_traits.py`.
+If the Trait Basis service rejects an unknown trait (`422 Unprocessable Entity`), call `client.simulation_runner.list_traits()` to inspect supported trait names, update your config, and retry. This mirrors the guardrail logic inside `SimulationRunner` that skips unsupported mixes in scripts such as `example_mix_traits.py`.

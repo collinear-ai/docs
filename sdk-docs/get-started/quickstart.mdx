@@ -50,7 +50,7 @@ assessment = client.assess(conversations)
 print(assessment)
 ```
 
-The SDK validates these persona buckets. Supplying unsupported ages or occupations raises immediately, while combinations that pair `"Retired"` with an age bucket below `"35-44"` are simply skipped.
+The SDK validates these persona buckets. Supplying unsupported ages or occupations raises immediately, while combinations that pair `"Retired"` with an age bucket below `"35-44"` are skipped.
 
 Replace the placeholder keys with your own before running.
 
@@ -65,4 +65,4 @@ The script leaves you with two Python objects:
 - `conversations`: the simulated Trait Basis conversations.
 - `assessment`: safety scores for each conversation.
 
-Inspect them in your editor or an interactive shell, then move on to the [Trait Basis simulation guide](simulations) for deeper configuration or the [Platform API](/get-started/platform-access) when you need hosted runs.
+Inspect them in your editor or an interactive shell, then move on to the [Trait Basis simulation guide](simulations) for deeper configuration or the [Platform API](/api-reference/endpoint/judge_conversation) when you need hosted runs.

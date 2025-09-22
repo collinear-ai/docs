@@ -8,40 +8,42 @@ openapi: 'POST /api/v1/dataset/upload'
 
 - **file**: The file should be in JSON/CSV Format
 
-- **space_id**: The unique identifier for your space. [Learn more about obtaining a space ID](/essentials/get_space_id).
+- **space_id**: The unique identifier for your space.
 
 - **dataset_name**:  The name of your dataset
 
-If you are creating a new dataset your file format would be:
+If you are creating a new dataset your file must be a JSON **array**. Each row
+supports the following keys:
+
+- `conv_prefix`: conversation turns in OpenAI chat format.
+- `response`: the assistant turn you want to store.
+- `ground_truth`: **integer labels only** (for example `1` for correct,
+  `0` for incorrect). Sending strings will raise `400 Bad Request` with the
+  message `invalid input for query argument`.
+- `context`: optional metadata string.
+
+Example payload:
+
 ```
 [
   {
-    "conv_prefix": [
-      {
-        "role": "user",
-        "content": "Hey how are you?"
-      }
-    ],
-    "response": {
-      "role": "assistant",
-      "content": "I'm good, how are you?"
-    },
-    "ground_truth": <GROUND_TRUTH_VALUE>(optional),
-    "context":<CONTEXT>(Optional)
+    "conv_prefix": [{"role": "user", "content": "Hey how are you?"}],
+    "response": {"role": "assistant", "content": "I'm good, how are you?"},
+    "ground_truth": 1,
+    "context": "greeting"
   },
   {
-    "conv_prefix": [
-      {
-        "role": "user",
-        "content": "Hey how are you?"
-      }
-    ],
-    "response": {
-      "role": "assistant",
-      "content": "I'm bad, how are you?"
-    },
-    "ground_truth": <GROUND_TRUTH_VALUE>(optional),
-    "context":<CONTEXT>(Optional)
+    "conv_prefix": [{"role": "user", "content": "Hey how are you?"}],
+    "response": {"role": "assistant", "content": "I'm bad, how are you?"},
+    "ground_truth": 0,
+    "context": "follow_up"
   }
 ]
 ```
+
+### Response shape
+
+Staging currently streams the uploaded rows back in the body instead of the
+`{ "dataset_id": ..., "message": ... }` object documented in the OpenAPI
+schema. Each array element will include an auto-generated `id` that you can use
+with the judge endpoints.

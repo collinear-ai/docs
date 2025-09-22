@@ -1,0 +1,80 @@
+---
+title: Python SDK Overview
+description: Understand what the standalone Collinear Python SDK provides and how it differs from the dashboard API.
+---
+
+> This section covers the standalone **Collinear Python SDK** that runs locally in scripts or notebooks. For documentation on the dashboard backend and REST API used by the Collinear product, see the API Reference pages.
+
+## When to Use the SDK
+
+Use the SDK when you want to:
+
+- Script Trait Basis simulations directly against an OpenAI-compatible model endpoint.
+- Generate synthetic conversations for evaluation, RL fine-tuning, or data analysis without touching the hosted platform.
+- Run local guardrail assessments with your own judge model credentials.
+
+Reach for the dashboard API when you need to orchestrate runs inside Collinear's hosted platform or manage Spaces, Judges, and datasets via the product backend.
+
+## Installation
+
+```bash
+uv venv && source .venv/bin/activate
+uv add collinear
+uv sync
+```
+
+or
+
+```bash
+pip install --upgrade collinear
+```
+
+Set the required credentials before running examples:
+
+```bash
+export OPENAI_API_KEY=sk-...
+export TRAIT_BASIS_API_KEY=tb-...
+```
+
+Optional environment variables let you point at a custom assistant base URL (`OPENAI_BASE_URL`) or model name (`OPENAI_ASSISTANT_MODEL`).
+
+## First Simulation in 30 Seconds
+
+```python
+import os
+from collinear.client import Client
+
+client = Client(
+    assistant_model_url=os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
+    assistant_model_api_key=OPENAI_API_KEY,
+    assistant_model_name=os.getenv("OPENAI_ASSISTANT_MODEL", "gpt-4o-mini"),
+    steer_api_key=TRAIT_BASIS_API_KEY,
+)
+
+trait_basis = {
+    "ages": ["25-34", "35-44", "45-54"],
+    "genders": ["male", "female", "other"],
+    "occupations": ["Employed", "Unemployed", "Student"],
+    "intents": [
+        "modify_booking",
+        "cancel_booking_request_refund",
+        "check_flight_status",
+    ],
+    "traits": {
+        "impatience": [0, 1, 2],
+        "confusion": [0, 1, 2],
+    },
+    "locations": ["USA", "Canada"],
+    "languages": ["English", "Spanish"],
+    "tasks": ["airline support"],
+}
+
+simulations = client.simulate(trait_basis, k=1, num_exchanges=2)
+for turn in simulations[0].conv_prefix:
+    print(f"{turn['role']}: {turn['content']}")
+print("assistant:", simulations[0].response)
+```
+
+The SDK enforces canonical persona buckets: stick to the predefined age ranges and occupation categories; if a combo tries to pair `"Retired"` with an age bucket below `"35-44"`, it is skipped automatically.
+
+The remaining SDK pages dive deeper into configuring simulations, running assessments, adapting notebooks, and stitching together advanced recipes.

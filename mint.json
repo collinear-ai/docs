@@ -41,9 +41,7 @@
       "method": "bearer"
     }
   },
-  "anchors": [
-    
-  ],
+  "anchors": [],
   "navigation": [
     {
       "group": "Introduction",
@@ -56,26 +54,14 @@
       "pages": [
         "get-started/overview",
         "get-started/quickstart",
+        "get-started/platform-access",
         "get-started/simulations"
       ]
     },
     {
       "group": "Core concepts",
       "pages": [
-        "core-concepts/datasets",
-        "core-concepts/judges",
-        "core-concepts/runs",
-        "core-concepts/personas"
-      ]
-    },
-    {
-      "group": "Agents",
-      "pages": [
-        "agents/overview",
-        "agents/01_Upload_Agent_Workflow_Logs",
-        "agents/02_Generate_Evaluation_Data",
-        "agents/03_Assess_Usecases",
-        "agents/04_Review_Export_Results"
+        "core-concepts/judges"
       ]
     },
     {
@@ -85,43 +71,19 @@
       ]
     },
     {
-      "group": "Judge",
+      "group": "API Reference - SDK",
       "pages": [
-        "flows/collinear_judges/types_of_judges",
-        "flows/collinear_judges/veritas_judge"
+        "api-reference/sdk/overview",
+        "api-reference/sdk/assessment",
+        "api-reference/sdk/simulations"
       ]
     },
     {
-      "group": "Datasets",
+      "group": "API Reference - Platform",
       "pages": [
-        "datasets/format_dataset",
-        "datasets/upload_dataset",
-        "datasets/run_judge_on_dataset",
-        "datasets/run_conversation_model_on_dataset",
-        "datasets/exporting_dataset"
-      ]
-    },
-    {
-      "group": "Upload",
-      "pages": [
+        "api-reference/introduction",
         "api-reference/endpoint/upload_dataset",
-        "api-reference/endpoint/upload_assessed_dataset"
-      ]
-    },
-    {
-      "group": "Analyze",
-      "pages": [
-        "api-reference/endpoint/judge_conversation",
-        "api-reference/endpoint/curator_judge"     
-      ]
-    },
-    {
-      "group": "Agentic AI",
-      "pages": [
-        "api-reference/endpoint/01_Upload_Agent_Workflow_Logs",
-        "api-reference/endpoint/02_Generate_Evaluation_Data",
-        "api-reference/endpoint/03_Assess_Usecases",
-        "api-reference/endpoint/04_Review_Export_Results"
+        "api-reference/endpoint/judge_conversation"
       ]
     }
   ],

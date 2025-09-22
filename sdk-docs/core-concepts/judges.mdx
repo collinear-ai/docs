@@ -1,0 +1,32 @@
+---
+title: Types of Judges
+description: A comprehensive overview of models categorized by judge type, including safety, reliability, and performance judges.
+---
+
+# Model Roles and Responsibilities
+
+This guide provides a detailed overview of our different AI judges, categorized by their roles in  safety, reliability, and performance runs. Each judge is designed to ensure that your AI systems operate safely, reliably, and optimally in diverse environments.
+
+### Key Features:
+
+- **Preventative Control**: Detects and prevents potential issues pre-production
+- **Detective Control**: Identifies and flags errors post-occurrence
+- **Monitoring**: Offers general oversight and diagnostics of system performance
+
+# Model Judges Options
+
+| Judge Type  | Model Name            | Description                                                                                    |
+| ----------- | --------------------- | ---------------------------------------------------------------------------------------------- |
+| Safety      | Collinear Guard       | Proprietary model purpose-designed to rate responses against a custom likert scale             |
+| Safety      | Collinear Guard Nano  | Lightweight proprietary model built for rapid evaluation cycles, providing pass / fail ratings |
+| Safety      | Llama Guard 3         | A specialized open-source model built for safety evaluations by Meta                           |
+| Safety      | LLM-as-a-Judge        | Any leading off-the-shelf model for toxicity and bias evaluation                               |
+| Reliability | Veritas               | Proprietary model purpose-designed for advanced hallucination detection                        |
+| Reliability | Veritas Nano          | Proprietary lightweight model built for low-latency hallucination detection                    |
+| Reliability | Lynx 8B               | Specialized open-source model built for detecting hallucinations by Patronus AI                |
+| Reliability | LLM-as-a-Judge        | Any leading off-the-shelf model for accuracy evaluation                                        |
+| Performance | Collinear Flex        | Proprietary model purpose-designed to rate responses against a custom likert scale             |
+| Performance | Quality of Reasoning  | Specialized SLM focused on the depth, logic, and reasoning used to support conclusions         |
+| Performance | Instruction Following | Specialized SLM focused on assessing how aligned the output adheres to given instruction       |
+| Performance | Coherence             | Specialized SLM focused on checking if the output maintains logical and semantic flow          |
+| Performance | LLM-as-a-Judge        | Any leading off-the-shelf model for custom evaluations                                         |

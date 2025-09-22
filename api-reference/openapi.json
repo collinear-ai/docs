@@ -503,7 +503,7 @@
     },
     "/api/v1/judge/upload/curated-data": {
       "post": {
-        "summary": "Upload Curated Data",
+        "summary": "Upload Improved Data",
         "operationId": "upload_curated_data_api_v1_judge_upload_curated_data_post",
         "requestBody": {
           "content": {
@@ -757,7 +757,7 @@
                   "items": {
                     "$ref": "#/components/schemas/DatasetAnnotationsDTO"
                   },
-                  "title": "Response Get Dataset Annotations By Space Id Api V1 Curated Data Space  Space Id  Get"
+                  "title": "Response Get Dataset Annotations By Space Id Api V1 Improved Data Space  Space Id  Get"
                 }
               }
             }
@@ -806,7 +806,7 @@
                   "items": {
                     "$ref": "#/components/schemas/DatasetAnnotationsNewDTO"
                   },
-                  "title": "Response Get Dataset Annotations By Space Id Api V1 Curated Data Space  Space Id  New Get"
+                  "title": "Response Get Dataset Annotations By Space Id Api V1 Improved Data Space  Space Id  New Get"
                 }
               }
             }
@@ -855,7 +855,7 @@
                   "items": {
                     "$ref": "#/components/schemas/DatasetAnnotationsNewDTO"
                   },
-                  "title": "Response Dataset Annotations By Dataset Id Api V1 Curated Data Dataset  Dataset Id  Get"
+                  "title": "Response Dataset Annotations By Dataset Id Api V1 Improved Data Dataset  Dataset Id  Get"
                 }
               }
             }

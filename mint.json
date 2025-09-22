@@ -61,7 +61,9 @@
     {
       "group": "Core concepts",
       "pages": [
-        "core-concepts/judges"
+        "core-concepts/judges",
+        "core-concepts/simulate",
+        "core-concepts/assess"
       ]
     },
     {
@@ -71,17 +73,8 @@
       ]
     },
     {
-      "group": "API Reference - SDK",
-      "pages": [
-        "api-reference/sdk/overview",
-        "api-reference/sdk/assessment",
-        "api-reference/sdk/simulations"
-      ]
-    },
-    {
       "group": "API Reference - Platform",
       "pages": [
-        "api-reference/introduction",
         "api-reference/endpoint/upload_dataset",
         "api-reference/endpoint/judge_conversation"
       ]

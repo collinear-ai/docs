@@ -1,5 +1,5 @@
 ---
-title: Simulate
+title: Simulations (TraitMix)
 description: Generate a baseline simulated conversation with the Collinear SDK.
 ---
 
@@ -15,11 +15,11 @@ client = Client(
     assistant_model_url=os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
     assistant_model_api_key=OPENAI_API_KEY,
     assistant_model_name=os.getenv("OPENAI_ASSISTANT_MODEL", "gpt-4o-mini"),
-    steer_api_key=TRAIT_BASIS_API_KEY,
+    steer_api_key=TRAIT_MIX_API_KEY,
 )
 
 trait_basis = {
-    "ages": ["25-34"],
+    "ages": ["25"],
     "genders": ["female"],
     "occupations": ["Employed"],
     "intents": ["check_flight_status"],

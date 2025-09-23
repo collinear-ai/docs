@@ -1,16 +1,16 @@
 ---
-title: Run Trait Basis Simulations
-description: Configure trait basis payloads and batching when generating conversations with the Collinear Python SDK.
+title: Run Trait mix Simulations
+description: Configure trait mix payloads and batching when generating conversations with the Collinear Python SDK.
 ---
 
-## Define the trait basis
+## Define the trait mix
 
-A `SteerConfigInput` (used by the SDK today) describes the trait basis grid that drives sampling. Treat it as the source of truth for personas and intents. Keep all trait intensities between **0** and **2**.
+A `SteerConfigInput` (used by the SDK today) describes the trait mix grid that drives sampling. Treat it as the source of truth for personas and intents. Keep all trait intensities between **0** and **2**.
 
 ```python
 from collinear.schemas.steer import SteerConfigInput
 
-trait_basis: SteerConfigInput = {
+trait_mix: SteerConfigInput = {
     "ages": ["13-17", "18-24", "25-34", "35-44", "45-54", "55-64", "65+"],
     "genders": ["male", "female", "other"],
     "occupations": ["Unemployed", "Employed", "Student", "Retired", "Not in Labor Force"],
@@ -46,15 +46,15 @@ The SDK enforces the canonical age buckets and occupation taxonomy above. If a c
 
 `Client.simulate` exposes levers for scale and pacing:
 
-- `k`: number of trait basis combinations to draw; omit it to use all combinations.
+- `k`: number of trait mix combinations to draw; omit it to use all combinations.
 - `num_exchanges`: user/assistant pairs per conversation. Each exchange adds one user line and one assistant line.
 - `batch_delay`: seconds to sleep between samples to avoid rate limits.
-- `mix_traits`: set `True` to mix two traits per persona (requires at least two traits defined by the Trait Basis API).
-- `steer_temperature` and `steer_max_tokens`: forwarded to the Trait Basis service when generating user turns.
+- `mix_traits`: set `True` to mix two traits per persona (requires at least two traits defined by the Trait mix API).
+- `steer_temperature` and `steer_max_tokens`: forwarded to the Trait mix service when generating user turns.
 
 ```python
 simulations = client.simulate(
-    steer_config=trait_basis,
+    steer_config=trait_mix,
     k=5,
     num_exchanges=4,
     batch_delay=0.5,
@@ -64,7 +64,7 @@ simulations = client.simulate(
 )
 ```
 
-Each `SimulationResult` contains the conversation prefix (`conv_prefix`), the assistant's final response (`response`), and the resolved trait basis attributes (`steer` in the SDK today).
+Each `SimulationResult` contains the conversation prefix (`conv_prefix`), the assistant's final response (`response`), and the resolved trait mix attributes (`steer` in the SDK today).
 
 ## Custom Prompts and Tone
 

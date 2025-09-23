@@ -61,9 +61,10 @@
     {
       "group": "Core concepts",
       "pages": [
+        "core-concepts/assess",
         "core-concepts/judges",
-        "core-concepts/simulate",
-        "core-concepts/assess"
+        "core-concepts/simulations",
+        "core-concepts/tau-trait"
       ]
     },
     {
@@ -76,7 +77,8 @@
       "group": "API Reference - Platform",
       "pages": [
         "api-reference/endpoint/upload_dataset",
-        "api-reference/endpoint/judge_conversation"
+        "api-reference/endpoint/judge_conversation",
+        "api-reference/endpoint/tau-trait"
       ]
     }
   ],

@@ -1,11 +1,11 @@
 ---
-title: Trait Basis Simulations
-description: Configure trait basis payloads for large-scale conversation generation.
+title: Trait Mix Simulations
+description: Configure trait mix payloads for large-scale conversation generation.
 ---
 
-The Trait Basis API samples personas by taking the Cartesian product of the axes you supply. Keep the structure tight and you can generate millions of consistent conversations without hand-written prompts.
+The Trait Mix API samples personas by taking the Cartesian product of the axes you supply. Keep the structure tight and you can generate millions of consistent conversations without hand-written prompts.
 
-## Trait Basis payload fields
+## Trait Mix payload fields
 
 | Key | Type | Notes |
 | --- | --- | --- |
@@ -73,7 +73,7 @@ conversations = client.simulate(
     k=500,              # Optional: sample subset instead of full Cartesian product
     num_exchanges=4,
     batch_delay=0.1,
-    max_concurrency=4,  # Switches to Trait Basis batch endpoint when >1
+    max_concurrency=4,  # Switches to Trait Mix batch endpoint when >1
 )
 ```
 
@@ -86,7 +86,7 @@ conversations = client.simulate(
 
 ### Trait availability
 
-`client.simulation_runner.list_traits()` returns the Trait Basis catalog recognised by your key. If a run fails with “unknown trait”, inspect that list, adjust the payload, and retry.
+`client.simulation_runner.list_traits()` returns the Trait Mix catalog recognised by your key. If a run fails with “unknown trait”, inspect that list, adjust the payload, and retry.
 
 ### Next steps
 

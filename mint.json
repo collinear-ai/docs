@@ -74,11 +74,30 @@
       ]
     },
     {
-      "group": "API Reference - Platform",
+      "group": "Assessments",
+      "pages": [
+        "api-reference/endpoint/assess"
+      ]
+    },
+    {
+      "group": "Datasets",
       "pages": [
         "api-reference/endpoint/upload_dataset",
+        "api-reference/endpoint/tau-trait",
+        "api-reference/endpoint/dataset_upload_platform"
+      ]
+    },
+    {
+      "group": "Judges",
+      "pages": [
         "api-reference/endpoint/judge_conversation",
-        "api-reference/endpoint/tau-trait"
+        "api-reference/endpoint/judge_create_sdk"
+      ]
+    },
+    {
+      "group": "Synthetic Data",
+      "pages": [
+        "api-reference/endpoint/synth_data_generate"
       ]
     }
   ],

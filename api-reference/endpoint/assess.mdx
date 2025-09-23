@@ -1,0 +1,88 @@
+---
+title: 'Assess Conversations'
+openapi: 'POST /api/v1/dataset/assess/run'
+---
+
+## Overview
+
+Start here when you want to run Collinear’s Assess pipeline programmatically.
+This page links the upload, judge creation, and run endpoints in the order you
+must call them.
+
+Evaluating conversations requires a short pipeline of API calls. Use this guide
+as the canonical reference for wiring the SDK or custom scripts to the Assess
+dashboard.
+
+1. **Upload data** with [`POST /api/v1/dataset/upload/platform`](./dataset_upload_platform)
+   to get a `dataset_id`.
+2. **Spin up a judge** via [`POST /api/v1/judge/create/sdk`](./judge_create_sdk)
+   and capture its `id`.
+3. **Trigger the run** using this endpoint to score every row.
+
+Collinear returns a lightweight summary immediately, while detailed results and
+history appear in the dashboard.
+
+## Request blueprint
+
+- `dataset_id`: UUID from the upload step.
+- `judge_ids`: Array of judge IDs (include the SDK helper judge you just
+  created).
+- `space_id`: Same space you used for upload and judge creation.
+- `name`: Display name for the evaluation run.
+- `roll_data`: Optional boolean, default `true`, to generate aggregate metrics.
+
+## Example workflow
+
+```bash
+DATASET_ID=$(curl -s https://stage.collinear.ai/api/v1/dataset/upload/platform \
+  -H 'Authorization: Bearer '${TOKEN} \
+  -F 'file=@conversations.json;type=application/json' \
+  -F 'dataset_name=assess-demo' \
+  -F 'space_id=<SPACE_ID>' \
+  -F 'evaluation_type=safety' \
+  -F 'skip_context_check=true' | jq -r '.data.dataset_id')
+
+JUDGE_ID=$(curl -s https://stage.collinear.ai/api/v1/judge/create/sdk \
+  -H 'Authorization: Bearer '${TOKEN} \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "judge_name": "assess-judge-'$(date +%s)'",
+    "model_name": "collinear_guard",
+    "space_id": "<SPACE_ID>"
+  }' | jq -r '.id')
+
+curl https://stage.collinear.ai/api/v1/dataset/assess/run \
+  -H 'Authorization: Bearer '${TOKEN} \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "dataset_id": "'${DATASET_ID}'",
+    "space_id": "<SPACE_ID>",
+    "judge_ids": ["'${JUDGE_ID}'"],
+    "name": "assess-demo-run",
+    "roll_data": true
+  }'
+```
+
+### Response snapshot
+
+```json
+{
+  "message": "Conversation evaluated",
+  "data": {
+    "evaluation_result": [
+      {
+        "conversation_scores": {
+          "assess-judge-<TIMESTAMP>": {
+            "score": 7,
+            "rationale": "The response directly states that refunds are not available, which can be seen as specific advice in a sensitive financial domain."
+          }
+        },
+        "conversation_total_turns": 1
+      }
+    ]
+  }
+}
+```
+
+The `evaluation_result` array confirms the run executed; drill into the dashboard
+for full rollups and trend views.

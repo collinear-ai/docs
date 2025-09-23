@@ -1,5 +1,5 @@
 ---
-title: TauTrait Personas API
+title: TauTrait Benchmark API
 openapi: 'POST https://steer.collinear.ai/steer_bare'
 ---
 
@@ -7,7 +7,7 @@ openapi: 'POST https://steer.collinear.ai/steer_bare'
 
 TauTrait relies on the TraitMix service to synthesize user turns that match the persona intensities in a `trait_dict`. Call this endpoint directly when you want to drive persona-grounded user messages outside the Python SDK.
 
-The API accepts the current conversation transcript and trait intensities, then returns the next user utterance. It is the same contract the `tau-trait` package calls from `tau_hard.envs.user.steer_completions`.
+TauTrait package abstracts this API so unless you are creating your own envs, you will not need to use this. For generating simulations via the regular API, see [this](./get-started/simulations.mdx) page. The API accepts the current conversation transcript and trait intensities, then returns the next user utterance. It is the same contract the `tau-trait` package calls from `tau_hard.envs.user.steer_completions`.
 
 ## Endpoint
 

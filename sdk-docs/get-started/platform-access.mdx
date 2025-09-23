@@ -1,0 +1,117 @@
+---
+title: Platform access checklist
+description: Collect your Collinear platform credentials -- login, space, API key, and Judge ID -- before you start calling hosted APIs.
+---
+
+## Why this matters
+
+The [Collinear Platform](https://platform.collinear.ai) offers hosted assessment and visualizations for synthetic datasets. Before you can invoke the hosted Platform API or connect your Trait Basis runs to managed judges, you need a few identifiers from the Collinear dashboard:
+
+- A **platform login** so you can reach your organization’s spaces
+- At least one **Space** to scope datasets, judges, and runs
+- A **Collinear Platform API key** (separate from the Trait Basis key used by the SDK)
+- The **Space ID** that keeps uploads scoped to the right workspace
+- One or more **Judge IDs** for scoring conversations through the API
+
+This page shows how to obtain each identifier.
+
+---
+
+## Step 1 - Log in to the platform
+
+**Why it’s important:** You need platform access before you can manage spaces, retrieve keys, or view judge metadata.
+
+<div style={{position: 'relative', paddingBottom: 'calc(51.66666666666667% + 41px)', height: 0, width: '100%'}}>
+  <iframe
+    src="https://demo.arcade.software/mj1mxYsB2A30kLpuqlo9?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true"
+    title="Log in | Collinear"
+    frameBorder="0"
+    loading="lazy"
+    allowFullScreen
+    allow="clipboard-write"
+    style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', colorScheme: 'light'}}
+  />
+</div>
+
+---
+
+## Step 2 · Create your first Space
+
+**Why it’s important:** Spaces scope every dataset upload, judge, and evaluation you run. The Platform API requires a `space_id` on most write requests, and the dashboard keeps keys organized per space.
+
+<div style={{ position: 'relative', paddingBottom: 'calc(56.67989417989418% + 41px)', height: 0, width: '100%' }}>
+  <iframe
+    src="https://demo.arcade.software/dBnZzYdArjOk5gwLN1A4?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true"
+    title="Create a new space"
+    frameBorder="0"
+    loading="lazy"
+    allowFullScreen
+    allow="clipboard-write"
+    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', colorScheme: 'light' }}
+  />
+</div>
+
+---
+
+## Step 3 · Copy your Platform API key
+
+**Why it’s important:** Hosted API endpoints (for uploads, judges, and synthetic runs) expect the `Authorization: Bearer ${COLLINEAR_API_KEY}` header. This key lives alongside your space, and it is distinct from the `TRAIT_BASIS_API_KEY` used by the SDK.
+
+<div style={{position: 'relative', paddingBottom: 'calc(56.67989417989418% + 41px)', height: 0, width: '100%'}}>
+  <iframe
+    src="https://demo.arcade.software/rqDDAVn2UUKncscikf89?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true"
+    title="Getting your API Key"
+    frameBorder="0"
+    loading="lazy"
+    allowFullScreen
+    allow="clipboard-write"
+    style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', colorScheme: 'light'}}
+  />
+</div>
+
+
+---
+
+## Step 4 · Grab your Space ID
+
+**Why it’s important:** Upload and judge requests include `space_id` so the platform knows where to store datasets, logs, and scores. Using the wrong ID sends artifacts to the wrong workspace.
+
+<div style={{position: 'relative', paddingBottom: 'calc(56.67989417989418% + 41px)', height: 0, width: '100%'}}>
+  <iframe
+    src="https://demo.arcade.software/8hCPPgU662lalK2nUaBJ?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true"
+    title="Collinear AI"
+    frameBorder="0"
+    loading="lazy"
+    allowFullScreen
+    allow="clipboard-write"
+    style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', colorScheme: 'light'}}
+  />
+</div>
+
+---
+
+## Step 5 · Locate the Judge ID
+
+**Why it’s important:** Every call to `/api/v1/judge/conversation` or judge upload endpoints needs the judge identifier so the platform can route evaluations to the correct scoring model.
+
+<div style={{ position: 'relative', paddingBottom: 'calc(56.67989417989418% + 41px)', height: 0, width: '100%' }}>
+  <iframe
+    src="https://demo.arcade.software/xOvddFtrk03R3Nuk9myb?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true"
+    title="Explore and Manage AI Spaces and Judges"
+    frameBorder="0"
+    loading="lazy"
+    allowFullScreen
+    allow="clipboard-write"
+    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', colorScheme: 'light' }}
+  />
+</div>
+
+---
+
+## Next steps
+
+With the login, key, space, and judge IDs ready, you can:
+
+- Run the [Trait Basis quickstart](quickstart) locally and keep your platform key separate from the SDK key.
+- Follow the updated [Platform API example](overview#platform-api-example) to upload the JSONL you generated.
+- Jump into the [API reference](/api-reference/endpoint/judge_conversation) when you’re ready to script hosted evaluations.

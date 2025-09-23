@@ -1,0 +1,94 @@
+---
+title: Trait Basis Simulations
+description: Configure trait basis payloads for large-scale conversation generation.
+---
+
+The Trait Basis API samples personas by taking the Cartesian product of the axes you supply. Keep the structure tight and you can generate millions of consistent conversations without hand-written prompts.
+
+## Trait Basis payload fields
+
+| Key | Type | Notes |
+| --- | --- | --- |
+| `ages` | `list[str]` | Use the enforced buckets: `"13-17"`, `"18-24"`, `"25-34"`, `"35-44"`, `"45-54"`, `"55-64"`, `"65+"`. |
+| `genders` | `list[str]` | Use canonical values such as `"male"`, `"female"`, `"other"`. |
+| `occupations` | `list[str]` | Restricted to `"Unemployed"`, `"Employed"`, `"Student"`, `"Retired"`, `"Not in Labor Force"`. |
+| `intents` | `list[str]` | Required. Tie these to business flows (e.g. `"search_flights"`). |
+| `traits` | `dict[str, list[int]]` | Trait intensity range is **0–2**. Each list entry expands the grid. |
+| `locations` | `list[str]` | Country or region labels (e.g. `"USA"`, `"Canada"`). |
+| `languages` | `list[str]` | ISO-639 or curated tokens (`"English"`, `"Spanish"`, `"French"`, `"other"`). |
+| `tasks` | `list[str]` | High-level scenario label, e.g. `"airline support"`. |
+
+Every combination produces one persona. With two traits at three intensity levels you already have nine persona variants; add more axes carefully to avoid unbounded growth.
+
+## Minimal configuration
+
+```python
+trait_basis = {
+    "ages": ["13-17", "18-24", "25-34", "35-44", "45-54", "55-64", "65+"],
+    "genders": ["male", "female", "other"],
+    "occupations": ["Unemployed", "Employed", "Student", "Retired", "Not in Labor Force"],
+    "intents": [
+        "search_flights",
+        "make_booking",
+        "modify_booking",
+        "cancel_booking_request_refund",
+        "online_checkin",
+        "seat_selection_or_upgrade",
+        "boarding_pass_retrieval",
+        "check_flight_status",
+        "track_baggage",
+        "rebook_due_to_disruption",
+        "manage_frequent_flyer_account",
+        "redeem_or_earn_miles",
+        "request_lounge_access",
+    ],
+    "traits": {
+        "impatience": [0, 1, 2],
+        "confusion": [0, 1, 2],
+        "skeptical": [0, 1, 2],
+    },
+    "locations": ["USA", "Canada", "UK", "Australia", "other"],
+    "languages": ["English", "Spanish", "French", "other"],
+    "tasks": ["airline support"],
+}
+```
+
+> **Retirement rule:** The SDK filters out combinations where `occupation == "Retired"` is paired with any age bucket below `"35-44"`.
+
+## Running at scale with the SDK
+
+```python
+import os
+from collinear.client import Client
+
+client = Client(
+    assistant_model_url=os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
+    assistant_model_api_key=OPENAI_API_KEY,
+    assistant_model_name=os.getenv("OPENAI_ASSISTANT_MODEL", "gpt-4o-mini"),
+    steer_api_key=TRAIT_BASIS_API_KEY,
+)
+
+conversations = client.simulate(
+    trait_basis,
+    k=500,              # Optional: sample subset instead of full Cartesian product
+    num_exchanges=4,
+    batch_delay=0.1,
+    max_concurrency=4,  # Switches to Trait Basis batch endpoint when >1
+)
+```
+
+### Tips
+
+- **Start narrow.** Validate a small grid before expanding to millions of combinations.
+- **Name traits clearly.** Reviewers should know what `impatience=2` means without a legend.
+- **Cache configs.** Store JSON alongside your runs so you can replay identical grids later.
+- **Batch responsibly.** Increase `max_concurrency` only after confirming your model endpoint quota.
+
+### Trait availability
+
+`client.simulation_runner.list_traits()` returns the Trait Basis catalog recognised by your key. If a run fails with “unknown trait”, inspect that list, adjust the payload, and retry.
+
+### Next steps
+
+- Use the [Quickstart](quickstart) for a copy-paste demo.
+- Feed the same dataset into the [Collinear Platform API](/api-reference/endpoint/judge_conversation) when you need hosted scoring.

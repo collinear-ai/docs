@@ -1,0 +1,88 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Collinear AI",
+  "logo": {
+    "dark": "https://webresources-s3.s3.amazonaws.com/new_logo.png",
+    "light": "https://webresources-s3.s3.amazonaws.com/logo.png"
+  },
+  "favicon": "/images/collinearfavicon.svg",
+  "colors": {
+    "primary": "#F26124",
+    "light": "#F26124",
+    "dark": "#F26124",
+    "anchors": {
+      "from": "#F26124",
+      "to": "#70747B"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:support@collinear.ai"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Go To Homepage",
+    "url": "https://collinear.ai"
+  },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    },
+    {
+      "name": "Blog",
+      "url": "https://blog.collinear.ai"
+    }
+  ],
+  "api": {
+    "baseUrl": "https://api.collinear.ai",
+    "auth": {
+      "method": "bearer"
+    }
+  },
+  "anchors": [],
+  "navigation": [
+    {
+      "group": "Introduction",
+      "pages": [
+        "introduction"
+      ]
+    },
+    {
+      "group": "Get started",
+      "pages": [
+        "get-started/overview",
+        "get-started/quickstart",
+        "get-started/platform-access",
+        "get-started/simulations"
+      ]
+    },
+    {
+      "group": "Core concepts",
+      "pages": [
+        "core-concepts/judges",
+        "core-concepts/simulate",
+        "core-concepts/assess"
+      ]
+    },
+    {
+      "group": "Improve",
+      "pages": [
+        "improve/create_curation_run"
+      ]
+    },
+    {
+      "group": "API Reference - Platform",
+      "pages": [
+        "api-reference/endpoint/upload_dataset",
+        "api-reference/endpoint/judge_conversation"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "x": "https://twitter.com/CollinearAI",
+    "github": "https://github.com/collinear-ai",
+    "linkedin": "https://www.linkedin.com/company/collinearai/"
+  }
+}

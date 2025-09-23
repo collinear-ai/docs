@@ -1,0 +1,68 @@
+---
+title: Quickstart
+description: Run your first Trait Basis simulation and assessment in minutes.
+---
+
+## 1. Create an environment with uv
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv venv --python 3.12
+source .venv/bin/activate
+uv pip install --upgrade pip collinear
+```
+
+## 2. Create a short script `quickstart.py`
+
+```python
+from collinear.client import Client
+
+client = Client(
+    assistant_model_url="https://api.openai.com/v1",
+    assistant_model_api_key=OPENAI_API_KEY,
+    assistant_model_name="gpt-4o-mini",
+    steer_api_key=TRAIT_BASIS_API_KEY,
+)
+
+trait_basis = {
+    "ages": ["13-17", "18-24", "25-34", "35-44", "45-54", "55-64", "65+"],
+    "genders": ["male", "female", "other"],
+    "occupations": ["Unemployed", "Employed", "Student", "Retired", "Not in Labor Force"],
+    "intents": [
+        "search_flights",
+        "make_booking",
+        "modify_booking",
+        "cancel_booking_request_refund",
+        "track_baggage",
+    ],
+    "traits": {
+        "impatience": [0, 1, 2],
+        "confusion": [0, 1, 2],
+        "skeptical": [0, 1, 2],
+    },
+    "locations": ["USA", "Canada", "UK", "Australia", "other"],
+    "languages": ["English", "Spanish", "French", "other"],
+    "tasks": ["airline support"],
+}
+
+conversations = client.simulate(trait_basis, k=3, num_exchanges=3)
+assessment = client.assess(conversations)
+print(assessment)
+```
+
+The SDK validates these persona buckets. Supplying unsupported ages or occupations raises immediately, while combinations that pair `"Retired"` with an age bucket below `"35-44"` are simply skipped.
+
+Replace the placeholder keys with your own before running.
+
+## 3. Execute the run
+
+```bash
+uv run python quickstart.py
+```
+
+The script leaves you with two Python objects:
+
+- `conversations`: the simulated Trait Basis conversations.
+- `assessment`: safety scores for each conversation.
+
+Inspect them in your editor or an interactive shell, then move on to the [Trait Basis simulation guide](simulations) for deeper configuration or the [Platform API](/get-started/platform-access) when you need hosted runs.

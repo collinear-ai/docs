@@ -1,0 +1,63 @@
+---
+title: 'Query Language'
+description: 'This documentation provides an overview of the custom query language designed to parse and evaluate complex queries on structured data. The language supports a variety of conditions, logical operators, and special features that enable users to filter data effectively.'
+icon: magnifying-glass
+---
+
+
+## Query Structure
+
+A query is composed of one or more conditions connected by logical operators. The basic elements of a query are:
+
+- **Fields:** Represented as strings, often in a dot-delimited format to access nested data properties (e.g., `eval1.judgement`,`eval2.judgement`,`eval3.judgement`).
+- **Operators:** Define the relationship between fields and values or between conditions.
+- **Values:** Can be strings, numbers, or arrays, corresponding to the data type of the field.
+
+## Supported Operators
+
+### Condition Operators
+
+- `==`: Equality (e.g., `field == value`)
+- `!=`: Inequality (e.g., `field != value`)
+- `>`: Greater than (e.g., `field > value`)
+- `<`: Less than (e.g., `field < value`)
+- `>=`: Greater than or equal to (e.g., `field >= value`)
+- `<=`: Less than or equal to (e.g., `field <= value`)
+- `in`: Checks if a field's value is in a list (e.g., `field in [value1, value2]`)
+- `~`: Substring match, applicable for strings (e.g., `field ~ 'substring'`)
+
+### Logical Operators
+
+- `&&`: Logical AND, connects two conditions (e.g., `condition1 && condition2`)
+- `||`: Logical OR, connects two conditions (e.g., `condition1 || condition2`)
+
+
+## Examples
+
+### Basic Condition
+
+```plaintext
+eval1.judgement == 1
+```
+
+This checks if the `judgement` property of `eval1` is equal to `1`.
+
+### Nested Condition with AND
+
+```plaintext
+eval1.judgement == 1 && eval2.judgement == 0
+```
+
+This checks if both `eval1.judgement` equals `1` and `eval2.judgement` equals `0`.
+
+### Using OR Operator
+
+```plaintext
+eval1.judgement == 1 || eval2.judgement == 0
+```
+
+This checks if either `eval1.judgement` equals `1` or `eval2.judgement` equals `0`.
+
+## Conclusion
+
+This query language provides a powerful and flexible way to filter data based on complex conditions and nested properties. By supporting both condition and logical operators, it allows for precise control over data queries, making it an essential tool for data manipulation and analysis.

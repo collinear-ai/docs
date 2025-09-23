@@ -1,0 +1,35 @@
+---
+title: Simulate
+description: Generate a baseline simulated conversation with the Collinear SDK.
+---
+
+## Minimal Example
+
+This snippet starts a client with OpenAI-compatible credentials and produces a single simulated conversation. Replace the placeholder keys with your own before running it in a script or notebook.
+
+```python
+import os
+from collinear.client import Client
+
+client = Client(
+    assistant_model_url=os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
+    assistant_model_api_key=OPENAI_API_KEY,
+    assistant_model_name=os.getenv("OPENAI_ASSISTANT_MODEL", "gpt-4o-mini"),
+    steer_api_key=TRAIT_BASIS_API_KEY,
+)
+
+trait_basis = {
+    "ages": ["25-34"],
+    "genders": ["female"],
+    "occupations": ["Employed"],
+    "intents": ["check_flight_status"],
+    "traits": {"patience": [1]},
+    "locations": ["USA"],
+    "languages": ["English"],
+    "tasks": ["airline support"],
+}
+
+simulations = client.simulate(trait_basis, k=1, num_exchanges=2)
+```
+
+For richer scenarios, expand the `trait_basis` dictionary with additional persona buckets, intents, or turn counts before moving on to hosted evaluations.

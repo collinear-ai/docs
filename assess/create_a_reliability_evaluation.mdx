@@ -1,0 +1,75 @@
+---
+title: Create Reliability Assessment
+description: Use the Collinear AI Platform to create a new reliability assessment.
+icon: circle-check
+---
+
+## What is a Reliability Assessment?
+
+A **Reliability Assessment** measures how consistently and truthfully your model responds across a dataset. Collinear AI runs each sample through a selected **reliability judge**, which detects hallucinations or factual inconsistencies.
+
+This helps you:
+
+- Quantify your model’s factual accuracy
+- Identify hallucination-prone outputs
+- Compare performance across different models or prompts
+
+## Interactive Walkthrough
+
+Want to see it in action? Follow this guided demo to create your reliability run:
+
+<div style={{ position: 'relative', paddingBottom: 'calc(56.67989417989418% + 41px)', height: 0, width: '100%' }}>
+      <iframe
+        src="https://demo.arcade.software/SfYLwDb6OrmhylaL0k6F?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true"
+        title="Streamline AI Model Evaluations with Collinear"
+        frameBorder="0"
+        loading="lazy"
+        allowFullScreen
+        allow="clipboard-write"
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', colorScheme: 'light' }}
+      />
+    </div>
+
+# Introduction
+
+Once you connect your knowledge base or upload your dataset with context, you can run a reliability evaluation on it using Collinear AI's suite of reliability judges.
+
+---
+
+## Getting Started
+
+After connecting your knowledge base or uploading your dataset, you can initiate a **reliability assessment** using one of Collinear AI’s reliability judges.
+
+---
+
+## Select a Judge
+
+Choose from the following reliability models:
+
+1. **Veritas** – Collinear’s advanced large model for in-depth hallucination detection.
+2. **Veritas Nano** – Collinear’s ultra-fast binary classifier for hallucination detection.
+3. **Lynx 8B** – Patronus AI’s off-the-shelf model for hallucination detection.
+4. **LLM-as-a-Judge** – Use any custom model with a tailored prompt for flexible evaluation.
+
+---
+
+## Select a Context Engine
+
+Choose how you'd like to include contextual grounding during evaluation:
+
+### Options
+
+1. **Use Context From Dataset**
+   Pulls relevant context directly from your uploaded dataset.
+2. **Add Context Engine**
+   Use a RAG (Retrieve-and-Generate) engine connected directly to your knowledge base to provide additional context.
+
+#### Required Fields for RAG Integration:
+
+- **Content Engine API Key** – Authenticate securely with your context engine.
+- **RAG Host** – URL for the server powering the RAG service.
+- **Index** – Optimized data structure for efficient search and retrieval.
+- **Namespace** – Logical grouping to avoid identifier conflicts.
+- **Top K** – Controls how many of the top results to fetch from the index.
+
+---

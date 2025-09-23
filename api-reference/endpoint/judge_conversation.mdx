@@ -11,7 +11,7 @@ This is useful for scoring, grading, or analyzing the helpfulness, accuracy, or 
 
 The endpoint is designed to work with a conversation format where the
 `conversation_prefix` contains prior turns and `response` is the assistant’s
-reply. On staging the returned payload includes:
+reply. The current deployment returns:
 
 - `score`: numeric grade (higher means more concerning for safety judges).
 - `category`: short label for the detected issue (may be `null`).

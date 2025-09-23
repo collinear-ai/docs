@@ -3,6 +3,10 @@ title: 'Upload Dataset'
 openapi: 'POST /api/v1/dataset/upload'
 ---
 
+Use this endpoint to create or append datasets that appear under **Datasets** in
+the platform. It accepts JSON/CSV files and is the standard ingestion method
+outside the Assess pipeline.
+
 
 ## Parameters
 
@@ -43,7 +47,7 @@ Example payload:
 
 ### Response shape
 
-Staging currently streams the uploaded rows back in the body instead of the
+The current deployment streams the uploaded rows back in the body instead of the
 `{ "dataset_id": ..., "message": ... }` object documented in the OpenAPI
 schema. Each array element will include an auto-generated `id` that you can use
 with the judge endpoints.

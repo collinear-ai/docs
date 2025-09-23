@@ -74,13 +74,38 @@
       ]
     },
     {
-      "group": "API Reference - Platform",
+      "group": "Assessments",
+      "pages": [
+        "api-reference/endpoint/assess"
+      ]
+    },
+    {
+      "group": "Datasets",
       "pages": [
         "api-reference/endpoint/upload_dataset",
+        "api-reference/endpoint/dataset_upload_platform"
+      ]
+    },
+    {
+      "group": "Judges",
+      "pages": [
         "api-reference/endpoint/judge_conversation",
+        "api-reference/endpoint/judge_create_sdk"
+      ]
+    },
+    {
+      "group": "Simulated Data",
+      "pages": [
+        "api-reference/endpoint/simulated_data_generate"
+      ]
+    },
+    {
+      "group": "Benchmarks",
+      "pages": [
         "api-reference/endpoint/tau-trait"
       ]
     }
+
   ],
   "footerSocials": {
     "x": "https://twitter.com/CollinearAI",

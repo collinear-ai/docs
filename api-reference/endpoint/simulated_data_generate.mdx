@@ -1,0 +1,68 @@
+---
+title: 'Generate Simulated Data (JSON)'
+openapi: 'POST /api/v1/synth_data/generate'
+---
+
+## Alert
+
+This method of generating simulated data is different from the SDK. If you wish to create trait-based simulations, use the [SDK](/get-started/quickstart)
+
+## Overview
+
+Generate synthetic conversation rows inline by providing example prompts and a
+few seed examples. The service uses the specified model to fan out new samples
+that you can immediately download or store. This JSON variant is convenient when
+building tooling that programmatically defines the schema and instructions.
+
+### Request body fields
+
+- `model_id`: UUID of the model that should author the synthetic responses.
+- `multiplier`: Integer multiplier applied to the number of examples. If you
+  send three examples and set `multiplier` to `4`, the service targets twelve
+  generations.
+- `examples`: Array of objects. Each example can include any keys your pipeline
+  understands (commonly `conv_prefix`, `response`, `context`, etc.).
+- `prompt`: Instruction prompt that explains how the model should transform the
+  examples when creating new rows.
+
+### Example request
+
+```bash
+curl https://stage.collinear.ai/api/v1/synth_data/generate \
+  -H 'Authorization: Bearer <token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model_id": "<MODEL_ID>",
+    "multiplier": 5,
+    "prompt": "Generate safe customer service conversations for billing issues.",
+    "examples": [
+      {
+        "conv_prefix": [
+          {"role": "user", "content": "My shipment is missing."}
+        ],
+        "response": {
+          "role": "assistant",
+          "content": "I'm sorry to hear that. Let me check the tracking number."
+        }
+      }
+    ]
+  }'
+```
+
+### Response shape
+
+The API returns an array. Each element includes the original example that the
+model expanded from and a `generated` string with the newly created row:
+
+```json
+[
+  {
+    "original": {"conv_prefix": [...], "response": {...}},
+    "generated": "{\n  \"conv_prefix\": [...],\n  \"response\": {...}\n}"
+  }
+]
+```
+
+Parse the `generated` string into JSON before storing it. The service may
+stream partial chunks before the final array is delivered; buffer the body
+before parsing if your HTTP client emits incremental events.

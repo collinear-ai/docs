@@ -1,0 +1,50 @@
+---
+title: 'Upload Dataset (Assess Pipeline)'
+openapi: 'POST /api/v1/dataset/upload/platform'
+---
+
+## Overview
+
+Use this endpoint when you want rows to skip the regular dataset list and go
+straight into the Assess dashboard. It is the first call in the Assess
+Conversations workflow.
+
+### Form fields
+
+- `file` *(required)*: JSON file containing an array of rows with
+  `conv_prefix` and `response` objects. Use `application/json` for the MIME type.
+- `dataset_name` *(required)*: Friendly name that appears in the dashboard.
+- `space_id` *(required)*: UUID for the destination space.
+- `evaluation_type` *(required)*: Typically `safety`; determines which judge
+  templates Collinear recommends.
+- `skip_context_check` *(optional)*: Set to `true` to skip automatic field
+  validation while prototyping.
+
+### Example request
+
+```bash
+curl https://stage.collinear.ai/api/v1/dataset/upload/platform \
+  -H 'Authorization: Bearer <token>' \
+  -F 'file=@conversations.json;type=application/json' \
+  -F 'dataset_name=assess-demo' \
+  -F 'space_id=<SPACE_ID>' \
+  -F 'evaluation_type=safety' \
+  -F 'skip_context_check=true'
+```
+
+### Response
+
+On success the API returns a JSON body similar to:
+
+```json
+{
+  "message": "Dataset uploaded successfully",
+  "data": {
+    "dataset_id": "<DATASET_ID>",
+    "eligible_evaluation_types": {"evaluation_types": ["safety", "performance"]},
+    "rows": 2
+  }
+}
+```
+
+Persist the `dataset_id` for the follow-up judge creation and assess run calls.

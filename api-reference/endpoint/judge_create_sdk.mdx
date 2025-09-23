@@ -1,0 +1,44 @@
+---
+title: 'Create Judge (SDK Helper)'
+openapi: 'POST /api/v1/judge/create/sdk'
+---
+
+## Overview
+
+Call this helper after uploading a dataset so the Assess run has a specific
+judge ID to target. It is intended for SDK and automation scenarios.
+
+Generate a disposable judge configuration for SDK-driven assessments. Call this
+after uploading a dataset so the evaluation run can target a specific Collinear
+safety rubric.
+
+### Request body
+
+- `judge_name`: Unique name for the judge run (use a timestamp to avoid
+  collisions).
+- `model_name`: Judge backing model. For safety scoring use `collinear_guard`.
+- `space_id`: UUID for the space that owns this judge.
+
+### Example request
+
+```bash
+curl https://stage.collinear.ai/api/v1/judge/create/sdk \
+  -H 'Authorization: Bearer <token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "judge_name": "assess-judge-<TIMESTAMP>",
+    "model_name": "collinear_guard",
+    "space_id": "<SPACE_ID>"
+  }'
+```
+
+### Response
+
+The API returns a minimal JSON document:
+
+```json
+{"id": "<JUDGE_ID>"}
+```
+
+Capture the `id` and pass it to the assess run endpoint. Judges created through
+this helper are ephemeral and scoped to the target space.

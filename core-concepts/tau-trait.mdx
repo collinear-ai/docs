@@ -1,0 +1,94 @@
+---
+title: TauTrait
+description: Drive dynamic rollouts for Collinear agents by pairing TauTrait with TraitMix personas.
+---
+
+## Why TauTrait
+
+TauTrait packages Collinear's fork of the $\tau$-bench research benchmark (previously referenced internally as **tauHard**). It ships the airline and retail environments, tool catalogs, and scripted user simulators that we rely on to regression-test assistants before launching new policies. When you run TauTrait with TraitMix personas you get:
+
+- **Persona-driven users** – the same trait intensities that power `Client.simulate` flow into the benchmark through `trait_dict`.
+- **Dynamic tool calls** – airline and retail agents interact with live tool definitions, surfacing execution and policy regressions.
+- **Repeatable rollouts** – every run produces JSONL trajectories and pass@k metrics you can diff between builds.
+
+Use TauTrait whenever you need higher-fidelity pre-production rollouts than static datasets provide.
+
+## Installation
+
+TauTrait is published as [`tau-trait`](https://pypi.org/project/tau-trait/). Install it into the same environment as your Collinear simulations:
+
+```bash
+pip install tau-trait
+```
+
+At runtime set the credentials that TauTrait expects:
+
+- `OPENAI_API_KEY` (or the equivalent provider key) for the agent model.
+- `STEER_API_KEY` so the TraitMix-backed user simulator can request persona-grounded turns when `user_model_provider="steer"`.
+
+## Run a rollout programmatically
+
+Create a `RunConfig` and call `run`. Trait intensities are integers that mirror the `trait_basis` intensities you pass to `Client.simulate`.
+
+```python
+from tau_hard.types import RunConfig
+from tau_hard.run import run
+
+config = RunConfig(
+    model_provider="openai",
+    user_model_provider="steer",
+    model="gpt-4o-mini",
+    env="retail",
+    agent_strategy="tool-calling",
+    temperature=0.7,
+    user_strategy="traitmix",
+    task_ids=[4],
+    trait_dict={
+        "impatience": 1,
+        "skeptical": 2,
+    },
+    max_concurrency=4,
+)
+
+results = run(config)
+```
+
+Each rollout writes a checkpoint file under `results/` in the format `agent_strategy-model-temperature_range_start-end_user-user_strategy_traits-<traits>_<timestamp>.json`. The JSON captures the reward, transcript, and debug info for every task.
+
+## Wiring traits from the SDK
+
+The Collinear SDK already produces persona mixes through `trait_basis`. When you call `Client.simulate`, every combination is emitted as a `trait_dict` that you can hand directly to TauTrait:
+
+```python
+simulations = client.simulate(trait_basis, k=1, num_exchanges=2)
+
+run(
+    RunConfig(
+        ...,
+        user_model_provider="steer",
+        user_strategy="traitmix",
+        trait_dict=simulations[0].metadata["trait_dict"],
+    )
+)
+```
+
+This keeps the personas used for offline dataset generation and online rollout testing in sync.
+
+## Example configuration files
+
+The repository ships sample configs you can copy when standing up new experiments:
+
+- `simulations/examples/rl/configs/tau_hard_config.json` – standard airline/retail rollout tuned for TraitMix personas.
+- `voice-simulations/examples/configs/tau_hard_config.json` – voice-agent variant that enables the same trait plumbing.
+
+Update the keys, model names, and `trait_dict` intensities to match your scenario, then drive TauTrait via notebooks (`simulations/examples/rl/simulations_RL.ipynb`) or CLI entry points (`python -m tau_hard.run ...`).
+
+## When to choose another tool
+
+Stick with the lightweight `Client.simulate` API when you only need persona-conditioned transcripts. Reach for TauTrait when you must:
+
+- Evaluate end-to-end tool chains against scripted user goals.
+- Measure pass@k or reward trends over time.
+- Replay historical trajectories stored under `simulations/examples/rl/tau-hard/historical_trajectories`.
+
+Pair both workflows to cover persona coverage (TraitMix) and task completion (TauTrait).

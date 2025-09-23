@@ -1,0 +1,68 @@
+---
+title: TauTrait Personas API
+openapi: 'POST https://steer.collinear.ai/steer_bare'
+---
+
+## Overview
+
+TauTrait relies on the TraitMix service to synthesize user turns that match the persona intensities in a `trait_dict`. Call this endpoint directly when you want to drive persona-grounded user messages outside the Python SDK.
+
+The API accepts the current conversation transcript and trait intensities, then returns the next user utterance. It is the same contract the `tau-trait` package calls from `tau_hard.envs.user.steer_completions`.
+
+## Endpoint
+
+```
+POST https://steer.collinear.ai/steer_bare
+```
+
+### Headers
+
+- `Content-Type: application/json`
+- `API-Key: <STEER_API_KEY>` – generate or reuse the key you pass to the SDK / TauTrait runtime.
+
+## Request body
+
+| Field | Type | Required | Description |
+| ----- | ---- | -------- | ----------- |
+| `trait_dict` | object | Yes | Map of trait names to integer intensities (0–2). Mirrors the `trait_dict` forwarded by TauTrait. |
+| `messages` | array | Yes | Conversation so far, ordered oldest to newest. Each item must contain `role` (`system`\|`user`\|`assistant`) and `content` (string). |
+| `temperature` | number | No | Sampling temperature used when generating the user turn. Defaults to the service-wide default (TauTrait sends `0.7`). |
+| `max_tokens` | integer | No | Maximum tokens for the generated message. TauTrait defaults to `256`. |
+| `system_prompt` | string\|number | No | Optional system prompt identifier. TauTrait currently sends `0` to use the default prompt. |
+
+The service ignores any additional fields.
+
+## Example
+
+```bash
+curl -X POST https://steer.collinear.ai/steer_bare \
+  -H 'Content-Type: application/json' \
+  -H "API-Key: $STEER_API_KEY" \
+  -d '{
+    "trait_dict": {"impatience": 1, "skeptical": 2},
+    "messages": [
+      {"role": "system", "content": "You are a user interacting with an agent."},
+      {"role": "user", "content": "Hi! How can I help you today?"},
+      {"role": "assistant", "content": "Could you share your booking number?"}
+    ],
+    "temperature": 0.7,
+    "max_tokens": 256,
+    "system_prompt": 0
+  }'
+```
+
+**Response**
+
+```json
+{
+  "response": "Sure, it's AB1234, but I'm really in a hurry—can we make this quick?"
+}
+```
+
+Return payloads always include a `response` string. TauTrait treats this as the next user turn and appends it to the transcript. If the service cannot satisfy the request you receive an HTTP error code with details in the JSON body.
+
+## Usage tips
+
+- Pass the exact `trait_dict` you receive from the Collinear SDK or TauTrait run config to guarantee consistent personas across rollouts.
+- Trim each `messages` item to only `role` and `content`; extraneous keys are ignored by TauTrait before forwarding the payload.
+- Handle non-200 responses by retrying with backoff or swapping to a neutral persona when the service is unavailable.

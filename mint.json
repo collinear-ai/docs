@@ -95,9 +95,9 @@
       ]
     },
     {
-      "group": "Synthetic Data",
+      "group": "Simulated Data",
       "pages": [
-        "api-reference/endpoint/synth_data_generate"
+        "api-reference/endpoint/simulated_data_generate"
       ]
     }
   ],

@@ -83,7 +83,6 @@
       "group": "Datasets",
       "pages": [
         "api-reference/endpoint/upload_dataset",
-        "api-reference/endpoint/tau-trait",
         "api-reference/endpoint/dataset_upload_platform"
       ]
     },
@@ -99,7 +98,14 @@
       "pages": [
         "api-reference/endpoint/simulated_data_generate"
       ]
+    },
+    {
+      "group": "Benchmarks",
+      "pages": [
+        "api-reference/endpoint/tau-trait"
+      ]
     }
+
   ],
   "footerSocials": {
     "x": "https://twitter.com/CollinearAI",

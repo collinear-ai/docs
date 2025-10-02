@@ -18,7 +18,7 @@ POST https://steer.collinear.ai/steer_bare
 ### Headers
 
 - `Content-Type: application/json`
-- `API-Key: <STEER_API_KEY>` – generate or reuse the key you pass to the SDK / TauTrait runtime.
+- `API-Key: <TRAITMIX_API_KEY>` – generate or reuse the key you pass to the SDK / TauTrait runtime.
 
 ## Request body
 
@@ -37,7 +37,7 @@ The service ignores any additional fields.
 ```bash
 curl -X POST https://steer.collinear.ai/steer_bare \
   -H 'Content-Type: application/json' \
-  -H "API-Key: $STEER_API_KEY" \
+  -H "API-Key: $TRAITMIX_API_KEY" \
   -d '{
     "trait_dict": {"impatience": 1, "skeptical": 2},
     "messages": [

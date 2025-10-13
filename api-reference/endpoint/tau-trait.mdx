@@ -18,7 +18,7 @@ POST https://steer.collinear.ai/steer_bare
 ### Headers
 
 - `Content-Type: application/json`
-- `API-Key: <STEER_API_KEY>` – generate or reuse the key you pass to the SDK / TauTrait runtime.
+- `API-Key: <COLLINEAR_API_KEY>` – use the Collinear API key from your dashboard (the same key you configure in the SDK / TauTrait runtime).
 
 ## Request body
 
@@ -37,7 +37,7 @@ The service ignores any additional fields.
 ```bash
 curl -X POST https://steer.collinear.ai/steer_bare \
   -H 'Content-Type: application/json' \
-  -H "API-Key: $STEER_API_KEY" \
+  -H "API-Key: $COLLINEAR_API_KEY" \
   -d '{
     "trait_dict": {"impatience": 1, "skeptical": 2},
     "messages": [
@@ -66,3 +66,4 @@ Return payloads always include a `response` string. TauTrait treats this as the 
 - Pass the exact `trait_dict` you receive from the Collinear SDK or TauTrait run config to guarantee consistent personas across rollouts.
 - Trim each `messages` item to only `role` and `content`; extraneous keys are ignored by TauTrait before forwarding the payload.
 - Handle non-200 responses by retrying with backoff or swapping to a neutral persona when the service is unavailable.
+- To validate trait names up front, call [List Supported Traits](/api-reference/endpoint/helpers).

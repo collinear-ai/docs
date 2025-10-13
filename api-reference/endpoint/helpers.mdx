@@ -1,0 +1,52 @@
+---
+title: List Supported Traits
+openapi: 'GET https://steer.collinear.ai/traits'
+---
+
+## Overview
+
+Retrieve the set of trait names currently supported by the Steering service. Use this to validate your `trait_dict` before running simulations or benchmarks.
+
+## Endpoint
+
+```
+GET https://steer.collinear.ai/traits
+```
+
+### Auth
+
+No API key is required for this endpoint.
+
+## Example
+
+```bash
+curl -s https://steer.collinear.ai/traits
+```
+
+**Response**
+
+```json
+{
+  "traits": ["impatience", "confusion", "skeptical", "incoherence"]
+}
+```
+
+## Usage in the SDK
+
+```python
+from collinear.client import Client
+
+client = Client(
+    assistant_model_url="https://api.openai.com/v1",
+    assistant_model_api_key=OPENAI_API_KEY,
+    assistant_model_name="gpt-4o-mini",
+    collinear_api_key=COLLINEAR_API_KEY,
+)
+
+available = client.simulation_runner.list_traits()
+print(available)
+```
+
+Notes:
+- The SDK may include an `API-Key` header automatically, but it is not required and is ignored by this endpoint.
+- On error, `list_traits()` returns an empty list; handle this case in your tooling.

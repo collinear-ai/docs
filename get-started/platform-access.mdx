@@ -9,7 +9,7 @@ The [Collinear Platform](https://platform.collinear.ai) offers hosted assessment
 
 - A **platform login** so you can reach your organization’s spaces
 - At least one **Space** to scope datasets, judges, and runs
-- A **Collinear Platform API key** (separate from the Trait Mix key used by the SDK)
+- A **Collinear API key** (used by both the Platform and Collinear SDK)
 - The **Space ID** that keeps uploads scoped to the right workspace
 - One or more **Judge IDs** for scoring conversations through the API
 
@@ -55,7 +55,7 @@ This page shows how to obtain each identifier.
 
 ## Step 3 · Copy your Platform API key
 
-**Why it’s important:** Hosted API endpoints (for uploads, judges, and synthetic runs) expect the `Authorization: Bearer ${COLLINEAR_API_KEY}` header. This key lives alongside your space, and it is distinct from the `TRAITMIX_API_KEY` used by the SDK.
+**Why it’s important:** Hosted Platform API endpoints (uploads, judges, synthetic runs) expect the `Authorization: Bearer ${COLLINEAR_API_KEY}` header. The Collinear SDK also uses this same key when generating simulated user turns. Keep this key handy for both surfaces.
 
 <div style={{position: 'relative', paddingBottom: 'calc(56.67989417989418% + 41px)', height: 0, width: '100%'}}>
   <iframe
@@ -112,6 +112,6 @@ This page shows how to obtain each identifier.
 
 With the login, key, space, and judge IDs ready, you can:
 
-- Run the [Trait Mix quickstart](quickstart) locally and keep your platform key separate from the SDK key.
+- Run the [Trait Mix quickstart](quickstart) locally; the Platform and SDK API both use your Collinear API key.
 - Follow the updated [Platform API example](/api-reference/endpoint/upload_dataset) to upload the JSONL you generated.
 - Jump into the [API reference](/api-reference/endpoint/judge_conversation) when you’re ready to script hosted evaluations.

@@ -104,6 +104,12 @@
       "pages": [
         "api-reference/endpoint/tau-trait"
       ]
+    },
+    {
+      "group": "Helpers",
+      "pages": [
+        "api-reference/endpoint/helpers"
+      ]
     }
 
   ],

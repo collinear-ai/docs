@@ -65,7 +65,7 @@ client = Client(
     assistant_model_url=os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
     assistant_model_api_key=OPENAI_API_KEY,
     assistant_model_name=os.getenv("OPENAI_ASSISTANT_MODEL", "gpt-4o-mini"),
-    collinear_api_key=TRAITMIX_API_KEY,
+    collinear_api_key=COLLINEAR_API_KEY,
 )
 
 conversations = client.simulate(
@@ -86,7 +86,7 @@ conversations = client.simulate(
 
 ### Trait availability
 
-`client.simulation_runner.list_traits()` returns the Trait Mix catalog recognised by your key. If a run fails with “unknown trait”, inspect that list, adjust the payload, and retry.
+`client.simulation_runner.list_traits()` returns the current Trait Mix catalog supported by the service. If a run fails with “unknown trait”, inspect that list, adjust the payload, and retry. See the API reference: [List Supported Traits](/api-reference/endpoint/helpers).
 
 ### Next steps
 

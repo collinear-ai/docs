@@ -50,24 +50,6 @@
       ]
     },
     {
-      "group": "Get started",
-      "pages": [
-        "get-started/overview",
-        "get-started/quickstart",
-        "get-started/platform-access",
-        "get-started/simulations"
-      ]
-    },
-    {
-      "group": "Core concepts",
-      "pages": [
-        "core-concepts/assess",
-        "core-concepts/judges",
-        "core-concepts/simulations",
-        "core-concepts/tau-trait"
-      ]
-    },
-    {
       "group": "Simulation Lab",
       "pages": [
         "simulation-lab/overview",
@@ -79,9 +61,11 @@
       ]
     },
     {
-      "group": "Improve",
+      "group": "Core Concepts",
       "pages": [
-        "improve/create_curation_run"
+        "core-concepts/task-generator",
+        "core-concepts/verifiers",
+        "core-concepts/npcs"
       ]
     },
     {

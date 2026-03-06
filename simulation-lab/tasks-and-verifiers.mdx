@@ -46,7 +46,6 @@ A task bundle is a JSON file with four sections:
 - **`task`** — The natural language instruction given to the agent.
 - **`tool_servers`** — Which tool servers are required for this task.
 - **`seed_emails` / `seed_calendar_events`** — Data injected into the environment before the agent starts. This is what makes the task solvable — the agent reads the seeded email to learn what it needs to do.
-- **Verifiers** — Automated checks referenced by the task (covered below).
 
 ## Task Generation Flow
 
@@ -75,6 +74,6 @@ There are two types:
 
 1. **Programmatic verifiers** — Inspect the environment state directly. For example: "Did the agent send an email to the correct recipient?" is checked by querying the email tool server's state, as well as reviewing the state diffs (before/after environment snapshots).
 
-2. **LLM-as-judge verifiers (rubric-based)** — An LLM evaluates the agent's actions against a rubric. Useful for subjective criteria like "Did the agent communicate professionally?"
+2. **Rubric-based Reward Models (rubric-based)** — Reward models that evaluates the agent's actions against a rubric. Useful for subjective criteria like "Did the agent communicate professionally?"
 
 Both types receive the same `RunArtifacts` interface, so they work with any agent implementation.

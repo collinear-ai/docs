@@ -1,0 +1,43 @@
+---
+title: "Task Generator"
+description: "How Simulation Lab generates tasks from templates, seed data, NPCs, and toolsets"
+---
+
+The Task Generator produces complete task bundles by combining four inputs through an iterative generation process.
+
+<img src="/images/simulation-lab/core-concepts/task-gen/task-gen.png" />
+
+## Inputs
+
+- **Template** (`task.json`) — The structural blueprint that defines the task format and constraints.
+- **Seed Data** — Domain-specific records injected into the environment (e.g., employee records, resumes, job requisitions).
+- **NPCs** — Simulated users with defined interests and personality traits that interact with or are referenced by the task.
+- **Toolset** — The available tools described by their descriptions, schemas, and dynamics.
+
+## Iterative Task Generation
+
+The generator combines these inputs and iteratively improves the output for:
+
+- **Grounding in seed data** — Tasks reference real data present in the environment.
+- **Realism** — Instructions reflect plausible real-world scenarios.
+- **Feasibility with toolset** — Tasks are solvable using the available tools.
+- **Diversity** — Generated tasks cover a range of scenarios and difficulty levels.
+
+## Skills.md
+
+Each task is paired with a `Skills.md` file that provides the agent with:
+
+- **Scenario context** — Background information about the task domain and situation.
+- **Recurring workflows** — Common patterns and procedures the agent should follow.
+
+## Task Bundle Output
+
+A generated task bundle contains:
+
+- **Task metadata** — Unique ID, display name, difficulty, and category.
+- **Task instruction** — The natural language instruction given to the agent.
+- **Tool servers** — Which tool servers are required.
+- **Seed data** — Data injected into the environment before the agent starts.
+- **Verifiers** — Automated checks that determine whether the agent succeeded.
+
+See [Tasks & Verifiers](/simulation-lab/tasks-and-verifiers) for the full bundle format and how to run generated tasks.

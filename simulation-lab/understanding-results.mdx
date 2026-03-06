@@ -1,0 +1,58 @@
+---
+title: "Understanding Results"
+description: "Rollout traces, scoring, statistical confidence, and state diffs"
+---
+
+## Rollout Traces
+
+Every rollout produces a complete trace: the full sequence of agent actions, tool calls, tool responses, and any state changes detected. Traces are saved as JSON and can be inspected programmatically.
+
+## Scoring
+
+Verifiers produce structured results for each rollout:
+
+- **Pass/fail** — Did the agent complete the task successfully?
+- **Reward signal** — A numeric score (typically 0.0 to 1.0) indicating quality of completion.
+- **Metadata** — Verifier-specific details (which checks passed, which failed, and why).
+
+## Statistical Confidence
+
+A single rollout tells you whether the agent can solve a task. Multiple rollouts tell you whether it reliably solves it.
+
+Running multiple rollouts will enable users to derive:
+
+- **Pass rate** — What percentage of attempts succeed?
+- **Variance** — How consistent is the agent? A model that passes 8/10 times is more reliable than one that passes 5/10.
+- **Model comparison** — Run the same tasks with different models to compare reliability.
+
+## State Diffs
+
+Simulation Lab tracks what changed in the environment during each rollout. After each tool call that mutates state, the system captures a before/after snapshot and computes a human-readable diff.
+
+For example, after the agent sends an email:
+
+```
+[STATE DIFF]
+Email:
+  Added:
+    - To: employee@company.com
+      Subject: "Welcome Package - First Day Information"
+      Preview: "Hi Sarah, Welcome to the team! Here's what you need..."
+```
+
+After a calendar event is created:
+
+```
+[STATE DIFF]
+Calendar:
+  Added:
+    - [marcus_johnson] New Hire Orientation
+      2026-01-22 10:00 - 11:00 UTC
+```
+
+These diffs serve two purposes:
+
+1. **Debugging** — Read the trace and immediately see what the agent changed at each step, without manually inspecting backing services.
+2. **Verification** — Verifiers use diffs to confirm the agent made the right changes. "Did the agent send an email to the right person?" is answered by inspecting the email state diff.
+
+Full-rollout diffs (comparing the environment state after seeding vs. after the agent finishes) provide a summary of everything that changed during the entire run.

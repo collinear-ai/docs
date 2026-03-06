@@ -1,0 +1,73 @@
+---
+title: "Bring Your Own Agent"
+description: "Integrate your own agent implementation with Simulation Lab"
+---
+
+Simulation Lab is agent-agnostic. The default agent uses a tool-calling loop with any OpenAI-compatible LLM API, but you can bring your own agent implementation by implementing the `BaseAgent` contract.
+
+## The Agent Contract
+
+A custom agent extends `BaseAgent` and implements four methods:
+
+```python
+class MyAgent(BaseAgent):
+    @staticmethod
+    def name() -> str:
+        return "my-agent"
+
+    def version(self) -> str | None:
+        return "1.0.0"
+
+    async def setup(self, environment: BaseEnvironment) -> None:
+        """Called once before the agent starts.
+
+        Use this to discover available tools, configure state,
+        or perform any one-time initialization.
+        """
+        self.tools = await environment.list_tools()
+
+    async def run(
+        self,
+        instruction: str,
+        environment: BaseEnvironment,
+        context: RunArtifacts,
+    ) -> None:
+        """Execute the agent's task.
+
+        Populate the context (RunArtifacts) as execution progresses
+        so that partial results are captured even on timeout or error.
+        """
+        context.record_message({"role": "user", "content": instruction})
+
+        # Your agent logic here:
+        # 1. Read the instruction
+        # 2. Decide which tools to call
+        # 3. Call tools via environment.call_tool(server, name, params)
+        # 4. Record each tool call and result in context
+        # 5. Iterate until done
+
+        call = ToolCall(tool_server="email-env", tool_name="send_email", parameters={...})
+        result = await environment.call_tool(call.tool_server, call.tool_name, call.parameters)
+        context.record_tool_call(call, result)
+```
+
+Register your agent at runtime via the CLI:
+
+```bash
+collinear tasks run -t hr-demo -m gpt-4o --agent-import-path path.to.agent:MyAgent
+```
+
+## The Environment Interface
+
+The `environment` object passed to your agent provides two async methods:
+
+- **`environment.list_tools()`** — returns tool schemas (names, descriptions, input schemas) for all tool servers in the workspace.
+- **`environment.call_tool(tool_server, tool_name, parameters)`** — executes a tool call on a specific server and returns the result.
+
+Under the hood, these map to the tool server protocol: `list_tools()` calls `GET /tools`, and `call_tool()` calls `POST /step`.
+
+## Run Artifacts
+
+As the agent executes, it populates a `RunArtifacts` object — the structured record of the run (conversation history, tool calls, results, errors). Helper methods (`record_message`, `record_tool_call`, `set_error`) allow incremental recording so that partial results are captured even on timeout or error.
+
+Verifiers consume `RunArtifacts` to determine whether the agent succeeded. This is the contract between agent execution and verification — your agent populates it, and verifiers read from it.

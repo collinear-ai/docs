@@ -54,7 +54,8 @@
       "pages": [
         "simulation-lab/overview",
         "simulation-lab/getting-started",
-        "simulation-lab/environments-and-tools",
+        "simulation-lab/toolsets",
+        "simulation-lab/scenarios",
         "simulation-lab/bring-your-own-agent",
         "simulation-lab/tasks-and-verifiers",
         "simulation-lab/understanding-results"

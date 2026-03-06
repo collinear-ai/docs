@@ -27,7 +27,7 @@ Running multiple rollouts will enable users to derive:
 
 ## State Diffs
 
-Simulation Lab tracks what changed in the environment during each rollout. After each tool call that mutates state, the system captures a before/after snapshot and computes a human-readable diff.
+Simulation Lab tracks what changed in the playground during each rollout. After each tool call that mutates state, the system captures a before/after snapshot and computes a human-readable diff.
 
 For example, after the agent sends an email:
 
@@ -55,4 +55,4 @@ These diffs serve two purposes:
 1. **Debugging** — Read the trace and immediately see what the agent changed at each step, without manually inspecting backing services.
 2. **Verification** — Verifiers use diffs to confirm the agent made the right changes. "Did the agent send an email to the right person?" is answered by inspecting the email state diff.
 
-Full-rollout diffs (comparing the environment state after seeding vs. after the agent finishes) provide a summary of everything that changed during the entire run.
+Full-rollout diffs (comparing the playground state after seeding vs. after the agent finishes) provide a summary of everything that changed during the entire run.

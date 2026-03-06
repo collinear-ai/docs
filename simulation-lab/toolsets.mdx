@@ -1,0 +1,89 @@
+---
+title: "Toolsets"
+description: "Tool definitions, OOTB toolsets, and BYO tools"
+---
+
+## Tool Server Protocol
+
+Tool servers expose a standard HTTP API. Any service that implements this protocol can be used as a tool in the Simulation Lab.
+
+## Multi-Tool Composition
+
+A workspace can include multiple tool servers. The agent sees a unified tool list. Tools are automatically namespaced by their server name (e.g., `email-env__send_email`, `chronos-server__create_event`). Routing is handled transparently; the agent calls tools by name and the Simulation Lab forwards each call to the correct server.
+
+## Tool Definition Format
+
+Each tool server is defined as a YAML file that maps directly to Docker Compose services. Here is the email tool as an example:
+
+```yaml
+name: email
+display_name: Email
+description: Email sending and inbox management via SMTP server.
+category: communication
+
+exposed_ports:
+  - port: 8025
+    description: Email web UI
+
+services:
+  smtp-server:
+    image: <smtp-image>
+    ports: ["8025", "1025"]
+    healthcheck:
+      interval: 10s
+      retries: 6
+
+  email-env:
+    image: <tool-server-image>
+    environment:
+      SMTP_BASE_URL: http://smtp-server:8025
+    depends_on:
+      smtp-server:
+        condition: service_healthy
+```
+
+The YAML specifies everything Docker needs: images, ports, health checks, environment variables, and dependency ordering. The CLI reads these definitions and composes them into a working `docker-compose.yml`.
+
+## OOTB Toolsets
+
+Below is a selection of out-of-the-box tools that come with Simulation Lab. We are continually adding more domain-specific tools as part of our roadmap.
+
+| Name | Category | Description |
+|------|----------|-------------|
+| `Calendar` | Productivity | CalDAV calendar (Baikal + Chronos MCP) |
+| `Coding` | Development | Sandboxed shell and filesystem (OpenHands) |
+| `Email` | Communication | Email sending/inbox via MailHog SMTP |
+| `File Explorer` | Development | Read, write, and list files |
+| `Frappe HRMS` | Enterprise | Full HR management system (Frappe HRMS) |
+| `Google Workspace` | Productivity | Drive, Docs, Sheets, Gmail, Calendar |
+| `Nano Bananna Pro` | Creative | Image generation and editing |
+| `OpenTable` | Lifestyle | Restaurant search, reservations, and cancellations |
+| `Outlook` | Communication | Email inbox, drafts, and sent items |
+| `Playwright` | Browser | Browser automation via Playwright MCP |
+| `Rocket.Chat` | Communication | Open source Slack-equivalent Team chat |
+| `SEC Edgar` | Finance | SEC EDGAR filings search |
+| `Terminal` | Development | Run shell commands |
+| `Twelve Data` | Finance | Market data |
+| `Weather` | Utilities | Forecasts by location |
+| `WhatsApp` | Communication | Messaging with contacts, groups, and messages |
+
+## Bring Your Own Tools (MCP or CLI)
+
+<Note>This feature is launching soon.</Note>
+
+Simulation Lab enables users to bring their own tools via MCP.
+
+### The Core Idea
+
+Simulation Lab's tool server protocol wraps MCP servers. To add your own toolset, you point Simulation Lab at your MCP server, and then it becomes available to agents in the workspace, and can be used for task generation and verification.
+
+### Two Paths for Integration
+
+**For task generation:** Provide your MCP tool definitions as JSON. The hosted task generation API consumes them and produces task bundles (instructions, seed data, and verifiers) tailored to your tools.
+
+```bash
+# Generate tasks for your custom tools
+collinear-sim-lab tasks-gen run --tools ./tools.json --out ./bundles/hr-custom
+```
+
+**For runtime:** Point Simulation Lab at your MCP server URL. It becomes available to agents in the workspace alongside built-in toolsets. Agents discover it via the unified tool list and call it like any other tool.

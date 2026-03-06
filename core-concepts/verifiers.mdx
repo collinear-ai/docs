@@ -1,0 +1,35 @@
+---
+title: "Verifiers"
+description: "Programmatic and rubric-based evaluation of agent behavior. "
+---
+
+For each task, Collinear’s **Verifier Engine** generates two complementary sets of verifiers that together cover the full evaluation surface:
+
+## Programmatic Verifiers
+
+Programmatic verifiers inspect the environment state directly. They compare before/after snapshots of the environment to confirm the agent made the correct changes.
+
+**Example:** "Did the agent send an email to the correct recipient?" is answered by querying the email tool server's state and reviewing the state diff.
+
+Programmatic verifiers are deterministic — given the same environment state, they always produce the same result. Use them for objective, checkable criteria.
+
+## Rubric-based Verifiers (Rewards)
+
+Rubric-based verifiers use an LLM-as-judge to evaluate the agent's actions against a scoring rubric. The judge reviews the agent's full trace and assigns a reward score.
+
+**Example:** "Did the agent communicate professionally?" is evaluated by an LLM reviewing the conversation against a rubric defining professional communication.
+
+Rubric-based verifiers are useful for:
+
+- Subjective quality criteria (tone, clarity, helpfulness)
+- Multi-step reasoning evaluation
+- Cases where the "correct" answer depends on judgment
+
+
+## How Verifiers Produce Rewards
+
+Both verifier types produce structured results:
+
+- **Pass/fail** — Did the agent complete the task successfully?
+- **Reward signal** — A numeric score (typically 0.0 to 1.0) indicating quality of completion.
+- **Metadata** — Verifier-specific details (which checks passed, which failed, and why).

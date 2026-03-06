@@ -1,0 +1,45 @@
+---
+title: "NPCs"
+description: "Simulated users with configurable traits and personas"
+---
+
+NPCs (non-player characters) are simulated users that populate the environment and interact with or are referenced by tasks. Each NPC has defined interests and personality traits that influence how they behave in the simulation.
+
+NPCs serve two roles in the Simulation Lab:
+
+1. **Task context** — NPCs appear as employees, customers, or other personas in seed data, giving the agent realistic people to interact with.
+2. **User simulation** — NPCs can act as simulated end-users that the agent must serve, with varying traits that test the agent's robustness.
+
+## TraitBasis
+
+TraitBasis is the system for generating diverse, coherent NPC personas. It defines personas across multiple dimensions:
+
+```python
+trait_basis = {
+    "ages": ["25"],
+    "genders": ["female"],
+    "occupations": ["Employed"],
+    "intents": ["check_flight_status"],
+    "traits": {"patience": [1]},
+    "locations": ["USA"],
+    "languages": ["English"],
+    "tasks": ["airline support"],
+}
+```
+
+### Trait Dimensions
+
+- **Demographics** — Age, gender, location, language, occupation.
+- **Intents** — What the user is trying to accomplish.
+- **Personality traits** — Configurable on a scale (e.g., patience, confusion, skepticism, incoherence).
+- **Tasks** — The domain context for the interaction.
+
+### Why TraitBasis Matters
+
+By varying trait combinations, you can systematically test how your agent handles:
+
+- **Different user personas** — Does the agent perform equally well for all demographics?
+- **Challenging interactions** — How does it handle impatient or confused users?
+- **Fairness** — Are there trait combinations where the agent underperforms?
+
+TraitBasis-generated personas are used across task generation and NPC behavior, ensuring consistent and controllable diversity throughout the simulation.

@@ -1,52 +1,52 @@
 ---
-title: What is Collinear AI?
-description: "Collinear powers the AI data flywheel through realistic simulations, QA testing, and intelligent data improvement. Start with high-fidelity, realistic user simulations to identify gaps, then seamlessly bridge to targeted data generation for post-training improvement.
-
-Collinear's platform creates a continuous improvement loop: simulate diverse user interactions to stress-test your AI agents for robustness to real world scenarios, identify failure modes through comprehensive QA, and generate high-signal training data to close those gaps. This data flywheel accelerates AI development from evaluation to production-ready systems.
-
-Collinear's core capabilities for the Data Flywheel process include:
-
-1. Simulate: Generate realistic, multi-turn user interactions with diverse personas and edge cases to stress-test AI agents.
-
-2. Analyze: Glean insights into enteprise AI across 20+ metrics for Performance, Safety, and Reliability using state-of-the-art judges for scoring against your bespoke policies.
-
-3. Improve: Generate and filter high-signal semi-synthetic data using our proprietary Judges for targeted model post-training."
+title: What is Collinear?
+description: "An interactive playground where agents learn new skills and improve existing capabilities."
 ---
 
-<img
-    src="/images/collinear-hero.png"
-/>
+Collinear is a Simulation Lab: an interactive playground where agents learn new skills and improve existing capabilities. We simulate thousands of real-world users, tools, and workflows — so your agents can fail, learn, and improve before they ever touch production.
 
-This flywheel approach helps you:
+Collinear provides isolated, reproducible environments populated with realistic simulated applications, generates tasks and automated verifiers for those environments, and produces grounded reward signals by running agents through multiple attempts per task. The result is a continuous loop: evaluate agent behavior, identify gaps, and iterate — all before deploying to real users.
 
-- **Discover real-world failure modes:** Simulate diverse user interactions to find edge cases that manual testing would miss.
+<img src="/images/simulation-lab/what-is-collinear/sim-lab-updated.png" />
 
-- **Scale QA beyond human capacity:** Replace manual testing with automated, reproducible simulations that cover thousands of scenarios.
+## Why use a Simulation Lab?
 
-- **Close the feedback loop:** Generate targeted training data based on actual performance gaps, not guesswork.
+**Without a Simulation Lab:**
 
-- **Accelerate development cycles:** Move from evaluation to improvement in days, not months, with data-driven insights.
+- **Little to no control on agent environment:** You're testing against live or mock systems that don't reflect real-world complexity.
+- **Hard to reproduce or predict outcomes:** Flaky results make it difficult to pinpoint what went wrong or why.
+- **Static signal and rewards:** Evaluation criteria are fixed and can't adapt to evolving agent capabilities.
+
+**With a Simulation Lab:**
+
+- **Fully controlled behavior and actions:** Every tool, user, and workflow runs in an isolated, deterministic environment you configure.
+- **Reproducible and predictable outcomes:** Run the same scenario thousands of times with clean state to get statistically meaningful results.
+- **Dynamic signal and rewards:** Verifiers and reward functions evolve alongside your agent, giving you grounded feedback at every iteration.
+
+## Features
 
 <CardGroup cols={3}>
-    <Card
-        title="Simulate"
-        icon="users"
-        href="/get-started/simulations"
-    >
-        Generate realistic user interactions with diverse personas and edge cases
+    <Card title="Scalability" icon="gauge-high">
+        IMPALA system design so GPUs stay saturated during async rollouts
     </Card>
-    <Card
-        title="Analyze"
-        icon="gavel"
-        href="/assess/create_a_safety_evaluation"
-    >
-        Evaluate AI agents across safety, reliability, and performance criteria
+    <Card title="Fidelity" icon="bullseye">
+        Train and evaluate on realistic world interactions
     </Card>
-    <Card
-        title="Improve"
-        icon="table"
-        href="/improve/create_curation_run"
-    >
-        Generate and filter high-signal training data for post-training
+    <Card title="Adaptability" icon="shuffle">
+        Dynamically compose scenarios, tasks, and verifiers
+    </Card>
+</CardGroup>
+
+## Use Cases
+
+<CardGroup cols={3}>
+    <Card title="Surface failure modes early" icon="magnifying-glass">
+        Discover real-world failures before they reach production
+    </Card>
+    <Card title="Close the loop" icon="arrows-rotate">
+        Hill-climb on existing capabilities through iterative evaluation
+    </Card>
+    <Card title="Expand to new capabilities" icon="rocket">
+        Extend your agent into new domains and skill sets
     </Card>
 </CardGroup>

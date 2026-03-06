@@ -52,18 +52,7 @@ A task bundle is a JSON file with four sections:
 
 Task generation is server-side. The CLI sends MCP tool definitions to the hosted API, which generates task bundles and returns them for local storage:
 
-```
-MCP Tool Definitions (JSON)
-    |
-    v
-collinear tasks-gen run --tools ./tools.json --out ./bundles/hr-custom
-    -> POST tool definitions to hosted task-gen API
-    -> API generates tasks + seed data + verifiers
-    -> Download task bundle artifacts
-    |
-    v
-Output: local task bundle directory (./bundles/hr-custom/)
-```
+![Task generation flow](/images/simulation-lab/task-gen-flow.png)
 
 ## Pre-Canned Task Bundles
 
@@ -71,7 +60,7 @@ For common domains, pre-canned bundles are available from the hosted catalog. Us
 
 ```bash
 # Run a pre-canned bundle by name
-collinear tasks run -t human-resources-recruiting -m gpt-5.2
+collinear-sim-lab tasks run -t human-resources-recruiting -m gpt-5.2
 ```
 
 The `-t` flag fetches the named bundle into the local cache before running. Pre-canned bundles are curated for specific domains (e.g., `human-resources-recruiting` for HR recruiting workflows) and include tasks, seed data, and verifiers ready to use.

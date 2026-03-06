@@ -3,7 +3,7 @@ title: "Getting Started"
 description: "Set up and run your first Simulation Lab evaluation using the CLI"
 ---
 
-The `collinear` CLI is the primary interface. It handles environment composition, task management, agent execution, and teardown.
+The `collinear-sim-lab` CLI is the primary interface. It handles environment composition, task management, agent execution, and teardown.
 
 ## Prerequisites
 
@@ -18,14 +18,14 @@ Initialize an environment from a template (or pick tools interactively), build i
 
 ```bash
 # Option A: Start from a template (recommended)
-collinear env init --template human-resources -o my-env.yaml
+collinear-sim-lab env init --template human-resources -o my-env.yaml
 
 # Option B: Pick tools interactively
-collinear env init -o my-env.yaml
+collinear-sim-lab env init -o my-env.yaml
 
 # Build and start
-collinear env build --config my-env.yaml
-collinear env up --config my-env.yaml
+collinear-sim-lab env build --config my-env.yaml
+collinear-sim-lab env up --config my-env.yaml
 ```
 
 After `env up` completes, all tool servers are running and seeded with baseline data:
@@ -48,7 +48,7 @@ Tasks are organized into bundles, which are packaged sets of instructions, seed 
 **Pre-set bundle (hosted).** Use a named bundle from the hosted catalog:
 
 ```bash
-collinear tasks run -t hr-demo -m gpt-5.2 --agent-import-path path.to.agent:MyAgent
+collinear-sim-lab tasks run -t hr-demo -m gpt-5.2 --agent-import-path path.to.agent:MyAgent
 ```
 
 `-t/--tasks` will fetch the bundle into the local cache before running.
@@ -60,8 +60,8 @@ collinear tasks run -t hr-demo -m gpt-5.2 --agent-import-path path.to.agent:MyAg
 3. Run against the local bundle
 
 ```bash
-collinear tasks-gen run --tools ./tools.json --out ./bundles/hr-custom
-collinear tasks run -p ./bundles/hr-custom -m gpt-5.2 --agent-import-path path.to.agent:MyAgent
+collinear-sim-lab tasks-gen run --tools ./tools.json --out ./bundles/hr-custom
+collinear-sim-lab tasks run -p ./bundles/hr-custom -m gpt-5.2 --agent-import-path path.to.agent:MyAgent
 ```
 
 See [Tasks & Verifiers](/simulation-lab/tasks-and-verifiers) for details on task generation.
@@ -71,13 +71,13 @@ See [Tasks & Verifiers](/simulation-lab/tasks-and-verifiers) for details on task
 **Built-in reference agent (default).**
 
 ```bash
-collinear tasks run -t hr-demo -m gpt-4o
+collinear-sim-lab tasks run -t hr-demo -m gpt-4o
 ```
 
 **Custom agent (recommended).**
 
 ```bash
-collinear tasks run -t hr-demo -m gpt-4o --agent-import-path path.to.agent:MyAgent
+collinear-sim-lab tasks run -t hr-demo -m gpt-4o --agent-import-path path.to.agent:MyAgent
 ```
 
 Your agent must implement the `BaseAgent` contract and populate `RunArtifacts` during execution. See [Bring Your Own Agent](/simulation-lab/bring-your-own-agent) for the full contract.
@@ -99,7 +99,7 @@ export COLLINEAR_VERIFIER_API_KEY="$OPENAI_API_KEY"
 If you are using hosted task generation or pre-canned bundles, authenticate first:
 
 ```bash
-collinear auth login
+collinear-sim-lab auth login
 ```
 
 The CLI stores your API key in its config file and uses it for `tasks-gen` and remote bundle fetches.
@@ -109,5 +109,5 @@ Pre-canned bundles and task-gen outputs are cached in the OS default cache direc
 ## Step 6 — Tear Down
 
 ```bash
-collinear env down --config my-env.yaml
+collinear-sim-lab env down --config my-env.yaml
 ```

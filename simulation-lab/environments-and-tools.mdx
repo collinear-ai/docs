@@ -77,6 +77,8 @@ Templates are named tool combinations for common domains:
 | Template | Included Tools |
 |----------|---------------|
 | `human-resources` | frappe-hrms, rocketchat, email, calendar |
+| `customer-service` | frappe-helpdesk, rocketchat, email, calendar |
+| `coding` | OpenHands |
 | `finance` | sec-edgar, twelve-data, google-workspace |
 
 Templates are a starting point; users can then build custom combinations by selecting individual tools.
@@ -108,7 +110,7 @@ Simulation Lab's tool server protocol wraps MCP servers. To add your own tools, 
 
 ```bash
 # Generate tasks for your custom tools
-collinear tasks-gen run --tools ./tools.json --out ./bundles/hr-custom
+collinear-sim-lab tasks-gen run --tools ./tools.json --out ./bundles/hr-custom
 ```
 
 **For runtime:** Point Simulation Lab at your MCP server URL. It becomes available to agents in the workspace alongside built-in tools. Agents discover it via the unified tool list and call it like any other tool.

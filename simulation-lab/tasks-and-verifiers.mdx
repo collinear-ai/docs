@@ -1,0 +1,80 @@
+---
+title: "Tasks & Verifiers"
+description: "Task bundles, generation flow, pre-canned bundles, and verification"
+---
+
+Simulation Lab includes a hosted task generation API that produces complete task bundles from tool definitions. This is the programmatic path for creating evaluation content at scale.
+
+## What a Task Bundle Contains
+
+A task bundle is a JSON file with four sections:
+
+```json
+{
+  "meta": {
+    "task_id": "send-new-hire-welcome-package",
+    "display_name": "Send new hire welcome package",
+    "category": "onboarding",
+    "difficulty": "easy"
+  },
+  "task": "A new employee is starting next week and needs welcome materials. Review their start date and role in HRIS, coordinate with their manager via chat about welcome package contents, communicate with the new hire via chat with first-day information...",
+  "tool_servers": [
+    { "name": "hrms", "tool_server_url": "http://<hrms-server>:<port>" },
+    { "name": "calendar", "tool_server_url": "http://<calendar-server>:<port>" }
+  ],
+  "seed_emails": [
+    {
+      "from_profile_id": "marcus_johnson",
+      "to_addr": "hr@company.com",
+      "subject": "New Hire Starting - Welcome Package Request",
+      "body_text": "Hi team, we have a new hire starting next week..."
+    }
+  ],
+  "seed_calendar_events": [
+    {
+      "account": "marcus_johnson",
+      "calendar_id": "default",
+      "summary": "Department Meeting",
+      "start": "2026-01-22T09:00:00Z",
+      "end": "2026-01-22T10:00:00Z"
+    }
+  ]
+}
+```
+
+- **`meta`** — Task metadata: unique ID, display name, difficulty, category.
+- **`task`** — The natural language instruction given to the agent.
+- **`tool_servers`** — Which tool servers are required for this task.
+- **`seed_emails` / `seed_calendar_events`** — Data injected into the environment before the agent starts. This is what makes the task solvable — the agent reads the seeded email to learn what it needs to do.
+- **Verifiers** — Automated checks referenced by the task (covered below).
+
+## Task Generation Flow
+
+Task generation is server-side. The CLI sends MCP tool definitions to the hosted API, which generates task bundles and returns them for local storage:
+
+![Task generation flow](/images/simulation-lab/task-gen-flow.png)
+
+## Pre-Canned Task Bundles
+
+For common domains, pre-canned bundles are available from the hosted catalog. Use them directly without running task generation:
+
+```bash
+# Run a pre-canned bundle by name
+collinear-sim-lab tasks run -t human-resources-recruiting -m gpt-5.2
+```
+
+The `-t` flag fetches the named bundle into the local cache before running. Pre-canned bundles are curated for specific domains (e.g., `human-resources-recruiting` for HR recruiting workflows) and include tasks, seed data, and verifiers ready to use.
+
+Bundles (both generated and pre-canned) are cached locally in the OS default cache directory (e.g., `~/.cache/collinear` on Linux, `~/Library/Caches/collinear` on macOS).
+
+## Verifiers
+
+Verifiers consume `RunArtifacts` — the structured record of everything the agent did — and produce a pass/fail result.
+
+There are two types:
+
+1. **Programmatic verifiers** — Inspect the environment state directly. For example: "Did the agent send an email to the correct recipient?" is checked by querying the email tool server's state, as well as reviewing the state diffs (before/after environment snapshots).
+
+2. **LLM-as-judge verifiers (rubric-based)** — An LLM evaluates the agent's actions against a rubric. Useful for subjective criteria like "Did the agent communicate professionally?"
+
+Both types receive the same `RunArtifacts` interface, so they work with any agent implementation.

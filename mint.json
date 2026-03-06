@@ -68,6 +68,17 @@
       ]
     },
     {
+      "group": "Simulation Lab",
+      "pages": [
+        "simulation-lab/overview",
+        "simulation-lab/getting-started",
+        "simulation-lab/environments-and-tools",
+        "simulation-lab/bring-your-own-agent",
+        "simulation-lab/tasks-and-verifiers",
+        "simulation-lab/understanding-results"
+      ]
+    },
+    {
       "group": "Improve",
       "pages": [
         "improve/create_curation_run"

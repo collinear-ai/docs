@@ -27,20 +27,10 @@
   },
   "tabs": [
     {
-      "name": "API Reference",
-      "url": "api-reference"
-    },
-    {
       "name": "Blog",
       "url": "https://blog.collinear.ai"
     }
   ],
-  "api": {
-    "baseUrl": "https://api.collinear.ai",
-    "auth": {
-      "method": "bearer"
-    }
-  },
   "anchors": [],
   "navigation": [
     {
@@ -68,46 +58,7 @@
         "core-concepts/verifiers",
         "core-concepts/npcs"
       ]
-    },
-    {
-      "group": "Assessments",
-      "pages": [
-        "api-reference/endpoint/assess"
-      ]
-    },
-    {
-      "group": "Datasets",
-      "pages": [
-        "api-reference/endpoint/upload_dataset",
-        "api-reference/endpoint/dataset_upload_platform"
-      ]
-    },
-    {
-      "group": "Judges",
-      "pages": [
-        "api-reference/endpoint/judge_conversation",
-        "api-reference/endpoint/judge_create_sdk"
-      ]
-    },
-    {
-      "group": "Simulated Data",
-      "pages": [
-        "api-reference/endpoint/simulated_data_generate"
-      ]
-    },
-    {
-      "group": "Benchmarks",
-      "pages": [
-        "api-reference/endpoint/tau-trait"
-      ]
-    },
-    {
-      "group": "Helpers",
-      "pages": [
-        "api-reference/endpoint/helpers"
-      ]
     }
-
   ],
   "footerSocials": {
     "x": "https://twitter.com/CollinearAI",

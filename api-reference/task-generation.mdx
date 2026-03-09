@@ -3,7 +3,7 @@ title: "Task Generation"
 description: "Generate task bundles from tool definitions"
 ---
 
-**Base URL:** `https://simlab-api.collinear.ai`
+**Base URL:** `https://rl-gym-api.collinear.ai`
 
 Generate task bundles (instructions, rubrics, verifiers) from your tool definitions. Task generation is asynchronous — submit a job, poll for status, then download results.
 
@@ -17,7 +17,7 @@ POST /task-gen
 
 ```json
 {
-  "tools": [
+  "toolset": [
     {
       "name": "send_email",
       "description": "Send an email to the specified recipient.",
@@ -41,18 +41,18 @@ POST /task-gen
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `tools` | `list[object]` | Yes | MCP tool definitions (JSON from a `/tools` endpoint) |
+| `toolset` | `list[object]` | Yes | MCP tool definitions (JSON from a `/tools` endpoint) |
 | `num_tasks` | `int` | No | Number of tasks to generate (default: 10, max: 200) |
-| `model` | `string` | No | LLM model for generation (default: `claude-sonnet-4-6`) |
-| `preset` | `string` | No | Built-in preset (e.g. `"recruiting"`) — auto-fills agent, domain, workflows |
+| `model` | `string` | No | Any OpenAI-compatible model identifier (default: `claude-sonnet-4-6`) |
+| `preset` | `string` | No | Built-in preset (e.g. `"recruiting"`) — auto-fills agent, scenario, workflows |
 | `agent` | `object` | No | Agent identity: `{ "role": "...", "description": "..." }` |
-| `domain` | `object` | No | Domain context: `{ "name": "...", "conventions": "...", "policies": [...] }` |
+| `scenario` | `object` | No | Scenario context: `{ "name": "...", "conventions": "...", "policies": [...] }` |
 | `categories` | `list[object]` | No | Task categories: `[{ "id": "...", "label": "..." }]` |
 | `workflows` | `list[object]` | No | Example workflows: `[{ "name": "...", "steps": ["..."] }]` |
-| `stakeholders` | `list[object]` | No | Stakeholder roles: `[{ "role": "...", "typical_asks": "..." }]` |
-| `environment` | `object` | No | Branding: `{ "email_domain": "...", "agent_email": "..." }` |
+| `npcs` | `list[object]` | No | NPC roles: `[{ "role": "...", "typical_asks": "..." }]` |
+| `workspace` | `object` | No | Workspace branding: `{ "email_domain": "...", "agent_email": "..." }` |
 | `complexity` | `object` | No | Difficulty distribution: `{ "easy": 0.3, "medium": 0.5, "hard": 0.2 }` |
-| `diversity` | `object` | No | Diversity config for scenario variation |
+| `diversity` | `object` | No | Diversity config for scenario variations |
 
 **Response:** `200 OK`
 

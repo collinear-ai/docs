@@ -1,0 +1,124 @@
+---
+title: "Task Generation"
+description: "Generate task bundles from tool definitions"
+---
+
+**Base URL:** `https://simlab-api.collinear.ai`
+
+Generate task bundles (instructions, rubrics, verifiers) from your tool definitions. Task generation is asynchronous — submit a job, poll for status, then download results.
+
+## Submit a Task Generation Job
+
+```
+POST /task-gen
+```
+
+**Request body:**
+
+```json
+{
+  "tools": [
+    {
+      "name": "send_email",
+      "description": "Send an email to the specified recipient.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "to": { "type": "string" },
+          "subject": { "type": "string" },
+          "body": { "type": "string" }
+        },
+        "required": ["to", "subject", "body"]
+      }
+    }
+  ],
+  "num_tasks": 10,
+  "model": "claude-sonnet-4-6",
+  "preset": "recruiting",
+  "complexity": { "easy": 0.3, "medium": 0.5, "hard": 0.2 }
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `tools` | `list[object]` | Yes | MCP tool definitions (JSON from a `/tools` endpoint) |
+| `num_tasks` | `int` | No | Number of tasks to generate (default: 10, max: 200) |
+| `model` | `string` | No | LLM model for generation (default: `claude-sonnet-4-6`) |
+| `preset` | `string` | No | Built-in preset (e.g. `"recruiting"`) — auto-fills agent, domain, workflows |
+| `agent` | `object` | No | Agent identity: `{ "role": "...", "description": "..." }` |
+| `domain` | `object` | No | Domain context: `{ "name": "...", "conventions": "...", "policies": [...] }` |
+| `categories` | `list[object]` | No | Task categories: `[{ "id": "...", "label": "..." }]` |
+| `workflows` | `list[object]` | No | Example workflows: `[{ "name": "...", "steps": ["..."] }]` |
+| `stakeholders` | `list[object]` | No | Stakeholder roles: `[{ "role": "...", "typical_asks": "..." }]` |
+| `environment` | `object` | No | Branding: `{ "email_domain": "...", "agent_email": "..." }` |
+| `complexity` | `object` | No | Difficulty distribution: `{ "easy": 0.3, "medium": 0.5, "hard": 0.2 }` |
+| `diversity` | `object` | No | Diversity config for scenario variation |
+
+**Response:** `200 OK`
+
+```json
+{
+  "job_id": "tg_abc123",
+  "status": "pending",
+  "progress": null,
+  "created_at": "2026-03-07T06:20:00Z"
+}
+```
+
+## Check Job Status
+
+```
+GET /task-gen/{job_id}
+```
+
+**Response:** `200 OK`
+
+```json
+{
+  "job_id": "tg_abc123",
+  "status": "running",
+  "progress": "Step 4/10: formatting tasks",
+  "created_at": "2026-03-07T06:20:00Z"
+}
+```
+
+| Status | Meaning |
+|--------|---------|
+| `pending` | Job queued, not yet started |
+| `running` | Generation in progress |
+| `completed` | Results ready for download |
+| `failed` | Generation failed (see `error` field) |
+
+## Download Results
+
+```
+GET /task-gen/{job_id}/results
+```
+
+**Response:** `200 OK` (only when status is `completed`)
+
+```json
+{
+  "job_id": "tg_abc123",
+  "tasks": [
+    { "filename": "task_001.json", "content": "{ ... }" }
+  ],
+  "instructions": [
+    { "filename": "task_001_instruction.md", "content": "..." }
+  ],
+  "rubrics": [
+    { "filename": "task_001_rubric.md", "content": "..." }
+  ],
+  "verifiers": [
+    { "filename": "task_001_verifier.py", "content": "..." }
+  ]
+}
+```
+
+Returns `202` if the job is still running, `404` if not found, `500` if the job failed.
+
+**CLI shortcut:**
+
+```bash
+collinear tasks-gen run --config config.toml --num-tasks 10
+```

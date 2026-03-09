@@ -1,0 +1,78 @@
+---
+title: "Tool Server Protocol"
+description: "HTTP interface that all tool servers expose"
+---
+
+Every tool server (coding, email, calendar, etc.) exposes the same HTTP interface. This is what agents interact with at runtime.
+
+**Base URL:** Provided per-task in the `tool_servers` field of the task response.
+
+## List Tools
+
+Get available tools and their parameter schemas.
+
+```
+GET /tools
+```
+
+**Response:** `200 OK`
+
+```json
+{
+  "tools": [
+    {
+      "name": "send_email",
+      "description": "Send an email to the specified recipient.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "to": { "type": "string", "description": "Recipient email address" },
+          "subject": { "type": "string", "description": "Email subject line" },
+          "body": { "type": "string", "description": "Email body text" }
+        },
+        "required": ["to", "subject", "body"]
+      }
+    }
+  ]
+}
+```
+
+## Execute a Tool
+
+Invoke a tool action and get the result.
+
+```
+POST /step
+```
+
+**Request body:**
+
+```json
+{
+  "action": {
+    "tool_name": "send_email",
+    "parameters": {
+      "to": "candidate@example.com",
+      "subject": "Interview Scheduling",
+      "body": "Hello, we'd like to schedule..."
+    }
+  }
+}
+```
+
+**Response:** `200 OK`
+
+```json
+{
+  "observation": "Email sent successfully to candidate@example.com"
+}
+```
+
+**Error response:**
+
+```json
+{
+  "observation": "Error: invalid email address format",
+  "is_error": true
+}
+```

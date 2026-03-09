@@ -1,0 +1,55 @@
+---
+title: "RunArtifacts"
+description: "The data object agents populate during execution"
+---
+
+`RunArtifacts` is the structured record of an agent run. Your agent populates it during execution, and verifiers consume it to evaluate task completion.
+
+## Fields
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `version` | `str` | Yes | Schema version (currently `"0.1"`) |
+| `task_id` | `str` | Yes | Task identifier |
+| `task` | `str` | Yes | Task instruction text |
+| `model` | `str` | No | Model used (e.g., `"gpt-4o"`) |
+| `provider` | `str` | No | Model provider (e.g., `"openai"`) |
+| `messages` | `list[dict]` | No | Full message history (role + content) |
+| `tool_calls` | `list[ToolCall]` | No | All tool invocations made |
+| `tool_results` | `list[ToolCallResult]` | No | Results from each tool call (parallel to `tool_calls`) |
+| `metadata` | `dict` | No | Arbitrary metadata |
+| `final_observation` | `str` | No | Agent's final output/summary |
+| `error` | `str` | No | Error message if the run failed |
+| `steps_taken` | `int` | Yes | Number of tool calls executed |
+| `max_steps` | `int` | No | Step limit (if configured) |
+| `created_at` | `str` | Yes | ISO 8601 timestamp |
+
+## Helper Methods
+
+| Method | Description |
+|--------|-------------|
+| `record_message(role, content)` | Append a message to the history |
+| `record_tool_call(call, result)` | Record a tool call + result, increments `steps_taken` |
+| `set_final_observation(text)` | Set the agent's final output |
+| `set_error(text)` | Record an error |
+| `to_dict()` | Serialize to a JSON-compatible dict |
+| `dump(path)` | Write artifacts to a JSON file |
+
+## ToolCall
+
+```python
+@dataclass
+class ToolCall:
+    tool_server: str          # e.g. "email"
+    tool_name: str            # e.g. "send_email"
+    parameters: dict[str, Any]  # tool-specific parameters
+```
+
+## ToolCallResult
+
+```python
+@dataclass
+class ToolCallResult:
+    observation: Any          # response from the tool server
+    is_error: bool = False    # True if the tool call failed
+```

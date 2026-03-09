@@ -1,0 +1,38 @@
+---
+title: "BasePlayground"
+description: "The playground abstraction for interacting with tool servers"
+---
+
+The playground is the interface your agent uses to discover and call tools at runtime.
+
+## Methods
+
+| Method | Description |
+|--------|-------------|
+| `list_tools(tool_server=None)` | Returns tool definitions (all servers, or a specific one) |
+| `call_tool(tool_server, tool_name, parameters)` | Invokes a tool and returns a `ToolCallResult` |
+
+## Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `tool_servers` | `dict[str, str]` | Mapping of server names to base URLs |
+
+## HttpToolPlayground
+
+The SDK ships `HttpToolPlayground`, which implements `BasePlayground` over HTTP against the [Tool Server Protocol](/api-reference/tool-server-protocol).
+
+```python
+from collinear_gym.agents import HttpToolPlayground
+
+env = HttpToolPlayground(
+    tool_servers={
+        "email": "https://<environment-url>/email",
+        "calendar": "https://<environment-url>/calendar",
+    },
+    timeout_seconds=30.0,
+)
+
+tools = env.list_tools()
+result = env.call_tool("email", "send_email", {"to": "...", "subject": "...", "body": "..."})
+```

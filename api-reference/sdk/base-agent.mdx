@@ -1,0 +1,85 @@
+---
+title: "BaseAgent"
+description: "The core contract for building custom agents"
+---
+
+The SDK provides a contract for building custom agents. Install via:
+
+```bash
+pip install collinear-gym
+```
+
+## Contract
+
+Your agent extends `BaseAgent` and implements four methods:
+
+```python
+from collinear_gym.agents import BaseAgent, BasePlayground, RunArtifacts, ToolCall
+
+class MyAgent(BaseAgent):
+    @staticmethod
+    def name() -> str:
+        return "my-agent"
+
+    def version(self) -> str | None:
+        return "1.0.0"
+
+    def setup(self, playground: BasePlayground) -> None:
+        """Called once before run(). Use to discover tools, warm up models, etc."""
+        self.tools = playground.list_tools()
+
+    def run(
+        self,
+        instruction: str,
+        playground: BasePlayground,
+        context: RunArtifacts,
+    ) -> None:
+        """Execute the task using a think-act-observe loop."""
+        # 1. Send the instruction to your LLM along with available tools
+        messages = [{"role": "user", "content": instruction}]
+        context.record_message("user", instruction)
+
+        max_steps = context.max_steps or 20
+        for step in range(max_steps):
+            # 2. Think — ask your LLM to decide the next action
+            llm_response = self.call_llm(messages, tools=self.tools)
+
+            if llm_response.is_done:
+                # LLM decided the task is complete
+                context.set_final_observation(llm_response.text)
+                break
+
+            # 3. Act — execute the tool call the LLM chose
+            tool_call = ToolCall(
+                tool_server=llm_response.tool_server,
+                tool_name=llm_response.tool_name,
+                parameters=llm_response.parameters,
+            )
+            result = playground.call_tool(
+                tool_call.tool_server,
+                tool_call.tool_name,
+                tool_call.parameters,
+            )
+
+            # 4. Observe — record the result and feed it back to the LLM
+            context.record_tool_call(tool_call, result)
+            messages.append({"role": "assistant", "content": f"Called {tool_call.tool_name}"})
+            messages.append({"role": "tool", "content": str(result.observation)})
+```
+
+<Note>`self.call_llm()` is your own LLM integration — use any provider (OpenAI, Anthropic, etc.). The SDK is model-agnostic.</Note>
+
+## Lifecycle
+
+1. The runner calls `setup()` once, then `run()`.
+2. If the agent exceeds the timeout, the run is terminated and artifacts captured up to that point are saved.
+
+## Running Your Agent
+
+Register your agent at runtime via the CLI:
+
+```bash
+collinear tasks run -t hr-demo -m gpt-4o --agent-import-path path.to.agent:MyAgent
+```
+
+If `--agent-import-path` is omitted, the CLI uses the built-in reference agent.

@@ -1,0 +1,59 @@
+---
+title: "Runs"
+description: "Launch agent evaluation runs (rollouts)"
+---
+
+**Base URL:** `https://simlab-api.collinear.ai`
+
+## Launch Runs
+
+Start a batch of rollouts (agent evaluation runs) for one or more tasks.
+
+```
+POST /runs
+```
+
+**Request body:**
+
+```json
+{
+  "scenario_id": "hr_recruiting",
+  "task_ids": ["hr-102", "hr-103"],
+  "rollout_count": 3,
+  "model_config": {
+    "model": "gpt-4o",
+    "provider": "openai",
+    "max_steps": 20
+  },
+  "task_overrides": {
+    "hr-102": {
+      "name": "Custom task name",
+      "description": "Custom description",
+      "rubric_markdown": "# Custom rubric..."
+    }
+  }
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `scenario_id` | `string` | Yes | Scenario to run against |
+| `task_ids` | `list[string]` | Yes | Tasks to evaluate |
+| `rollout_count` | `int` | No | Number of rollouts per task (default: 1) |
+| `model_config` | `object` | No | Model, provider, and step limit |
+| `task_overrides` | `object` | No | Per-task overrides for name, description, or rubric |
+
+**Response:** `200 OK`
+
+```json
+{
+  "run_id": "run_abc123",
+  "rollouts": [
+    {
+      "rollout_id": "rol_001",
+      "task_id": "hr-102",
+      "status": "queued"
+    }
+  ]
+}
+```

@@ -1,0 +1,144 @@
+---
+title: "Scenarios"
+description: "List scenarios, tasks, rubrics, and NPC profiles"
+---
+
+**Base URL:** `https://simlab-api.collinear.ai`
+
+## List Scenarios
+
+List all available scenarios (domains).
+
+```
+GET /scenarios
+```
+
+**Response:** `200 OK`
+
+```json
+[
+  {
+    "scenario_id": "hr_recruiting",
+    "name": "HR Recruiting Tasks",
+    "description": "End-to-end recruiting workflow tasks",
+    "num_tasks": 12,
+    "num_npcs": 10,
+    "tool_servers": [
+      { "name": "hrms", "server_type": "http" },
+      { "name": "email", "server_type": "http" }
+    ]
+  }
+]
+```
+
+## List Tasks for a Scenario
+
+Get all tasks within a scenario, including instructions, tool server config, rubrics, and seed data.
+
+```
+GET /scenarios/{scenario_id}/tasks
+```
+
+**Path parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `scenario_id` | string | Scenario identifier (e.g. `hr_recruiting`) |
+
+**Response:** `200 OK`
+
+```json
+{
+  "scenario_id": "hr_recruiting",
+  "tasks": [
+    {
+      "task_id": "hr-102",
+      "name": "Schedule Initial Candidate Screening",
+      "version": "1.0",
+      "category": "recruiting",
+      "difficulty": "medium",
+      "description": "Schedule an initial screening call with the candidate...",
+      "tool_servers": [
+        { "name": "email", "tool_server_url": "https://<environment-url>/email" },
+        { "name": "calendar", "tool_server_url": "https://<environment-url>/calendar" }
+      ],
+      "task_context": "The candidate applied for a Senior Engineer role...",
+      "rubric": {
+        "task_id": "hr-102",
+        "title": "Schedule Initial Candidate Screening",
+        "overview": "Verify the agent correctly schedules...",
+        "primary_requirements": ["Send calendar invite", "Notify recruiter"],
+        "success_criteria": ["Calendar event created with correct time"],
+        "scoring": [
+          { "label": "Full Credit", "description": "All requirements met" },
+          { "label": "Partial Credit", "description": "Calendar created but no notification" },
+          { "label": "No Credit", "description": "Task not completed" }
+        ]
+      },
+      "npc_profiles": [
+        {
+          "profile_id": "lisa-anderson",
+          "first_name": "Lisa",
+          "last_name": "Anderson",
+          "email": "lisa.anderson@techcorp.com",
+          "occupation": "VP of HR / CHRO"
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Get Task Rubric
+
+Get the evaluation rubric for a specific task.
+
+```
+GET /scenarios/{scenario_id}/tasks/{task_id}/rubric
+```
+
+**Response:** `200 OK`
+
+```json
+{
+  "task_id": "hr-102",
+  "title": "Schedule Initial Candidate Screening",
+  "overview": "Verify the agent correctly schedules a screening call...",
+  "primary_requirements": ["Send calendar invite to candidate", "Notify recruiting team"],
+  "success_criteria": ["Calendar event exists with correct attendees and time"],
+  "validation_steps": ["Check calendar for new event", "Check email outbox"],
+  "quality_criteria": ["Professional tone in email"],
+  "notes": "Agent should not double-book the time slot",
+  "scoring": [
+    { "label": "Full Credit", "description": "All requirements met" },
+    { "label": "Partial Credit", "description": "Partial completion" },
+    { "label": "No Credit", "description": "Task not completed" }
+  ]
+}
+```
+
+## List NPC Profiles
+
+Get the NPC (Non-Playable Character) profiles for a scenario. NPCs are simulated users that interact with the agent in real time (e.g., a hiring manager who responds to messages).
+
+```
+GET /scenarios/{scenario_id}/npcs
+```
+
+**Response:** `200 OK`
+
+```json
+{
+  "scenario_id": "hr_recruiting",
+  "npc_profiles": [
+    {
+      "profile_id": "lisa-anderson",
+      "first_name": "Lisa",
+      "last_name": "Anderson",
+      "email": "lisa.anderson@techcorp.com",
+      "occupation": "VP of HR / CHRO",
+      "public_info": "15 years in HR leadership..."
+    }
+  ]
+}
+```

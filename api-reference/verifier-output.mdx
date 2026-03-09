@@ -1,0 +1,28 @@
+---
+title: "Verifier Output"
+description: "Output format from verifier evaluation"
+---
+
+After an agent run, verifiers evaluate whether the task was completed successfully. Verifiers consume [RunArtifacts](/api-reference/sdk/run-artifacts) and produce reward files.
+
+## Output Directory Structure
+
+```
+output/agent_run_{task_id}_{timestamp}/
+  artifacts.json              # Full RunArtifacts
+  verifier/
+    reward.txt                # "1" or "0"
+    reward.json               # { "reward": 1.0 }
+```
+
+## reward.json Schema
+
+```json
+{
+  "reward": 1.0
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `reward` | `float` | `1.0` for success, `0.0` for failure (partial scores possible) |

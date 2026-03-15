@@ -1,0 +1,36 @@
+---
+title: "Seed Data"
+description: "Domain-specific data injected into environments to create realistic starting conditions"
+---
+
+Seed data populates simulation environments with realistic records before the agent runs. There are two layers of seeding:
+
+## Baseline Seed Data
+
+When an environment starts (`simlab env up`), each tool server is seeded with baseline data — the standing records that exist independent of any task. For example, an HR environment might include:
+
+- Employee records in HRIS
+- Company policies and org charts
+- Existing calendar events and email threads
+
+Baseline seed data is defined by the scenario template and runs automatically via each tool's seed services.
+
+## Task-Specific Seed Data
+
+Each task injects additional data on top of the baseline to set up the specific scenario the agent must solve. This is what makes the task solvable — the agent discovers the seeded data through normal tool use.
+
+Examples of task-specific seed data:
+
+- An email from a hiring manager requesting an interview be scheduled
+- A calendar event the agent needs to reschedule
+- A chat message with a candidate question that needs a response
+
+Task-specific seed data is defined in the task configuration and injected fresh at the start of each rollout, ensuring clean state across attempts.
+
+## Why Seed Data Matters
+
+Seed data is what makes simulation environments realistic rather than empty sandboxes. It provides:
+
+- **Grounding** — Tasks reference real data present in the environment, so agents must read and reason over actual records.
+- **Reproducibility** — The same seed data produces the same starting conditions across rollouts, enabling fair comparison between agents or models.
+- **Isolation** — Each rollout starts from a known state, so results from one run don't leak into the next.

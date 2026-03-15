@@ -3,52 +3,11 @@ title: "Tasks"
 description: "Task format, generation flow, and pre-built tasks"
 ---
 
-Simulation Lab includes a task generation pipeline that produces complete tasks from tool definitions. This is the programmatic path for creating evaluation content at scale.
+Simulation Lab includes a task generation pipeline that produces complete tasks from a configuration file. This is the programmatic path for creating evaluation content at scale.
 
-## What a Task Contains
+## Task Generation Config
 
-A task is a JSON file with these sections:
-
-```json
-{
-  "meta": {
-    "version": "2.0",
-    "task_id": "send-new-hire-welcome-package",
-    "display_name": "Send new hire welcome package",
-    "category": "onboarding",
-    "difficulty": "easy",
-    "idempotent": false
-  },
-  "task": "A new employee is starting next week and needs welcome materials. Review their start date and role in HRIS, coordinate with their manager via chat about welcome package contents, communicate with the new hire via chat with first-day information...",
-  "apps": ["HRIS", "Email", "Calendar", "Chat"],
-  "seed_emails": [
-    {
-      "from_profile_id": "marcus_johnson",
-      "to_addr": "hr@company.com",
-      "subject": "New Hire Starting - Welcome Package Request",
-      "body_text": "Hi team, we have a new hire starting next week..."
-    }
-  ],
-  "seed_calendar_events": [
-    {
-      "account": "marcus_johnson",
-      "calendar_id": "default",
-      "summary": "Department Meeting",
-      "start": "2026-01-22T09:00:00Z",
-      "end": "2026-01-22T10:00:00Z"
-    }
-  ]
-}
-```
-
-- **`meta`** — Task metadata: unique ID, display name, difficulty, category, schema version.
-- **`task`** — The natural language instruction given to the agent.
-- **`apps`** — Which applications the task requires (e.g., HRIS, Email, Calendar, Chat).
-- **`seed_emails` / `seed_calendar_events`** — Task-specific seed data injected into the environment before the agent starts. This is what makes the task solvable — the agent reads the seeded email to learn what it needs to do. This is illustrative; task-specific seed data is not limited to calendar or email events.
-
-## Task Generation Flow
-
-Task generation can be done via presets, an interactive wizard, or by providing MCP tool definitions directly.
+Task generation is driven by a TOML config file that defines the agent role, available toolsets, scenario conventions, and generation parameters. Initialize one from a preset or create it from scratch:
 
 ```bash
 # Initialize a config from a preset
@@ -57,6 +16,91 @@ simlab tasks-gen init --preset recruiting --output-dir ./taskgen
 # Run generation
 simlab tasks-gen run --config ./taskgen/config.toml
 ```
+
+Here is an example config for an HR recruiting scenario:
+
+```toml
+preset = "recruiting"
+categories = [
+    { id = "job_requisition", label = "Job requisition" },
+    { id = "shortlist_resumes", label = "Shortlist the resumes" },
+    { id = "schedule_interviews", label = "Schedule the interviews" },
+    { id = "consolidate_feedback", label = "Consolidate feedback" },
+    { id = "send_offers_or_rejections", label = "Send out offers or rejections" },
+    { id = "negotiate_and_final_offer", label = "Negotiate and send final offer" },
+    { id = "handle_candidate_rejections", label = "Handle candidate rejections" },
+    { id = "candidate_questions", label = "Handle questions from candidates" },
+]
+
+[agent]
+role = "HR recruiting coordinator"
+description = "Handles end-to-end recruiting workflows: scheduling interviews, managing candidate pipelines, coordinating offer discussions, and communicating with hiring managers and candidates."
+
+[[toolset]]
+name = "HRIS"
+description = "Query/update employee records, job requisitions, candidate profiles"
+operations = ["search", "read", "create", "update"]
+
+[[toolset]]
+name = "Email"
+description = "Send and read emails"
+operations = ["send", "read"]
+
+[[toolset]]
+name = "Calendar"
+description = "View and manage calendar events"
+operations = ["list", "create", "update", "delete"]
+
+[[toolset]]
+name = "Chat"
+description = "Send messages in Rocket.Chat channels and DMs"
+operations = ["send", "read"]
+
+[scenario]
+name = "recruiting"
+role_label = "HR recruiting professional"
+conventions = """
+- Always check all participants' calendars before scheduling
+- Never share compensation details in group channels
+- Document all candidate interactions in HRIS
+- Get manager approval before extending offers
+"""
+policies = [
+    "Interviews must include at least one diverse panel member",
+    "Offers require VP approval for >$200k total comp",
+    "Candidate data must not be shared outside recruiting team",
+]
+
+[generation]
+num_tasks = 2
+deduplicate = false
+filter = true
+
+[generation.complexity]
+easy = 0.3
+medium = 0.5
+hard = 0.2
+
+[generation.diversity]
+variations = [
+    "straightforward",
+    "scheduling_conflict",
+    "candidate_experience",
+    "handoff_or_reporting",
+    "offer_negotiation",
+    "candidate_decline",
+    "accommodation",
+]
+```
+
+- **`preset`** — Starting template. Available presets: `recruiting`, `people_mgmt`, `coding`, `customer_support`.
+- **`categories`** — Task categories to generate across.
+- **`[agent]`** — The role and description of the agent being evaluated.
+- **`[[toolset]]`** — Tools available to the agent, with allowed operations.
+- **`[scenario]`** — Domain conventions, policies, and constraints the agent should follow.
+- **`[generation]`** — Number of tasks, complexity distribution, and diversity dimensions.
+
+The config can also define `[[workflows]]` (multi-step procedures) and `[[npcs]]` (non-player characters like hiring managers or candidates) to increase task realism.
 
 ## Pre-Built Tasks
 

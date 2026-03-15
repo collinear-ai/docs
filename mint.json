@@ -61,7 +61,9 @@
       "pages": [
         "core-concepts/task-generator",
         "core-concepts/verifiers",
-        "core-concepts/npcs"
+        "core-concepts/npcs",
+        "core-concepts/seed-data",
+        "core-concepts/sandbox"
       ]
     },
     {

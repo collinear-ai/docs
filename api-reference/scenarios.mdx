@@ -1,13 +1,13 @@
 ---
 title: "Scenarios"
-description: "List scenarios, tasks, rubrics, and NPC profiles"
+description: "List templates, tasks, rubrics, and NPC profiles"
 ---
 
 **Base URL:** `https://rl-gym-api.collinear.ai`
 
-## List Scenarios
+## List Templates
 
-List all available scenarios (domains).
+List all available templates (scenario presets).
 
 ```
 GET /scenarios
@@ -31,9 +31,9 @@ GET /scenarios
 ]
 ```
 
-## List Tasks for a Scenario
+## List Tasks for a Template
 
-Get all tasks within a scenario, including instructions, tool server config, rubrics, and seed data.
+Get all tasks within a template, including instructions, tool server config, rubrics, and seed data.
 
 ```
 GET /scenarios/{scenario_id}/tasks
@@ -43,7 +43,7 @@ GET /scenarios/{scenario_id}/tasks
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `scenario_id` | string | Scenario identifier (e.g. `hr_recruiting`) |
+| `scenario_id` | string | Template identifier (e.g. `hr_recruiting`) |
 
 **Response:** `200 OK`
 
@@ -57,17 +57,16 @@ GET /scenarios/{scenario_id}/tasks
       "version": "1.0",
       "category": "recruiting",
       "difficulty": "medium",
+      "visibility": "public",
       "description": "Schedule an initial screening call with the candidate...",
       "tool_servers": [
         { "name": "email", "tool_server_url": "https://<environment-url>/email" },
         { "name": "calendar", "tool_server_url": "https://<environment-url>/calendar" }
       ],
-      "task_context": "The candidate applied for a Senior Engineer role...",
       "rubric": {
         "task_id": "hr-102",
         "title": "Schedule Initial Candidate Screening",
         "overview": "Verify the agent correctly schedules...",
-        "primary_requirements": ["Send calendar invite", "Notify recruiter"],
         "success_criteria": ["Calendar event created with correct time"],
         "scoring": [
           { "label": "Full Credit", "description": "All requirements met" },
@@ -104,9 +103,8 @@ GET /scenarios/{scenario_id}/tasks/{task_id}/rubric
   "task_id": "hr-102",
   "title": "Schedule Initial Candidate Screening",
   "overview": "Verify the agent correctly schedules a screening call...",
-  "primary_requirements": ["Send calendar invite to candidate", "Notify recruiting team"],
   "success_criteria": ["Calendar event exists with correct attendees and time"],
-  "validation_steps": ["Check calendar for new event", "Check email outbox"],
+  "testing_requirements": ["Verify calendar event was created", "Verify email was sent"],
   "quality_criteria": ["Professional tone in email"],
   "notes": "Agent should not double-book the time slot",
   "scoring": [
@@ -119,7 +117,7 @@ GET /scenarios/{scenario_id}/tasks/{task_id}/rubric
 
 ## List NPC Profiles
 
-Get the NPC (Non-Playable Character) profiles for a scenario. NPCs are simulated users that interact with the agent in real time (e.g., a hiring manager who responds to messages).
+Get the NPC (Non-Playable Character) profiles for a template. NPCs are simulated users that interact with the agent in real time (e.g., a hiring manager who responds to messages).
 
 ```
 GET /scenarios/{scenario_id}/npcs

@@ -11,24 +11,17 @@ API-Key: <your-api-key>
 
 ## Obtaining a Key
 
-**Via the CLI:**
-
 ```bash
-collinear auth login
+simlab auth login
 ```
 
-This stores the key in `~/.config/collinear/config.toml`.
-
-**Via environment variable:**
-
-```bash
-export COLLINEAR_API_KEY="<your-api-key>"
-```
+This will direct you to [platform.collinear.ai](https://platform.collinear.ai) (Developers → API Keys) to create or retrieve your API key.
 
 ## Error Responses
 
 | Status | Meaning |
 |--------|---------|
+| `400` | Invalid request - see response for details |
 | `401` | Invalid or missing API key |
 | `403` | Key valid but insufficient permissions |
 | `503` | Service temporarily unavailable |

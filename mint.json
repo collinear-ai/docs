@@ -71,7 +71,6 @@
       "pages": [
         "api-reference/authentication",
         "api-reference/scenarios",
-        "api-reference/runs",
         "api-reference/task-generation",
         "api-reference/tool-server-protocol"
       ]
@@ -80,7 +79,7 @@
       "group": "Agent SDK",
       "pages": [
         "api-reference/sdk/base-agent",
-        "api-reference/sdk/base-playground",
+        "api-reference/sdk/base-environment",
         "api-reference/sdk/run-artifacts"
       ]
     },

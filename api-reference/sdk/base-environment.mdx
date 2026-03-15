@@ -1,9 +1,9 @@
 ---
-title: "BasePlayground"
-description: "The playground abstraction for interacting with tool servers"
+title: "BaseEnvironment"
+description: "The environment abstraction for interacting with tool servers"
 ---
 
-The playground is the interface your agent uses to discover and call tools at runtime.
+The environment is the interface your agent uses to discover and call tools at runtime.
 
 ## Methods
 
@@ -18,14 +18,14 @@ The playground is the interface your agent uses to discover and call tools at ru
 |----------|------|-------------|
 | `tool_servers` | `dict[str, str]` | Mapping of server names to base URLs |
 
-## HttpToolPlayground
+## HttpToolEnvironment
 
-The SDK ships `HttpToolPlayground`, which implements `BasePlayground` over HTTP against the [Tool Server Protocol](/api-reference/tool-server-protocol).
+SimLab ships `HttpToolEnvironment`, which implements `BaseEnvironment` over HTTP against the [Tool Server Protocol](/api-reference/tool-server-protocol).
 
 ```python
-from collinear_gym.agents import HttpToolPlayground
+from simlab.agents import HttpToolEnvironment
 
-env = HttpToolPlayground(
+env = HttpToolEnvironment(
     tool_servers={
         "email": "https://<environment-url>/email",
         "calendar": "https://<environment-url>/calendar",

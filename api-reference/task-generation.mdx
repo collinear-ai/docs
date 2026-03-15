@@ -1,11 +1,11 @@
 ---
 title: "Task Generation"
-description: "Generate task bundles from tool definitions"
+description: "Generate tasks from tool definitions"
 ---
 
 **Base URL:** `https://rl-gym-api.collinear.ai`
 
-Generate task bundles (instructions, rubrics, verifiers) from your tool definitions. Task generation is asynchronous — submit a job, poll for status, then download results.
+Generate tasks (instructions, rubrics, verifiers) from your tool definitions. Task generation is asynchronous — submit a job, poll for status, then download results.
 
 ## Submit a Task Generation Job
 
@@ -21,7 +21,7 @@ POST /task-gen
     {
       "name": "send_email",
       "description": "Send an email to the specified recipient.",
-      "parameters": {
+      "inputSchema": {
         "type": "object",
         "properties": {
           "to": { "type": "string" },
@@ -41,12 +41,12 @@ POST /task-gen
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `toolset` | `list[object]` | Yes | MCP tool definitions (JSON from a `/tools` endpoint) |
+| `toolset` | `list[object]` | Yes | MCP tool definitions (JSON from a `/tools` endpoint). Each object should include `name`, `description`, and `inputSchema`. |
 | `num_tasks` | `int` | No | Number of tasks to generate (default: 10, max: 200) |
 | `model` | `string` | No | Any OpenAI-compatible model identifier (default: `claude-sonnet-4-6`) |
 | `preset` | `string` | No | Built-in preset (e.g. `"recruiting"`) — auto-fills agent, scenario, workflows |
 | `agent` | `object` | No | Agent identity: `{ "role": "...", "description": "..." }` |
-| `scenario` | `object` | No | Scenario context: `{ "name": "...", "conventions": "...", "policies": [...] }` |
+| `scenario` | `object` | No | Scenario context: `{ "name": "...", "role_label": "...", "conventions": "...", "policies": [...] }` |
 | `categories` | `list[object]` | No | Task categories: `[{ "id": "...", "label": "..." }]` |
 | `workflows` | `list[object]` | No | Example workflows: `[{ "name": "...", "steps": ["..."] }]` |
 | `npcs` | `list[object]` | No | NPC roles: `[{ "role": "...", "typical_asks": "..." }]` |
@@ -58,7 +58,7 @@ POST /task-gen
 
 ```json
 {
-  "job_id": "tg_abc123",
+  "job_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "status": "pending",
   "progress": null,
   "created_at": "2026-03-07T06:20:00Z"
@@ -75,7 +75,7 @@ GET /task-gen/{job_id}
 
 ```json
 {
-  "job_id": "tg_abc123",
+  "job_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "status": "running",
   "progress": "Step 4/10: formatting tasks",
   "created_at": "2026-03-07T06:20:00Z"
@@ -99,7 +99,7 @@ GET /task-gen/{job_id}/results
 
 ```json
 {
-  "job_id": "tg_abc123",
+  "job_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "tasks": [
     { "filename": "task_001.json", "content": "{ ... }" }
   ],
@@ -111,7 +111,8 @@ GET /task-gen/{job_id}/results
   ],
   "verifiers": [
     { "filename": "task_001_verifier.py", "content": "..." }
-  ]
+  ],
+  "skills_md": "# Skills\n\n..."
 }
 ```
 
@@ -120,5 +121,5 @@ Returns `202` if the job is still running, `404` if not found, `500` if the job 
 **CLI shortcut:**
 
 ```bash
-collinear tasks-gen run --config config.toml --num-tasks 10
+simlab tasks-gen run --config config.toml --num-tasks 10
 ```

@@ -52,6 +52,7 @@
         "simulation-lab/scenarios",
         "simulation-lab/bring-your-own-agent",
         "simulation-lab/tasks-and-verifiers",
+        "simulation-lab/verifiers-and-reward-models",
         "simulation-lab/understanding-results"
       ]
     },

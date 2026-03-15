@@ -1,27 +1,26 @@
 ---
-title: "Tasks & Verifiers"
-description: "Task bundles, generation flow, pre-canned bundles, and verification"
+title: "Tasks"
+description: "Task format, generation flow, and pre-built tasks"
 ---
 
-Simulation Lab includes a hosted task generation API that produces complete task bundles from tool definitions. This is the programmatic path for creating evaluation content at scale.
+Simulation Lab includes a task generation pipeline that produces complete tasks from tool definitions. This is the programmatic path for creating evaluation content at scale.
 
-## What a Task Bundle Contains
+## What a Task Contains
 
-A task bundle is a JSON file with four sections:
+A task is a JSON file with these sections:
 
 ```json
 {
   "meta": {
+    "version": "2.0",
     "task_id": "send-new-hire-welcome-package",
     "display_name": "Send new hire welcome package",
     "category": "onboarding",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "idempotent": false
   },
   "task": "A new employee is starting next week and needs welcome materials. Review their start date and role in HRIS, coordinate with their manager via chat about welcome package contents, communicate with the new hire via chat with first-day information...",
-  "tool_servers": [
-    { "name": "hrms", "tool_server_url": "http://<hrms-server>:<port>" },
-    { "name": "calendar", "tool_server_url": "http://<calendar-server>:<port>" }
-  ],
+  "apps": ["HRIS", "Email", "Calendar", "Chat"],
   "seed_emails": [
     {
       "from_profile_id": "marcus_johnson",
@@ -42,38 +41,29 @@ A task bundle is a JSON file with four sections:
 }
 ```
 
-- **`meta`** — Task metadata: unique ID, display name, difficulty, category.
+- **`meta`** — Task metadata: unique ID, display name, difficulty, category, schema version.
 - **`task`** — The natural language instruction given to the agent.
-- **`tool_servers`** — Which tool servers are required for this task.
-- **`seed_emails` / `seed_calendar_events`** — Data injected into the environment before the agent starts. This is what makes the task solvable — the agent reads the seeded email to learn what it needs to do.
+- **`apps`** — Which applications the task requires (e.g., HRIS, Email, Calendar, Chat).
+- **`seed_emails` / `seed_calendar_events`** — Task-specific seed data injected into the environment before the agent starts. This is what makes the task solvable — the agent reads the seeded email to learn what it needs to do. This is illustrative; task-specific seed data is not limited to calendar or email events.
 
 ## Task Generation Flow
 
-Task generation is server-side. The CLI sends MCP tool definitions to the hosted API, which generates task bundles and returns them for local storage:
-
-![Task generation flow](/images/simulation-lab/task-gen-flow.png)
-
-## Pre-Canned Task Bundles
-
-For common domains, pre-canned bundles are available from the hosted catalog. Use them directly without running task generation:
+Task generation can be done via presets, an interactive wizard, or by providing MCP tool definitions directly.
 
 ```bash
-# Run a pre-canned bundle by name
-collinear-sim-lab tasks run -t human-resources-recruiting -m gpt-5.2
+# Initialize a config from a preset
+simlab tasks-gen init --preset recruiting --output-dir ./taskgen
+
+# Run generation
+simlab tasks-gen run --config ./taskgen/config.toml
 ```
 
-The `-t` flag fetches the named bundle into the local cache before running. Pre-canned bundles are curated for specific domains (e.g., `human-resources-recruiting` for HR recruiting workflows) and include tasks, seed data, and verifiers ready to use.
+## Pre-Built Tasks
 
-Bundles (both generated and pre-canned) are cached locally in the OS default cache directory (e.g., `~/.cache/collinear` on Linux, `~/Library/Caches/collinear` on macOS).
+For common domains, pre-built tasks are available via the Scenario Manager API. Tasks are associated with templates — when you create an environment from a template, its tasks are automatically available:
 
-## Verifiers
-
-Verifiers consume `RunArtifacts` — the structured record of everything the agent did — and produce a pass/fail result.
-
-There are two types:
-
-1. **Programmatic verifiers** — Inspect the environment state directly. For example: "Did the agent send an email to the correct recipient?" is checked by querying the email tool server's state, as well as reviewing the state diffs (before/after environment snapshots).
-
-2. **Rubric-based Reward Models** — Reward models that evaluates the agent's actions against a rubric. Useful for subjective criteria like "Did the agent communicate professionally?"
-
-Both types receive the same `RunArtifacts` interface, so they work with any agent implementation.
+```bash
+simlab tasks list --env my-env
+simlab tasks run --env my-env --task 100_weaver_schedule_phone_screen \
+  --agent-model gpt-5.2--agent-api-key "$OPENAI_API_KEY"
+```

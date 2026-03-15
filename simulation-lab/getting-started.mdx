@@ -1,113 +1,119 @@
 ---
 title: "Getting Started"
-description: "Set up and run your first Simulation Lab evaluation using the CLI"
+description: "Install the CLI and run your first evaluation"
 ---
 
-The `collinear-sim-lab` CLI is the primary interface. It handles scenario composition, task management, agent execution, and teardown.
+Install the CLI and run your first evaluation against a simulated environment.
 
 ## Prerequisites
 
 - Python 3.11+
 - Docker Desktop (or Docker Engine with Compose)
-- `OPENAI_API_KEY` set in your environment (or another LLM provider key)
-- (Optional) API key from platform.collinear.ai for hosted task generation and pre-canned bundles
+- Collinear API key from [platform.collinear.ai](https://platform.collinear.ai)
+- An LLM provider API key (e.g. `OPENAI_API_KEY`)
+- Daytona API Key (optional if you want to deploy into a cloud sandbox)
 
-## Step 1 — Start a Local Playground
-
-Initialize a playground from a template (or pick tools interactively), build it, and start it:
-
-```bash
-# Option A: Start from a template (recommended)
-collinear-sim-lab env init --template human-resources -o my-env.yaml
-
-# Option B: Pick tools interactively
-collinear-sim-lab env init -o my-env.yaml
-
-# Build and start
-collinear-sim-lab env build --config my-env.yaml
-collinear-sim-lab env up --config my-env.yaml
-```
-
-After `env up` completes, all tool servers are running and seeded with baseline data:
-
-```
-Seed verification:
-  Employees:     37 loaded
-  Policies:      18 loaded
-
-  Sample employees:
-    Lisa Anderson             HR Department        VP of HR / CHRO
-    Sarah Williams            HR Department        Director of HR Business Partners
-    Priya Patel               HR Department        HR Business Partner
-```
-
-## Step 2 — Choose a Task Bundle
-
-Tasks are organized into bundles, which are packaged sets of instructions, seed data, and verifiers. There are two ways to get a bundle:
-
-**Pre-set bundle (hosted).** Use a named bundle from the hosted catalog:
+## Installation
 
 ```bash
-collinear-sim-lab tasks run -t hr-demo -m gpt-5.2 --agent-import-path path.to.agent:MyAgent
+pip install simulationlab
 ```
 
-`-t/--tasks` will fetch the bundle into the local cache before running.
+## Authentication
 
-**Task-gen bundle (hosted generation).**
-
-1. Provide your MCP tool definitions as JSON
-2. Generate a bundle into a local directory
-3. Run against the local bundle
+All `simlab` commands require a Collinear API key. Get one from the platform dashboard (Developers → API Keys).
 
 ```bash
-collinear-sim-lab tasks-gen run --tools ./tools.json --out ./bundles/hr-custom
-collinear-sim-lab tasks run -p ./bundles/hr-custom -m gpt-5.2 --agent-import-path path.to.agent:MyAgent
+# Option A: Global config file (recommended)
+mkdir -p ~/.config/simlab
+cat >> ~/.config/simlab/config.toml <<'EOF'
+collinear_api_key = "<your-collinear-api-key>"
+EOF
+
+# Option B: Environment variable
+export SIMLAB_COLLINEAR_API_KEY="<your-collinear-api-key>"
+
+# Option C: Per-command flag
+simlab --collinear-api-key "<your-collinear-api-key>" <command>
 ```
 
-See [Tasks & Verifiers](/simulation-lab/tasks-and-verifiers) for details on task generation.
+## Starting an environment
 
-## Step 3 — Run With a Built-In or Custom Agent
-
-**Built-in reference agent (default).**
+Initialize an environment from a template and start it:
 
 ```bash
-collinear-sim-lab tasks run -t hr-demo -m gpt-4o
+simlab env init my-env --template hr_recruiting
+simlab env up my-env --daytona
+```
+
+To pick tools interactively instead of using a template:
+
+```bash
+simlab env init my-env
+```
+
+## Choosing a task
+
+Tasks are organized by the scenario template associated with your environment.
+
+```bash
+# List tasks for your environment's template
+simlab tasks list --env my-env
+
+# View details for a specific task
+simlab tasks info --env my-env --task ar-100-schedule-phone-screen
+```
+
+If you generated tasks locally (via `tasks-gen`), browse them directly:
+
+```bash
+simlab tasks list --tasks-dir ./generated-tasks
+```
+
+## Running an evaluation
+
+The primary command is `simlab tasks run`.
+
+**Built-in reference agent (default).** Uses [LiteLLM](https://docs.litellm.ai/) and supports any LLM provider.
+
+```bash
+simlab tasks run --env my-env \
+  --task 100_weaver_schedule_phone_screen \
+  --agent-model gpt-5.2 \
+  --agent-api-key "$OPENAI_API_KEY"
 ```
 
 **Custom agent (recommended).**
 
 ```bash
-collinear-sim-lab tasks run -t hr-demo -m gpt-4o --agent-import-path path.to.agent:MyAgent
+simlab tasks run --env my-env \
+  --task ar-100-schedule-phone-screen \
+  --agent-import-path path.to.agent:MyAgent
 ```
 
-Your agent must implement the `BaseAgent` contract and populate `RunArtifacts` during execution. See [Bring Your Own Agent](/simulation-lab/bring-your-own-agent) for the full contract.
+Your agent must implement the `BaseAgent` contract. See [Bring Your Own Agent](/simulation-lab/bring-your-own-agent) for the full interface.
 
-If `--agent-import-path` is omitted, the CLI uses the baked-in reference agent.
+## Configuring verifiers
 
-## Step 4 — Configure Verifiers
-
-Verifiers run locally. You must configure the credentials for the LLM-as-a-judge. It is possible to use a different model for the judge than for the agent. Configure judge settings via env variables:
+When a task includes LLM-as-judge verifiers, configure the judge credentials separately from the agent:
 
 ```bash
-export COLLINEAR_VERIFIER_MODEL="gpt-5.2"
-export COLLINEAR_VERIFIER_PROVIDER="openai"
-export COLLINEAR_VERIFIER_API_KEY="$OPENAI_API_KEY"
+export SIMLAB_VERIFIER_MODEL="gpt-5.2"
+export SIMLAB_VERIFIER_PROVIDER="openai"
+export SIMLAB_VERIFIER_API_KEY="$OPENAI_API_KEY"
 ```
 
-## Step 5 — Authenticate for Hosted APIs (Optional)
+Or in `config.toml`:
 
-If you are using hosted task generation or pre-canned bundles, authenticate first:
-
-```bash
-collinear-sim-lab auth login
+```toml
+[verifier]
+model = "gpt-5.2"
+provider = "openai"
+api_key = "sk-..."
 ```
 
-The CLI stores your API key in its config file and uses it for `tasks-gen` and remote bundle fetches.
-
-Pre-canned bundles and task-gen outputs are cached in the OS default cache directory (e.g. `~/.cache/collinear` on Linux, `~/Library/Caches/collinear` on macOS).
-
-## Step 6 — Tear Down
+## Tear down
 
 ```bash
-collinear-sim-lab env down --config my-env.yaml
+simlab env down my-env
 ```

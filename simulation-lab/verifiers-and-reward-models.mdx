@@ -1,0 +1,14 @@
+---
+title: "Verifiers & Reward Models"
+description: "Programmatic verifiers and rubric-based reward models for agent evaluation"
+---
+
+Verifiers consume `RunArtifacts` — the structured record of everything the agent did — and produce a pass/fail result.
+
+There are two types:
+
+1. **Programmatic verifiers** — Inspect the environment state directly. For example: "Did the agent send an email to the correct recipient?" is checked by querying the email tool server's state, as well as reviewing the state diffs (before/after environment snapshots).
+
+2. **Rubric-based Reward Models** — Reward models that evaluates the agent's actions against a rubric. Useful for subjective criteria like "Did the agent communicate professionally?"
+
+Both types receive the same `RunArtifacts` interface, so they work with any agent implementation.

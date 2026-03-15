@@ -79,11 +79,11 @@ Simulation Lab's tool server protocol wraps MCP servers. To add your own toolset
 
 ### Two Paths for Integration
 
-**For task generation:** Provide your MCP tool definitions as JSON. The hosted task generation API consumes them and produces task bundles (instructions, seed data, and verifiers) tailored to your tools.
+**For task generation:** Provide your MCP tool definitions as JSON. The task generation pipeline consumes them and produces tasks (instructions, seed data, and verifiers) tailored to your tools.
 
 ```bash
 # Generate tasks for your custom tools
-collinear-sim-lab tasks-gen run --tools ./tools.json --out ./bundles/hr-custom
+simlab tasks-gen run --tools ./tools.json --out ./generated-tasks
 ```
 
 **For runtime:** Point Simulation Lab at your MCP server URL. It becomes available to agents in the workspace alongside built-in toolsets. Agents discover it via the unified tool list and call it like any other tool.

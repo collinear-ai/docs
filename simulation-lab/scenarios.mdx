@@ -5,25 +5,28 @@ description: "Scenario templates and composition for simulation scenarios"
 
 ## Scenario Templates
 
-Templates are named toolset combinations for common scenarios:
+Templates are named toolset combinations for common scenarios. Browse them with:
+
+```bash
+simlab templates list
+```
 
 | Template | Included Tools |
 |----------|---------------|
 | `human-resources` | Frappe HRMS, Rocket.Chat, Email, Calendar |
 | `customer-service` | Frappe Helpdesk, Rocket.Chat, Email, Calendar |
-| `coding` | OpenHands |
+| `coding` | OpenHands, Bash |
 | `finance` | SEC Edgar, Twelve Data, Google Workspace |
 | `personal-assistant` | OpenTable, Outlook, Weather, WhatsApp |
 
-Templates are a starting point; users can then build custom combinations by selecting individual toolsets or adding their own.
+Templates are a starting point; users can build custom combinations by selecting individual tools during `env init`.
 
 ## Scenario Composition
 
 The composition engine takes your selected tools and produces a complete Docker Compose stack:
 
-1. Collects services from each tool's YAML definition
+1. Collects services from each tool's YAML definition (main services, preseed services, seed services)
 2. Adds networking — all services join a shared bridge network
 3. Maps ports — only agent-facing and web UI ports get host bindings; internal services (databases, MCP servers) stay network-only
 4. Detects port conflicts and auto-resolves them
 5. Generates a `.env` file with placeholders for any required API keys
-6. Produces a `README.md` with endpoints and quickstart commands

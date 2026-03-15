@@ -3,7 +3,7 @@ title: "Bring Your Own Agent"
 description: "Integrate your own agent implementation with Simulation Lab"
 ---
 
-Simulation Lab is agent-agnostic. The default agent uses a tool-calling loop with any OpenAI-compatible LLM API, but you can bring your own agent implementation by implementing the `BaseAgent` contract.
+Simulation Lab is agent-agnostic. The default agent uses a tool-calling loop with any LLM API (via [LiteLLM](https://docs.litellm.ai/)), but you can bring your own agent implementation by implementing the `BaseAgent` contract.
 
 ## The Agent Contract
 
@@ -18,15 +18,15 @@ class MyAgent(BaseAgent):
     def version(self) -> str | None:
         return "1.0.0"
 
-    async def setup(self, environment: BaseEnvironment) -> None:
+    def setup(self, environment: BaseEnvironment) -> None:
         """Called once before the agent starts.
 
         Use this to discover available tools, configure state,
         or perform any one-time initialization.
         """
-        self.tools = await environment.list_tools()
+        self.tools = environment.list_tools()
 
-    async def run(
+    def run(
         self,
         instruction: str,
         environment: BaseEnvironment,
@@ -37,7 +37,7 @@ class MyAgent(BaseAgent):
         Populate the context (RunArtifacts) as execution progresses
         so that partial results are captured even on timeout or error.
         """
-        context.record_message({"role": "user", "content": instruction})
+        context.record_message("user", instruction)
 
         # Your agent logic here:
         # 1. Read the instruction
@@ -47,22 +47,23 @@ class MyAgent(BaseAgent):
         # 5. Iterate until done
 
         call = ToolCall(tool_server="email-env", tool_name="send_email", parameters={...})
-        result = await environment.call_tool(call.tool_server, call.tool_name, call.parameters)
+        result = environment.call_tool(call.tool_server, call.tool_name, call.parameters)
         context.record_tool_call(call, result)
 ```
 
 Register your agent at runtime via the CLI:
 
 ```bash
-collinear-sim-lab tasks run -t hr-demo -m gpt-4o --agent-import-path path.to.agent:MyAgent
+simlab tasks run --env my-env --task my-task --agent-import-path path.to.agent:MyAgent
 ```
 
 ## The Environment Interface
 
-The `environment` object passed to your agent provides two async methods:
+The `environment` object passed to your agent provides:
 
-- **`environment.list_tools()`** — returns tool schemas (names, descriptions, input schemas) for all tool servers in the workspace.
-- **`environment.call_tool(tool_server, tool_name, parameters)`** — executes a tool call on a specific server and returns the result.
+- **`environment.list_tools(tool_server=None)`** — returns tool schemas (names, descriptions, input schemas) for one server or all servers in the workspace.
+- **`environment.call_tool(tool_server, tool_name, parameters)`** — executes a tool call on a specific server and returns a `ToolCallResult`.
+- **`environment.tool_servers`** — property returning a `dict[str, str]` mapping server names to base URLs.
 
 Under the hood, these map to the tool server protocol: `list_tools()` calls `GET /tools`, and `call_tool()` calls `POST /step`.
 

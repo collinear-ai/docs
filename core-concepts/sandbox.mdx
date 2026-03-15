@@ -1,0 +1,42 @@
+---
+title: "Sandbox"
+description: "Isolated execution environments for agent rollouts"
+---
+
+Each rollout runs in its own sandbox — an isolated workspace with its own Docker network and containers. The sandbox is the unit of multi-tenancy in Simulation Lab.
+
+## Workspace Isolation
+
+A sandbox provides:
+
+- **Isolated network** — Each rollout gets its own Docker network with dedicated containers. Parallel rollouts cannot interfere with each other.
+- **Clean state** — Every rollout starts from a freshly provisioned environment with seed data applied from scratch.
+- **Per-rollout configuration** — Environment variables and configuration are scoped to the individual rollout.
+
+When a rollout finishes, the sandbox is torn down. When the next rollout starts, a fresh sandbox is provisioned from scratch.
+
+## Local Sandboxes
+
+By default, sandboxes run locally via Docker Compose. The `simlab env up` command starts the environment, and each `simlab tasks run` creates an isolated workspace within it.
+
+```bash
+simlab env up my-env
+```
+
+## Remote Sandboxes (Daytona)
+
+For cloud-based execution, Simulation Lab supports remote sandboxes via Daytona. This is useful for running evaluations at scale without local compute constraints.
+
+```bash
+simlab env up my-env --daytona
+```
+
+The Daytona API key is resolved from `--daytona-api-key`, `[daytona].api_key` in config.toml, `SIMLAB_DAYTONA_API_KEY`, or `DAYTONA_API_KEY`.
+
+## Why Sandboxes Matter
+
+Sandbox isolation is what makes evaluation results trustworthy:
+
+- **Parallel execution** — Run multiple rollouts concurrently to gather statistical confidence without interference.
+- **Reproducibility** — Same environment, same seed data, same starting conditions every time.
+- **Safety** — Agents interact with simulated services in isolation. Nothing leaks to production systems or other rollouts.

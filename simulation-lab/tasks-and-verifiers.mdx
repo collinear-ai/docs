@@ -1,79 +1,113 @@
 ---
-title: "Tasks & Verifiers"
-description: "Task bundles, generation flow, pre-canned bundles, and verification"
+title: "Tasks"
+description: "Task format, generation flow, and pre-built tasks"
 ---
 
-Simulation Lab includes a hosted task generation API that produces complete task bundles from tool definitions. This is the programmatic path for creating evaluation content at scale.
+Simulation Lab includes a task generation pipeline that produces complete tasks from a configuration file. This is the programmatic path for creating evaluation content at scale.
 
-## What a Task Bundle Contains
+## Task Generation Config
 
-A task bundle is a JSON file with four sections:
-
-```json
-{
-  "meta": {
-    "task_id": "send-new-hire-welcome-package",
-    "display_name": "Send new hire welcome package",
-    "category": "onboarding",
-    "difficulty": "easy"
-  },
-  "task": "A new employee is starting next week and needs welcome materials. Review their start date and role in HRIS, coordinate with their manager via chat about welcome package contents, communicate with the new hire via chat with first-day information...",
-  "tool_servers": [
-    { "name": "hrms", "tool_server_url": "http://<hrms-server>:<port>" },
-    { "name": "calendar", "tool_server_url": "http://<calendar-server>:<port>" }
-  ],
-  "seed_emails": [
-    {
-      "from_profile_id": "marcus_johnson",
-      "to_addr": "hr@company.com",
-      "subject": "New Hire Starting - Welcome Package Request",
-      "body_text": "Hi team, we have a new hire starting next week..."
-    }
-  ],
-  "seed_calendar_events": [
-    {
-      "account": "marcus_johnson",
-      "calendar_id": "default",
-      "summary": "Department Meeting",
-      "start": "2026-01-22T09:00:00Z",
-      "end": "2026-01-22T10:00:00Z"
-    }
-  ]
-}
-```
-
-- **`meta`** — Task metadata: unique ID, display name, difficulty, category.
-- **`task`** — The natural language instruction given to the agent.
-- **`tool_servers`** — Which tool servers are required for this task.
-- **`seed_emails` / `seed_calendar_events`** — Data injected into the environment before the agent starts. This is what makes the task solvable — the agent reads the seeded email to learn what it needs to do.
-
-## Task Generation Flow
-
-Task generation is server-side. The CLI sends MCP tool definitions to the hosted API, which generates task bundles and returns them for local storage:
-
-![Task generation flow](/images/simulation-lab/task-gen-flow.png)
-
-## Pre-Canned Task Bundles
-
-For common domains, pre-canned bundles are available from the hosted catalog. Use them directly without running task generation:
+Task generation is driven by a TOML config file that defines the agent role, available toolsets, scenario conventions, and generation parameters. Initialize one from a preset or create it from scratch:
 
 ```bash
-# Run a pre-canned bundle by name
-collinear-sim-lab tasks run -t human-resources-recruiting -m gpt-5.2
+# Initialize a config from a preset
+simlab tasks-gen init --preset recruiting --output-dir ./taskgen
+
+# Run generation
+simlab tasks-gen run --config ./taskgen/config.toml
 ```
 
-The `-t` flag fetches the named bundle into the local cache before running. Pre-canned bundles are curated for specific domains (e.g., `human-resources-recruiting` for HR recruiting workflows) and include tasks, seed data, and verifiers ready to use.
+Here is an example config for an HR recruiting scenario:
 
-Bundles (both generated and pre-canned) are cached locally in the OS default cache directory (e.g., `~/.cache/collinear` on Linux, `~/Library/Caches/collinear` on macOS).
+```toml
+preset = "recruiting"
+categories = [
+    { id = "job_requisition", label = "Job requisition" },
+    { id = "shortlist_resumes", label = "Shortlist the resumes" },
+    { id = "schedule_interviews", label = "Schedule the interviews" },
+    { id = "consolidate_feedback", label = "Consolidate feedback" },
+    { id = "send_offers_or_rejections", label = "Send out offers or rejections" },
+    { id = "negotiate_and_final_offer", label = "Negotiate and send final offer" },
+    { id = "handle_candidate_rejections", label = "Handle candidate rejections" },
+    { id = "candidate_questions", label = "Handle questions from candidates" },
+]
 
-## Verifiers
+[agent]
+role = "HR recruiting coordinator"
+description = "Handles end-to-end recruiting workflows: scheduling interviews, managing candidate pipelines, coordinating offer discussions, and communicating with hiring managers and candidates."
 
-Verifiers consume `RunArtifacts` — the structured record of everything the agent did — and produce a pass/fail result.
+[[toolset]]
+name = "HRIS"
+description = "Query/update employee records, job requisitions, candidate profiles"
+operations = ["search", "read", "create", "update"]
 
-There are two types:
+[[toolset]]
+name = "Email"
+description = "Send and read emails"
+operations = ["send", "read"]
 
-1. **Programmatic verifiers** — Inspect the environment state directly. For example: "Did the agent send an email to the correct recipient?" is checked by querying the email tool server's state, as well as reviewing the state diffs (before/after environment snapshots).
+[[toolset]]
+name = "Calendar"
+description = "View and manage calendar events"
+operations = ["list", "create", "update", "delete"]
 
-2. **Rubric-based Reward Models** — Reward models that evaluates the agent's actions against a rubric. Useful for subjective criteria like "Did the agent communicate professionally?"
+[[toolset]]
+name = "Chat"
+description = "Send messages in Rocket.Chat channels and DMs"
+operations = ["send", "read"]
 
-Both types receive the same `RunArtifacts` interface, so they work with any agent implementation.
+[scenario]
+name = "recruiting"
+role_label = "HR recruiting professional"
+conventions = """
+- Always check all participants' calendars before scheduling
+- Never share compensation details in group channels
+- Document all candidate interactions in HRIS
+- Get manager approval before extending offers
+"""
+policies = [
+    "Interviews must include at least one diverse panel member",
+    "Offers require VP approval for >$200k total comp",
+    "Candidate data must not be shared outside recruiting team",
+]
+
+[generation]
+num_tasks = 2
+deduplicate = false
+filter = true
+
+[generation.complexity]
+easy = 0.3
+medium = 0.5
+hard = 0.2
+
+[generation.diversity]
+variations = [
+    "straightforward",
+    "scheduling_conflict",
+    "candidate_experience",
+    "handoff_or_reporting",
+    "offer_negotiation",
+    "candidate_decline",
+    "accommodation",
+]
+```
+
+- **`preset`** — Starting template. Available presets: `recruiting`, `people_mgmt`, `coding`, `customer_support`.
+- **`categories`** — Task categories to generate across.
+- **`[agent]`** — The role and description of the agent being evaluated.
+- **`[[toolset]]`** — Tools available to the agent, with allowed operations.
+- **`[scenario]`** — Domain conventions, policies, and constraints the agent should follow.
+- **`[generation]`** — Number of tasks, complexity distribution, and diversity dimensions.
+
+The config can also define `[[workflows]]` (multi-step procedures) and `[[npcs]]` (non-player characters like hiring managers or candidates) to increase task realism.
+
+## Pre-Built Tasks
+
+For common domains, pre-built tasks are available via the Scenario Manager API. Tasks are associated with templates — when you create an environment from a template, its tasks are automatically available:
+
+```bash
+simlab tasks list --env my-env
+simlab tasks run --env my-env --task 100_weaver_schedule_phone_screen \
+  --agent-model gpt-5.2--agent-api-key "$OPENAI_API_KEY"
+```

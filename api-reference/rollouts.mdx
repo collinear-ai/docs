@@ -1,0 +1,129 @@
+---
+title: "Rollouts"
+description: "List rollouts and retrieve rollout artifacts"
+---
+
+**Base URL:** `https://rl-gym-api.collinear.ai`
+
+## List Rollouts
+
+List rollouts with optional filtering.
+
+```
+GET /rollouts
+```
+
+**Query parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `scenario_id` | `string` | Filter by template |
+| `task_id` | `string` | Filter by task |
+| `status` | `string` | Filter by status: `pending`, `running`, `completed`, `failed`, `workspace_error` |
+| `run_id` | `string` | Filter by parent run |
+
+**Response:** `200 OK`
+
+```json
+{
+  "total": 1,
+  "rollouts": [
+    {
+      "rollout_id": "rol_001",
+      "scenario_id": "hr",
+      "task_id": "hr__100_weaver_schedule_phone_screen",
+      "run_id": "run_abc123",
+      "status": "completed",
+      "phase": "completed",
+      "current_step": null,
+      "max_steps": 30,
+      "created_at": "2026-03-20T10:00:00Z",
+      "started_at": "2026-03-20T10:00:05Z",
+      "completed_at": "2026-03-20T10:02:30Z",
+      "result": { "success": true, "message": "All criteria met" },
+      "termination_reason": null,
+      "model_config": {
+        "model": "gpt-4o",
+        "provider": "openai",
+        "temperature": 0.7,
+        "max_steps": 30
+      },
+      "status_events": [
+        { "status": "pending", "timestamp": "2026-03-20T10:00:00Z" },
+        { "status": "running", "timestamp": "2026-03-20T10:00:05Z" },
+        { "status": "completed", "timestamp": "2026-03-20T10:02:30Z" }
+      ]
+    }
+  ]
+}
+```
+
+### Rollout Status Values
+
+| Status | Meaning |
+|--------|---------|
+| `pending` | Queued, waiting to start |
+| `running` | Currently executing |
+| `completed` | Finished successfully (check `result` for verifier output) |
+| `failed` | Agent or verifier error |
+| `workspace_error` | Environment provisioning failed |
+
+### Rollout Phase Values
+
+Granular progress while status is `running`:
+
+| Phase | Meaning |
+|-------|---------|
+| `building_environment` | Provisioning tool server containers |
+| `seeding` | Injecting seed data |
+| `agent_running` | Agent is executing (see `current_step`) |
+| `verifying` | Running verifier |
+| `completed` | Execution finished |
+
+## Get Rollout
+
+Get status and metadata for a single rollout.
+
+```
+GET /rollouts/{rollout_id}
+```
+
+**Response:** `200 OK` — returns a `RolloutResponse` (same schema as items in the list rollouts response).
+
+**Errors:** `404` if rollout not found.
+
+## Get Rollout Artifacts
+
+Download the full `RunArtifacts` captured during a rollout.
+
+```
+GET /rollouts/{rollout_id}/artifacts
+```
+
+**Query parameters:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `redact_tool_calls` | `bool` | `false` | When true, strips tool calls and tool responses from `artifacts.messages` |
+
+**Response:** `200 OK`
+
+```json
+{
+  "rollout_id": "rol_001",
+  "artifacts": {
+    "version": "0.1",
+    "task_id": "hr__100_weaver_schedule_phone_screen",
+    "task": "Schedule a phone screen with the candidate...",
+    "model": "gpt-4o",
+    "provider": "openai",
+    "messages": [...],
+    "steps_taken": 5,
+    "max_steps": 30,
+    "final_observation": "Phone screen scheduled successfully.",
+    "created_at": "2026-03-20T10:00:05Z"
+  }
+}
+```
+
+**Errors:** `404` if rollout not found or artifacts not yet available (rollout still in progress).

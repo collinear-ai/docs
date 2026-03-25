@@ -1,0 +1,186 @@
+---
+title: "Runs"
+description: "Launch, list, and manage agent evaluation runs"
+---
+
+**Base URL:** `https://rl-gym-api.collinear.ai`
+
+## Launch Runs
+
+Start a batch of rollouts (agent evaluation runs) for one or more tasks.
+
+```
+POST /runs
+```
+
+**Request body:**
+
+```json
+{
+  "scenario_id": "hr",
+  "task_ids": ["hr__100_weaver_schedule_phone_screen"],
+  "rollout_count": 3,
+  "max_parallel": 2,
+  "model_config": {
+    "model": "gpt-4o",
+    "provider": "openai",
+    "api_key": "sk-...",
+    "temperature": 0.7,
+    "max_steps": 30
+  }
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `scenario_id` | `string` | Yes | Template identifier (e.g. `hr`) |
+| `task_ids` | `list[string]` | Yes | Task IDs to execute (min 1) |
+| `model_config` | `ModelConfig` | Yes | LLM configuration for the agent (see below) |
+| `rollout_count` | `int` | No | Rollouts per task (default: 1) |
+| `max_parallel` | `int` | No | Hint for desired parallel rollouts |
+| `run_name` | `string` | No | Custom run name/ID (must be unique) |
+| `user_model_config` | `ModelConfig` | No | Optional LLM config for simulated user persona |
+| `task_overrides` | `dict[string, TaskOverride]` | No | Per-task overrides (keys must be in `task_ids`) |
+
+### ModelConfig
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `model` | `string` | — | LLM model identifier (e.g. `gpt-4o`, `claude-sonnet-4-6`) |
+| `provider` | `string` | `"custom"` | Provider: `custom`, `openai`, `anthropic`, `aws-bedrock`, `azure-openai`, `gcp` |
+| `api_key` | `string` | — | API credential for the provider (required) |
+| `base_url` | `string` | `null` | Custom API base URL (for proxies or self-hosted) |
+| `temperature` | `float` | `0.7` | Sampling temperature (0.0–2.0) |
+| `max_steps` | `int` | `30` | Maximum tool-calling turns per rollout (min: 1) |
+| `system_prompt` | `string` | `null` | Override system prompt injected before rollout |
+| `tool_server_url` | `string` | `null` | Override URL for the Tool Server |
+| `log_prob` | `bool` | `false` | Capture token log-probabilities during rollout |
+| `summarize_every_n_turns` | `int` | `0` | Summarize tool-call history every N turns (0 = disabled) |
+| `context_stride` | `int` | `3` | Recent exchanges kept verbatim when summarizing (min: 1) |
+
+### TaskOverride
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `task_json` | `object` | Full task JSON override (replaces entire on-disk task) |
+| `name` | `string` | Display name override |
+| `description` | `string` | Task prompt override |
+| `rubric_markdown` | `string` | Rubric markdown override for the universal verifier |
+| `client_context` | `dict` | Opaque caller metadata persisted in artifacts |
+
+**Response:** `200 OK`
+
+```json
+{
+  "run_id": "run_abc123",
+  "run_status": {
+    "run_id": "run_abc123",
+    "scenario_id": "hr",
+    "source": "rl-gym",
+    "total": 3,
+    "completed": 0,
+    "failed": 0,
+    "in_progress": 0,
+    "pending": 3,
+    "running": 0,
+    "rollout_ids": ["rol_001", "rol_002", "rol_003"]
+  },
+  "rollouts": [
+    {
+      "rollout_id": "rol_001",
+      "scenario_id": "hr",
+      "task_id": "hr__100_weaver_schedule_phone_screen",
+      "run_id": "run_abc123",
+      "status": "pending"
+    }
+  ]
+}
+```
+
+## List Runs
+
+List runs with optional filtering and pagination.
+
+```
+GET /runs
+```
+
+**Query parameters:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `scenario_id` | `string` | — | Filter by template |
+| `source` | `string` | `"rl-gym"` | Filter by source: `rl-gym`, `task-editor`, `datadog-synthetics`, `all` |
+| `limit` | `int` | `50` | Results per page (1–200) |
+| `offset` | `int` | `0` | Pagination offset |
+| `expand` | `list[string]` | — | Pass `rollouts` to populate `rollout_ids` |
+
+**Response:** `200 OK`
+
+```json
+{
+  "total": 1,
+  "runs": [
+    {
+      "run_id": "run_abc123",
+      "scenario_id": "hr",
+      "source": "rl-gym",
+      "total": 3,
+      "completed": 2,
+      "failed": 0,
+      "in_progress": 1,
+      "pending": 0,
+      "running": 1,
+      "rollout_ids": []
+    }
+  ]
+}
+```
+
+## Get Run Status
+
+Get aggregate status for a run, including per-rollout breakdowns.
+
+```
+GET /runs/{run_id}
+```
+
+**Response:** `200 OK` — returns a `RunStatusResponse` (same schema as items in the list runs response).
+
+**Errors:** `404` if run not found.
+
+## Cancel Run
+
+Signal all active rollouts in a run to cancel gracefully.
+
+```
+POST /runs/{run_id}/cancel
+```
+
+**Response:** `200 OK`
+
+```json
+{
+  "run_id": "run_abc123",
+  "cancelled_rollouts": 2
+}
+```
+
+## Delete Run
+
+Delete a run and all associated rollout records.
+
+```
+DELETE /runs/{run_id}
+```
+
+**Response:** `200 OK`
+
+```json
+{
+  "run_id": "run_abc123",
+  "deleted_rollouts": 3
+}
+```
+
+**Errors:** `404` if run not found.

@@ -1,6 +1,6 @@
 ---
 title: "Scenarios"
-description: "List templates, tasks, rubrics, and NPC profiles"
+description: "List templates, tasks, rubrics, NPC profiles, seed data, and verifier bundles"
 ---
 
 **Base URL:** `https://rl-gym-api.collinear.ai`
@@ -106,7 +106,7 @@ GET /scenarios/{scenario_id}/tasks/{task_id}/rubric
   "success_criteria": ["Calendar event exists with correct attendees and time"],
   "testing_requirements": ["Verify calendar event was created", "Verify email was sent"],
   "quality_criteria": ["Professional tone in email"],
-  "notes": "Agent should not double-book the time slot",
+  "notes": ["Agent should not double-book the time slot"],
   "scoring": [
     { "label": "Full Credit", "description": "All requirements met" },
     { "label": "Partial Credit", "description": "Partial completion" },
@@ -140,3 +140,59 @@ GET /scenarios/{scenario_id}/npcs
   ]
 }
 ```
+
+## List Seed Data Files
+
+List available seed data files for a template.
+
+```
+GET /scenarios/{scenario_id}/seed_data
+```
+
+**Response:** `200 OK`
+
+```json
+{
+  "scenario_id": "hr",
+  "files": ["leave_policy.md", "org_chart.md", "onboarding_policy.md"]
+}
+```
+
+## Get Seed Data File
+
+Get the contents of a specific seed data file.
+
+```
+GET /scenarios/{scenario_id}/seed_data/{filename}
+```
+
+**Path parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `scenario_id` | string | Template identifier |
+| `filename` | string | File path within the seed_data directory |
+
+**Response:** `200 OK`
+
+```json
+{
+  "scenario_id": "hr",
+  "filename": "leave_policy.md",
+  "content": "# Leave Policy\n\nEmployees are entitled to..."
+}
+```
+
+**Errors:** `400` if filename contains path traversal, `404` if file not found.
+
+## Download Verifier Bundle
+
+Download the verifier modules for a template as a ZIP archive. The ZIP contains an importable Python package structure.
+
+```
+GET /scenarios/{scenario_id}/verifiers/bundle
+```
+
+**Response:** `200 OK` — binary ZIP file (`Content-Type: application/zip`)
+
+**Errors:** `404` if scenario not found or no verifiers available.

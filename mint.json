@@ -71,6 +71,9 @@
       "pages": [
         "api-reference/authentication",
         "api-reference/scenarios",
+        "api-reference/runs",
+        "api-reference/rollouts",
+        "api-reference/test-model-config",
         "api-reference/task-generation",
         "api-reference/tool-server-protocol"
       ]

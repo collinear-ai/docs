@@ -5,12 +5,14 @@ description: "Generate tasks from tool definitions"
 
 **Base URL:** `https://rl-gym-api.collinear.ai`
 
-Generate tasks (instructions, rubrics, verifiers) from your tool definitions. Task generation is asynchronous — submit a job, poll for status, then download results.
+Generate task bundles (instructions, rubrics, verifiers) from your tool definitions. Task generation is asynchronous — submit a job, poll for status, then download results.
+
+> **Authentication required.** Task generation endpoints use the `/v1/` prefix and require the `API-Key` header.
 
 ## Submit a Task Generation Job
 
 ```
-POST /task-gen
+POST /v1/task-gen
 ```
 
 **Request body:**
@@ -68,7 +70,7 @@ POST /task-gen
 ## Check Job Status
 
 ```
-GET /task-gen/{job_id}
+GET /v1/task-gen/{job_id}
 ```
 
 **Response:** `200 OK`
@@ -92,7 +94,7 @@ GET /task-gen/{job_id}
 ## Download Results
 
 ```
-GET /task-gen/{job_id}/results
+GET /v1/task-gen/{job_id}/results
 ```
 
 **Response:** `200 OK` (only when status is `completed`)

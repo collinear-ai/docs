@@ -11,11 +11,19 @@ API-Key: <your-api-key>
 
 ## Obtaining a Key
 
+Via the CLI:
+
 ```bash
 simlab auth login
 ```
 
-This will direct you to [platform.collinear.ai](https://platform.collinear.ai) (Developers → API Keys) to create or retrieve your API key.
+This opens [platform.collinear.ai](https://platform.collinear.ai) where you can find your key under **Developers → API Keys**. The key is stored in `~/.config/collinear/config.toml`.
+
+Or set it as an environment variable:
+
+```bash
+export COLLINEAR_API_KEY="<your-api-key>"
+```
 
 ## Error Responses
 

@@ -9,23 +9,22 @@ The environment is the interface your agent uses to discover and call tools at r
 
 | Method | Description |
 |--------|-------------|
-| `list_tools(tool_server=None)` | Returns tool definitions (all servers, or a specific one) |
-| `call_tool(tool_server, tool_name, parameters)` | Invokes a tool and returns a `ToolCallResult` |
+| `async alist_tools(tool_server=None)` | Returns tool definitions (all servers, or a specific one) |
+| `async acall_tool(tool_server, tool_name, parameters)` | Invokes a tool and returns a `ToolCallResult` |
+| `list_tool_namespaces()` | Returns `list[ToolNamespace]` describing available tool servers and their transports |
+| `list_tools(tool_server=None)` | **Deprecated (removal in 0.4.0)** — sync wrapper around `alist_tools()` |
+| `call_tool(tool_server, tool_name, parameters)` | **Deprecated (removal in 0.4.0)** — sync wrapper around `acall_tool()` |
 
-## Properties
+<Note>Since `BaseAgent.setup()` and `run()` are synchronous, the deprecated sync wrappers (`list_tools`, `call_tool`) are still usable from agent code. They run the async methods internally via a compatibility shim.</Note>
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `tool_servers` | `dict[str, str]` | Mapping of server names to base URLs |
+## UnifiedToolEnvironment
 
-## HttpToolEnvironment
-
-SimLab ships `HttpToolEnvironment`, which implements `BaseEnvironment` over HTTP against the [Tool Server Protocol](/api-reference/tool-server-protocol).
+SimLab ships `UnifiedToolEnvironment`, which implements `BaseEnvironment` over HTTP and MCP transports against the [Tool Server Protocol](/api-reference/tool-server-protocol).
 
 ```python
-from simlab.agents import HttpToolEnvironment
+from simlab.agents import UnifiedToolEnvironment
 
-env = HttpToolEnvironment(
+env = UnifiedToolEnvironment(
     tool_servers={
         "email": "https://<environment-url>/email",
         "calendar": "https://<environment-url>/calendar",

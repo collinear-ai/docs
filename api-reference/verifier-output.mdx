@@ -3,26 +3,36 @@ title: "Verifier Output"
 description: "Output format from verifier evaluation"
 ---
 
-After an agent run, verifiers evaluate whether the task was completed successfully. Verifiers consume [RunArtifacts](/api-reference/sdk/run-artifacts) and produce reward files.
+After an agent run, verifiers evaluate whether the task was completed successfully. Verifiers consume [RunArtifacts](/api-reference/sdk/run-artifacts) and return a `VerifierResult`.
 
-## Output Directory Structure
+## VerifierResult
 
+```python
+class VerifierResult:
+    success: bool     # Whether the task was completed successfully
+    message: str      # Human-readable explanation
+    output: str       # Additional detail (defaults to message if empty)
 ```
-output/agent_run_{task_id}_{timestamp}/
-  artifacts.json              # Full RunArtifacts
-  verifier/
-    reward.txt                # "1" or "0"
-    reward.json               # { "reward": 1.0 }
-```
 
-## reward.json Schema
+The `result` field on rollout responses contains the serialized verifier output:
 
 ```json
 {
-  "reward": 1.0
+  "success": true,
+  "message": "All criteria met"
 }
 ```
 
+## Rubric Judge
+
+For rubric-based evaluation, the `RubricJudgeResult` provides structured scoring:
+
 | Field | Type | Description |
 |-------|------|-------------|
-| `reward` | `float` | `1.0` for success, `0.0` for failure (partial scores possible) |
+| `score` | `float` | Score from 0.0 to 1.0 |
+| `verdict` | `string` | `"PASS"` or `"FAIL"` |
+| `confidence` | `float` | Confidence in the verdict (0.0–1.0) |
+| `evidence` | `list[string]` | Bullet points with concrete evidence |
+| `failed_criteria` | `list[string]` | Unmet rubric criteria |
+| `dimension_scores` | `list[object]` | Per-dimension breakdowns: `{ "dimension": str, "score": float, "reason": str }` |
+| `error` | `string` | Error message if evaluation failed |

@@ -1,0 +1,30 @@
+---
+title: "Test Model Configuration"
+description: "Validate a model configuration with a test completion"
+---
+
+**Base URL:** `https://rl-gym-api.collinear.ai`
+
+Validate a model configuration by sending a test completion request.
+
+```
+POST /test-model-config
+```
+
+**Request body:** A `ModelConfig` object (same schema as in [Launch Runs](/api-reference/runs#modelconfig)).
+
+**Response:** `200 OK`
+
+```json
+{
+  "success": true,
+  "message": "Model responded successfully",
+  "error_type": null
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `success` | `bool` | Whether the test completion succeeded |
+| `message` | `string` | Human-readable result summary or error description |
+| `error_type` | `string` | Error classification: `authentication_error`, `connection_error`, `timeout`, `invalid_model`, `rate_limit`, `bad_request`, or `unknown` |

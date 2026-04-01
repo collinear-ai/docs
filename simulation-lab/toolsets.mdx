@@ -1,11 +1,11 @@
 ---
 title: "Toolsets"
-description: "Tool definitions, OOTB toolsets, and BYO tools"
+description: "Built-in tools, custom tool definitions, and MCP server integration"
 ---
 
 ## Tool Server Protocol
 
-Tool servers expose a standard HTTP API. Any service that implements this protocol can be used as a tool in the Simulation Lab.
+Tool servers expose a standard HTTP API. Any service that implements this protocol can be used as a tool in the Simulation Lab. See the [Tool Server Protocol](/api-reference/tool-server-protocol) reference for the full spec.
 
 ## Multi-Tool Composition
 
@@ -44,7 +44,17 @@ services:
 
 The YAML specifies everything Docker needs: images, ports, health checks, environment variables, and dependency ordering. The CLI reads these definitions and composes them into a working `docker-compose.yml`.
 
-## OOTB Toolsets
+For tools that are hosted externally and don't need Docker services, use the `tool_server_url` field instead:
+
+```yaml
+name: harbor-main
+display_name: Harbor Main
+description: Custom tool scaffold for harbor-main.
+category: custom
+tool_server_url: http://localhost:9000
+```
+
+## Built-in Toolsets
 
 Below is a selection of out-of-the-box tools that come with Simulation Lab. We are continually adding more domain-specific tools as part of our roadmap.
 
@@ -67,23 +77,179 @@ Below is a selection of out-of-the-box tools that come with Simulation Lab. We a
 | `Weather` | Utilities | Forecasts by location |
 | `WhatsApp` | Communication | Messaging with contacts, groups, and messages |
 
-## Bring Your Own Tools (MCP or CLI)
+## Bring Your Own Tools
 
-<Note>This feature is launching soon.</Note>
+Simulation Lab supports three paths for integrating custom tools: **MCP servers**, **env-local custom tool definitions**, and **custom CLI tools** for coding environments.
 
-Simulation Lab enables users to bring their own tools via MCP.
+### Custom MCP Servers
 
-### The Core Idea
+You can add custom MCP servers to any environment so the agent can call them alongside built-in tools. SimLab supports two MCP transport patterns:
 
-Simulation Lab's tool server protocol wraps MCP servers. To add your own toolset, you point Simulation Lab at your MCP server, and then it becomes available to agents in the workspace, and can be used for task generation and verification.
+- **URL-based** — SimLab connects directly to an HTTP MCP endpoint. No extra container is added.
+- **Command-based** — SimLab adds an `mcp-gateway` container that starts your stdio MCP servers and exposes them over HTTP inside the environment.
 
-### Two Paths for Integration
+#### Configuration format
 
-**For task generation:** Provide your MCP tool definitions as JSON. The task generation pipeline consumes them and produces tasks (instructions, seed data, and verifiers) tailored to your tools.
+Create a `mcp-servers.json` file with a top-level `mcpServers` object. Each server must define exactly one of `url` or `command`:
 
-```bash
-# Generate tasks for your custom tools
-simlab tasks-gen run --tools ./tools.json --out ./generated-tasks
+```json
+{
+  "mcpServers": {
+    "docs": {
+      "url": "https://example.com/mcp"
+    },
+    "weather": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/adhikasp/mcp-weather.git", "mcp-weather"],
+      "env": {
+        "ACCUWEATHER_API_KEY": "your_api_key_here"
+      }
+    }
+  }
+}
 ```
 
-**For runtime:** Point Simulation Lab at your MCP server URL. It becomes available to agents in the workspace alongside built-in toolsets. Agents discover it via the unified tool list and call it like any other tool.
+| Field | Required | Description |
+|-------|----------|-------------|
+| `url` | One of `url` or `command` | HTTP endpoint for URL-based servers |
+| `command` | One of `url` or `command` | Executable for command-based (stdio) servers |
+| `args` | No | Arguments passed to the command |
+| `env` | No | Environment variables (e.g. API keys) for command-based servers |
+
+**Naming rules:**
+- Server names may contain only letters, numbers, `_`, and `-`.
+- Names must not collide with built-in tool server names (e.g. `email`, `calendar`).
+
+#### Adding MCP servers to an environment
+
+Pass your config at `env init`:
+
+```bash
+# URL-based only
+simlab env init my-env --mcp-servers ./mcp-servers.json --non-interactive
+
+# Combined with a template
+simlab env init my-env --template hr --mcp-servers ./mcp-servers.json
+
+# Command-based (adds an mcp-gateway container automatically)
+simlab env init my-env --mcp-servers ./mcp-servers-command.json --non-interactive
+```
+
+After init, SimLab persists the config as `environments/<env-name>/mcp-servers.json`. For command-based servers, it also generates an `mcp-gateway` service in `docker-compose.yml`.
+
+#### Managing API keys and env vars
+
+For command-based servers, set secrets in `environments/<env-name>/.env` before running `simlab env up`.
+
+If an env var name is used by **only one** MCP server, set it directly:
+
+```bash
+# environments/my-env/.env
+ACCUWEATHER_API_KEY=your-real-key
+```
+
+If **multiple** servers share the same env var name, use the scoped form:
+
+```bash
+# environments/my-env/.env
+SIMLAB_MCP_WEATHER__API_KEY=weather-key
+SIMLAB_MCP_DOCS__API_KEY=docs-key
+```
+
+Server names are normalized for scoped env vars by uppercasing and replacing non-alphanumeric characters with `_` (e.g. `my-docs` becomes `MY_DOCS`).
+
+### Env-Local Custom Tool Definitions
+
+For environment-specific tool servers that aren't part of the built-in catalog, you can scaffold custom tool definitions under the environment's `custom-tools/` directory. These use the same YAML schema as built-in catalog tools.
+
+#### Scaffold a custom tool
+
+```bash
+simlab env custom-tools add my-env harbor-main
+```
+
+This creates the following layout:
+
+```text
+environments/my-env/
+  env.yaml
+  docker-compose.yml
+  .env
+  custom-tools/
+    harbor-main.yaml
+```
+
+The command also adds `harbor-main` to the tools list in `env.yaml` and regenerates the environment's Docker Compose and related files.
+
+#### Edit and regenerate
+
+After editing `custom-tools/*.yaml`, `env.yaml`, or `mcp-servers.json`, regenerate the environment:
+
+```bash
+simlab env init my-env --force
+```
+
+SimLab will also detect stale generated files when you run `simlab env up`, `simlab tasks run`, or `simlab tasks seed`, and prompt to regenerate in interactive sessions.
+
+#### Inspect a custom tool
+
+```bash
+simlab tools info harbor-main --env my-env
+```
+
+#### Naming rules
+
+- Custom tool names must not shadow built-in tool names.
+- Env-local custom tool names must be unique within the environment.
+- MCP server names must not conflict with either built-in or env-local tool names.
+
+### Custom CLI Tools (Coding Environments)
+
+For coding environments that need extra CLI tooling installed in the sandbox, you can customize the environment with setup scripts, mounted fixtures, and reusable skills.
+
+#### Layout
+
+```text
+environments/my-env/
+  env.yaml
+  coding/
+    setup/
+      install-tools.sh      # Installs extra CLIs (e.g. pdftotext, xlsx2csv)
+    fixtures/
+      report.pdf             # Files mounted into /workspace/fixtures
+      data.xlsx
+    skills/
+      pdf-xlsx-reporting/
+        SKILL.md             # Reusable instructions for the coding agent
+```
+
+#### Setup script
+
+The setup script runs inside the coding sandbox at startup. Use it to install any tools your tasks require:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+apt-get update -qq && apt-get install -y -qq poppler-utils
+uv pip install --quiet --system xlsx2csv
+```
+
+#### Running with custom CLI tools
+
+```bash
+simlab env init my-env --force
+simlab tasks run --env my-env \
+  --tasks-dir ./task-bundle \
+  --task workspace_asset_report \
+  --agent-model gpt-5.2
+```
+
+## Task Generation with Custom Tools
+
+Custom tools (both MCP and env-local) are available for task generation. Provide your tool definitions and the pipeline produces tasks, seed data, and verifiers tailored to your tools:
+
+```bash
+simlab tasks-gen run --config ./taskgen/config.toml
+```
+
+At runtime, the agent discovers custom tools through the same unified tool list as built-in tools and calls them transparently.

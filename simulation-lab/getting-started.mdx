@@ -43,7 +43,6 @@ Initialize an environment from a template and start it:
 
 ```bash
 simlab env init my-env --template hr_recruiting
-simlab env up my-env --daytona
 ```
 
 To pick tools interactively instead of using a template:
@@ -110,10 +109,4 @@ Or in `config.toml`:
 model = "gpt-5.2"
 provider = "openai"
 api_key = "sk-..."
-```
-
-## Tear down
-
-```bash
-simlab env down my-env
 ```

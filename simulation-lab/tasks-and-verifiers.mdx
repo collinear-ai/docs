@@ -10,17 +10,20 @@ Simulation Lab includes a task generation pipeline that produces complete tasks 
 Task generation is driven by a TOML config file that defines the agent role, available toolsets, scenario conventions, and generation parameters. Initialize one from a preset or create it from scratch:
 
 ```bash
-# Initialize a config from a preset
-simlab tasks-gen init --preset recruiting --output-dir ./taskgen
+# View task-gen templates
+simlab tasks-gen templates
+
+# Initialize a config from a template
+simlab tasks-gen init --template hr --output-dir ./taskgen
 
 # Run generation
 simlab tasks-gen run --config ./taskgen/config.toml
 ```
 
-Here is an example config for an HR recruiting scenario:
+Here is an example config for an HR scenario:
 
 ```toml
-preset = "recruiting"
+preset = "hr"
 categories = [
     { id = "job_requisition", label = "Job requisition" },
     { id = "shortlist_resumes", label = "Shortlist the resumes" },
@@ -57,7 +60,7 @@ description = "Send messages in Rocket.Chat channels and DMs"
 operations = ["send", "read"]
 
 [scenario]
-name = "recruiting"
+name = "hr"
 role_label = "HR recruiting professional"
 conventions = """
 - Always check all participants' calendars before scheduling

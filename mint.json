@@ -93,6 +93,84 @@
       ]
     }
   ],
+  "redirects": [
+    {
+      "source": "/core-concepts/assess",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/core-concepts/judges",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/core-concepts/simulations",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/core-concepts/tau-trait",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/assess/compare",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/assess/create_a_reliability_evaluation",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/assess/create_a_safety_evaluation",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/assess/create_collinear_flex_evaluation",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/assess/query_language",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/assess/redteam_report",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/get-started/overview",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/get-started/platform-access",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/get-started/quickstart",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/get-started/simulations",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/improve/create_curation_run",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/sdk-docs/core-concepts/judges",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/sdk-docs/get-started/platform-access",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/sdk-docs/get-started/quickstart",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/sdk-docs/get-started/simulations",
+      "destination": "/introduction"
+    }
+  ],
   "footerSocials": {
     "x": "https://twitter.com/CollinearAI",
     "github": "https://github.com/collinear-ai",

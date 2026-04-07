@@ -16,7 +16,7 @@ Install the CLI and run your first evaluation against a simulated environment.
 ## Installation
 
 ```bash
-pip install simulationlab
+uv tool install --python 3.13 "simulationlab[daytona]"
 ```
 
 ## Authentication
@@ -42,7 +42,8 @@ simlab --collinear-api-key "<your-collinear-api-key>" <command>
 Initialize an environment from a template and start it:
 
 ```bash
-simlab env init my-env --template hr_recruiting
+# Initialize an HR-based scenario environment
+simlab env init my-env --template hr
 ```
 
 To pick tools interactively instead of using a template:

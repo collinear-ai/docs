@@ -116,15 +116,7 @@ simlab tasks run --env my-env \
 
 Use any [LiteLLM-supported model](https://docs.litellm.ai/docs/providers) for `--agent-model` (e.g. `gpt-4o`, `anthropic/claude-sonnet-4-20250514`, `gemini/gemini-2.5-pro`).
 
-**Custom agent (recommended for production use):**
-
-```bash
-simlab tasks run --env my-env \
-  --task hr__0_weaver_flag_biased_compensation_adjustment_request \
-  --agent-import-path path.to.agent:MyAgent
-```
-
-Custom agents use their own model configuration — `--agent-model` and `--agent-api-key` do not apply. Your agent must implement the `BaseAgent` contract. See [Bring Your Own Agent](/simulation-lab/bring-your-own-agent) for the full interface.
+You can also run tasks with your own agent implementation instead of the built-in one. See [Bring Your Own Agent](/simulation-lab/bring-your-own-agent) for the full interface and setup.
 
 ## Viewing results
 

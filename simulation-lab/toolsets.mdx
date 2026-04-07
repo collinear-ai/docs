@@ -241,7 +241,8 @@ simlab env init my-env --force
 simlab tasks run --env my-env \
   --tasks-dir ./task-bundle \
   --task workspace_asset_report \
-  --agent-model gpt-5.2
+  --agent-model <model> \
+  --agent-api-key "$SIMLAB_AGENT_API_KEY"
 ```
 
 ## Task Generation with Custom Tools

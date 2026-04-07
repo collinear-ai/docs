@@ -23,7 +23,7 @@ simlab tasks-gen run --config ./taskgen/config.toml
 Here is an example config for an HR scenario:
 
 ```toml
-preset = "hr"
+template = "hr"
 categories = [
     { id = "job_requisition", label = "Job requisition" },
     { id = "shortlist_resumes", label = "Shortlist the resumes" },
@@ -96,7 +96,7 @@ variations = [
 ]
 ```
 
-- **`preset`** — Starting template. Available presets: `recruiting`, `people_mgmt`, `coding`, `customer_support`.
+- **`template`** — See `simlab tasks-gen templates` for all available templates.
 - **`categories`** — Task categories to generate across.
 - **`[agent]`** — The role and description of the agent being evaluated.
 - **`[[toolset]]`** — Tools available to the agent, with allowed operations.
@@ -111,6 +111,8 @@ For common domains, pre-built tasks are available via the Scenario Manager API. 
 
 ```bash
 simlab tasks list --env my-env
-simlab tasks run --env my-env --task 100_weaver_schedule_phone_screen \
-  --agent-model gpt-5.2--agent-api-key "$OPENAI_API_KEY"
+simlab tasks run --env my-env \
+  --task hr__0_weaver_flag_biased_compensation_adjustment_request \
+  --agent-model <model> \
+  --agent-api-key "$SIMLAB_AGENT_API_KEY"
 ```

@@ -7,34 +7,62 @@ Install the CLI and run your first evaluation against a simulated environment.
 
 ## Prerequisites
 
-- Python 3.11+
-- Docker Desktop (or Docker Engine with Compose)
-- Collinear API key from [platform.collinear.ai](https://platform.collinear.ai)
-- An LLM provider API key (e.g. `OPENAI_API_KEY`)
-- Daytona API Key (optional if you want to deploy into a cloud sandbox)
+- Python 3.13
+- A Collinear API key from [platform.collinear.ai](https://platform.collinear.ai) (Developers → API Keys)
+- An API key for any [LiteLLM-supported model provider](https://docs.litellm.ai/docs/providers) (OpenAI, Anthropic, Google, etc.)
+- **One of the following** for running environments:
+  - A [Daytona](https://app.daytona.io) API key — for fast, ephemeral remote sandboxes (recommended)
+  - Docker Desktop (or Docker Engine with Compose) — for local execution
 
 ## Installation
 
 ```bash
-pip install simulationlab
+uv tool install --python 3.13 "simulationlab[daytona]"
 ```
+
+The PyPI package is named `simulationlab`. The installed CLI command is `simlab`.
 
 ## Authentication
 
-All `simlab` commands require a Collinear API key. Get one from the platform dashboard (Developers → API Keys).
+Log in with your Collinear API key:
 
 ```bash
-# Option A: Global config file (recommended)
-mkdir -p ~/.config/simlab
-cat >> ~/.config/simlab/config.toml <<'EOF'
-collinear_api_key = "<your-collinear-api-key>"
-EOF
+simlab auth login
+```
 
-# Option B: Environment variable
-export SIMLAB_COLLINEAR_API_KEY="<your-collinear-api-key>"
+This saves your key to `~/.config/simlab/config.toml`.
 
-# Option C: Per-command flag
-simlab --collinear-api-key "<your-collinear-api-key>" <command>
+Then export your model provider key:
+
+```bash
+# Use whichever provider you prefer — SimLab uses LiteLLM under the hood.
+export SIMLAB_AGENT_API_KEY="your-api-key"
+
+# Optional: export Daytona key if using remote sandboxes
+export DAYTONA_API_KEY="dtn_..."
+```
+
+### Supported providers
+
+SimLab supports any [LiteLLM-compatible provider](https://docs.litellm.ai/docs/providers). Here are common examples:
+
+| Provider | Model format | `SIMLAB_AGENT_API_KEY` | Verifier `provider` value |
+|----------|-------------|------------------------|--------------------------|
+| OpenAI | `gpt-4o` | Your OpenAI API key | `openai` |
+| Anthropic | `anthropic/claude-sonnet-4-20250514` | Your Anthropic API key | `anthropic` |
+| Google | `gemini/gemini-2.5-pro` | Your Google AI API key | `gemini` |
+
+The model format follows LiteLLM conventions: `<provider>/<model_name>`. OpenAI models don't require the provider prefix since it's the default.
+
+**Full example using Anthropic:**
+
+```bash
+export SIMLAB_AGENT_API_KEY="sk-ant-..."
+
+simlab tasks run --env my-env \
+  --task hr__0_weaver_flag_biased_compensation_adjustment_request \
+  --agent-model anthropic/claude-sonnet-4-20250514 \
+  --agent-api-key "$SIMLAB_AGENT_API_KEY"
 ```
 
 ## Starting an environment
@@ -42,14 +70,11 @@ simlab --collinear-api-key "<your-collinear-api-key>" <command>
 Initialize an environment from a template and start it:
 
 ```bash
-simlab env init my-env --template hr_recruiting
+# Initialize an HR-based scenario environment
+simlab env init my-env --template hr
 ```
 
-To pick tools interactively instead of using a template:
-
-```bash
-simlab env init my-env
-```
+> To see all available templates: `simlab templates list`
 
 ## Choosing a task
 
@@ -58,9 +83,6 @@ Tasks are organized by the scenario template associated with your environment.
 ```bash
 # List tasks for your environment's template
 simlab tasks list --env my-env
-
-# View details for a specific task
-simlab tasks info --env my-env --task ar-100-schedule-phone-screen
 ```
 
 If you generated tasks locally (via `tasks-gen`), browse them directly:
@@ -71,42 +93,58 @@ simlab tasks list --tasks-dir ./generated-tasks
 
 ## Running a rollout
 
-The primary command is `simlab tasks run`.
+The primary command is `simlab tasks run`. It automatically starts the environment, seeds data, runs the agent, verifies the result, and tears down when done.
 
-**Built-in reference agent (default).** Uses [LiteLLM](https://docs.litellm.ai/) and supports any LLM provider.
-
-```bash
-simlab tasks run --env my-env \
-  --task 100_weaver_schedule_phone_screen \
-  --agent-model gpt-5.2 \
-  --agent-api-key "$OPENAI_API_KEY"
-```
-
-**Custom agent (recommended).**
+**With Daytona (recommended — fast, ephemeral remote sandboxes):**
 
 ```bash
 simlab tasks run --env my-env \
-  --task ar-100-schedule-phone-screen \
-  --agent-import-path path.to.agent:MyAgent
+  --task hr__0_weaver_flag_biased_compensation_adjustment_request \
+  --daytona \
+  --agent-model <model> \
+  --agent-api-key "$SIMLAB_AGENT_API_KEY"
 ```
 
-Your agent must implement the `BaseAgent` contract. See [Bring Your Own Agent](/simulation-lab/bring-your-own-agent) for the full interface.
+**Without Daytona (runs locally via Docker — first run may be slow while images pull):**
+
+```bash
+simlab tasks run --env my-env \
+  --task hr__0_weaver_flag_biased_compensation_adjustment_request \
+  --agent-model <model> \
+  --agent-api-key "$SIMLAB_AGENT_API_KEY"
+```
+
+Use any [LiteLLM-supported model](https://docs.litellm.ai/docs/providers) for `--agent-model` (e.g. `gpt-4o`, `anthropic/claude-sonnet-4-20250514`, `gemini/gemini-2.5-pro`).
+
+You can also run tasks with your own agent implementation instead of the built-in one. See [Bring Your Own Agent](/simulation-lab/bring-your-own-agent) for the full interface and setup.
+
+## Viewing results
+
+Results are saved to `output/agent_run_<task_id>_<timestamp>/`:
+
+- `artifacts.json` — full rollout trace (messages, tool calls, observations)
+- `verifier/reward.txt` — `1` (pass) or `0` (fail)
+- `verifier/reward.json` — e.g. `{"reward": 1.0}`
+
+For more detail, see [Understanding Results](/simulation-lab/understanding-results).
 
 ## Configuring verifiers
 
-When a task includes LLM-as-judge verifiers, configure the judge credentials separately from the agent:
+Generated tasks use rubric-based verifiers that need a model to score results. Configure the verifier before running generated tasks:
 
 ```bash
-export SIMLAB_VERIFIER_MODEL="gpt-5.2"
-export SIMLAB_VERIFIER_PROVIDER="openai"
-export SIMLAB_VERIFIER_API_KEY="$OPENAI_API_KEY"
+export SIMLAB_VERIFIER_MODEL="<provider>/<model>"    # e.g. gpt-4o, anthropic/claude-sonnet-4-20250514
+export SIMLAB_VERIFIER_PROVIDER="<provider>"          # e.g. openai, anthropic, gemini
+export SIMLAB_VERIFIER_API_KEY="your-api-key"
 ```
 
 Or in `config.toml`:
 
 ```toml
 [verifier]
-model = "gpt-5.2"
-provider = "openai"
-api_key = "sk-..."
+model = "<provider>/<model>"
+provider = "<provider>"
+api_key = "your-api-key"
 ```
+
+> Built-in tasks use programmatic verifiers and don't require this setup. This is only needed for tasks you generate via `tasks-gen`.

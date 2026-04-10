@@ -22,8 +22,8 @@
     }
   ],
   "topbarCtaButton": {
-    "name": "Go To Homepage",
-    "url": "https://collinear.ai"
+    "name": "Try SimLab",
+    "url": "https://github.com/collinear-ai/simlab"
   },
   "tabs": [
     {
